@@ -1,0 +1,40 @@
+modLoader="javafml" #mandatory
+loaderVersion="${forge_range}" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
+license="MIT"
+# A URL to refer people to when problems occur with this mod
+issueTrackerURL="https://github.com/ChiefArug/ThermalSysteams/issues" #optional
+[[mods]] #mandatory
+modId="systeams" #mandatory
+version="${systeams_version}" #mandatory
+displayName="Example Mod" #mandatory
+# A URL to query for updates for this mod. See the JSON update specification https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/
+#updateJSONURL="https://change.me.example.invalid/updates.json" #optional
+displayURL="https://www.curseforge.com/minecraft/mc-mods/systeams" #optional
+logoFile="pack.png" #optional
+credits="Thanks for KingLemming and the rest of CoFH for such a Thermally awesome series of mods!" #optional
+authors="ChiefArug" #optional
+# The description text for the mod (multi line!) (#mandatory)
+description='''
+Addon for the Thermal Series that adds Steam dynamos back to modern versions!
+'''
+# A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
+[[dependencies.systeams]] #optional
+    modId="forge" #mandatory
+    mandatory=true #mandatory
+    versionRange="${forge_range}" #mandatory
+    ordering="NONE"
+    side="BOTH"
+# Here's another dependency
+[[dependencies.systeams]]
+    modId="minecraft"
+    mandatory=true
+# This version range declares a minimum of the current minecraft version up to but not including the next major version
+    versionRange="${minecraft_range}"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.systeams]] #optional #TODO: this //TODO: this
+    modId="thermal" #mandatory
+    mandatory=true #mandatory
+    versionRange="${thermal_range}" #mandatory
+    ordering="NONE"
+    side="BOTH"
