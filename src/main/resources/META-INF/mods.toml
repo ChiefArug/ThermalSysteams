@@ -35,6 +35,6 @@ Addon for the Thermal Series that adds Steam dynamos back to modern versions!
 [[dependencies.systeams]] #optional #TODO: this //TODO: this
     modId="thermal" #mandatory
     mandatory=true #mandatory
-    versionRange="${thermal_range}" #mandatory
+    versionRange="${thermal_core_range}" #mandatory
     ordering="NONE"
     side="BOTH"

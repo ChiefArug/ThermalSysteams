@@ -97,6 +97,7 @@ dependencies {
     runtimeOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}"))
 
     implementation fg.deobf("com.teamcofh:cofh_core:${minecraft_version}-${cofh_core_version}")
+    implementation fg.deobf("com.teamcofh:thermal_core:${minecraft_version}-${thermal_core_version}")
     implementation fg.deobf("com.teamcofh:thermal_foundation:${minecraft_version}-${thermal_foundation_version}")
     implementation fg.deobf("com.teamcofh:thermal_expansion:${minecraft_version}-${thermal_expansion_version}")
 }
@@ -122,7 +123,7 @@ def modsTomlSpec = copySpec {
         expand 'systeams_version': systeams_version,
             'minecraft_range': minecraft_range,
             'forge_range': forge_range,
-            'thermal_range': thermal_range
+            'thermal_core_range': thermal_core_range
     }
 }
 
