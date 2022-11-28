@@ -6,7 +6,7 @@ issueTrackerURL="https://github.com/ChiefArug/ThermalSysteams/issues" #optional
 [[mods]] #mandatory
 modId="systeams" #mandatory
 version="${systeams_version}" #mandatory
-displayName="Example Mod" #mandatory
+displayName="Thermal Systeams" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/
 #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
 displayURL="https://www.curseforge.com/minecraft/mc-mods/systeams" #optional
