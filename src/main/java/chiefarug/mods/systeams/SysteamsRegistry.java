@@ -46,6 +46,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static chiefarug.mods.systeams.Systeams.MODID;
 
+@SuppressWarnings("unused")
 public class SysteamsRegistry {
 
 	private static final CreativeModeTab TAB = new CreativeModeTab(MODID) {
