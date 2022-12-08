@@ -3,8 +3,11 @@ package chiefarug.mods.systeams.recipe;
 import chiefarug.mods.systeams.SysteamsRegistry;
 import cofh.thermal.lib.util.managers.SingleFluidFuelManager;
 import cofh.thermal.lib.util.recipes.internal.IDynamoFuel;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraftforge.fluids.FluidStack;
+
+import java.util.Map;
 
 public class SteamFuelManager extends SingleFluidFuelManager {
     private static final SteamFuelManager INSTANCE = new SteamFuelManager();
@@ -30,7 +33,7 @@ public class SteamFuelManager extends SingleFluidFuelManager {
     public void refresh(RecipeManager recipeManager) {
 
         clear();
-        var recipes = recipeManager.byType(SysteamsRegistry.Recipes.Types.STEAM.get());
+        Map<ResourceLocation, SteamFuel> recipes = recipeManager.byType(SysteamsRegistry.Recipes.Types.STEAM.get());
         for (var entry : recipes.entrySet()) {
             addFuel(entry.getValue());
         }

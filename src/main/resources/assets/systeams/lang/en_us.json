@@ -1,3 +1,6 @@
 {
-  "block.systeams.steam_dynamo": "Steam Dynamo"
+  "block.systeams.steam_dynamo": "Steam Dynamo",
+  "item.systeams.steam_bucket": "Steam Bucket",
+  "fluid_type.systeams.steam": "Steam",
+  "item.systeams.steam_conversion_kit": "Boiler conversion Kit"
 }

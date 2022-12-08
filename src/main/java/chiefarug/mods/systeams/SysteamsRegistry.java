@@ -10,7 +10,6 @@ import cofh.lib.util.constants.BlockStatePropertiesCoFH;
 import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.recipes.SerializableRecipeType;
 import cofh.thermal.core.config.ThermalCoreConfig;
-import cofh.thermal.core.util.recipes.dynamo.CompressionFuel;
 import cofh.thermal.lib.block.TileBlockDynamo;
 import cofh.thermal.lib.common.ThermalAugmentRules;
 import cofh.thermal.lib.item.BlockItemAugmentable;
@@ -45,7 +44,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 
-import static chiefarug.mods.systeams.Systeams.LGGR;
 import static chiefarug.mods.systeams.Systeams.MODID;
 
 public class SysteamsRegistry {
@@ -62,17 +60,6 @@ public class SysteamsRegistry {
 			.sound(SoundType.NETHERITE_BLOCK)
 			.strength(2.0F)
 			.lightLevel(BlockHelper.lightValue(BlockStatePropertiesCoFH.ACTIVE, 14));
-	private static final BlockBehaviour.Properties FB_PROPERTIES = BlockBehaviour.Properties.of(
-			new Material.Builder(MaterialColor.COLOR_GRAY)
-					.noCollider()
-					.notSolidBlocking()
-					.nonSolid()
-					.destroyOnPush()
-					.replaceable()
-					.liquid()
-					.build(),
-			MaterialColor.COLOR_GRAY
-	);
 
 	private static final DeferredRegister<Fluid> FLUID_REGISTRY = DeferredRegister.create(ForgeRegistries.Keys.FLUIDS, MODID);
 	private static final DeferredRegister<FluidType> FLUID_TYPE_REGISTRY = DeferredRegister.create(ForgeRegistries.Keys.FLUID_TYPES, MODID);
@@ -139,14 +126,26 @@ public class SysteamsRegistry {
 						.canExtinguish(true)
 						.canHydrate(true)
 						.density(1);
-				private static final ForgeFlowingFluid.Properties FLUID = new ForgeFlowingFluid.Properties(Steam.FLUID_TYPE, Steam.FLUID, FLUID_FLOWING);
+				private static final ForgeFlowingFluid.Properties FLUID = new ForgeFlowingFluid.Properties(Steam.FLUID_TYPE, Steam.FLUID, Steam.FLUID_FLOWING).bucket(Steam.BUCKET).block(Steam.BLOCK);
+				private static final Item.Properties ITEM = new Item.Properties().tab(TAB).craftRemainder(net.minecraft.world.item.Items.BUCKET).stacksTo(1);
+				private static final BlockBehaviour.Properties BLOCK = BlockBehaviour.Properties.of(
+					new Material.Builder(MaterialColor.COLOR_GRAY)
+							.noCollider()
+							.notSolidBlocking()
+							.nonSolid()
+							.destroyOnPush()
+							.replaceable()
+							.liquid()
+							.build(),
+					MaterialColor.COLOR_GRAY
+				);
 			}
 			public static final TagKey<Fluid> TAG = FLUID_REGISTRY.createTagKey(new ResourceLocation(MODID, STEAM_ID));
 			public static final RegistryObject<FlowingFluid> FLUID = FLUID_REGISTRY.register(STEAM_ID, () -> new ForgeFlowingFluid.Source(Properties.FLUID));
 			public static final RegistryObject<FlowingFluid> FLUID_FLOWING = FLUID_REGISTRY.register(STEAM_ID + "_flowing", () -> new ForgeFlowingFluid.Flowing(Properties.FLUID));
 			public static final RegistryObject<FluidType> FLUID_TYPE = FLUID_TYPE_REGISTRY.register(STEAM_ID, () -> new FluidType(Properties.FLUID_TYPE));
-			public static final RegistryObject<Item> BUCKET = ITEM_REGISTRY.register(STEAM_ID + "_bucket", () -> new BucketItem(FLUID, I_PROPERTIES));
-			public static final RegistryObject<Block> BLOCK = BLOCK_REGISTRY.register(STEAM_ID, () -> new LiquidBlock(FLUID, FB_PROPERTIES));
+			public static final RegistryObject<Item> BUCKET = ITEM_REGISTRY.register(STEAM_ID + "_bucket", () -> new BucketItem(FLUID, Properties.ITEM));
+			public static final RegistryObject<LiquidBlock> BLOCK = BLOCK_REGISTRY.register(STEAM_ID, () -> new LiquidBlock(FLUID, Properties.BLOCK));
 		}
 	}
 	public static class Menus {
@@ -163,10 +162,7 @@ public class SysteamsRegistry {
 		}
 		public static class Types {
 			static void init() {}
-			public static final RegistryObject<SerializableRecipeType<CompressionFuel>> STEAM = RECIPE_TYPE_REGISTRY.register(STEAM_ID, () -> /*null*/{
-				LGGR.info("doing stuff and things");
-				return new SerializableRecipeType<CompressionFuel>(MODID, STEAM_ID);
-			});
+			public static final RegistryObject<SerializableRecipeType<SteamFuel>> STEAM = RECIPE_TYPE_REGISTRY.register(STEAM_ID, () -> new SerializableRecipeType<>(MODID, STEAM_ID));
 		}
 		public static class Serializers {
 			static void init() {}

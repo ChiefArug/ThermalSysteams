@@ -23,6 +23,7 @@ public class DynamoSteamScreen extends DynamoScreenBase<DynamoSteamContainer> {
 	    @Override
     public void init() {
         super.init();
+		addElement(GuiHelper.setClearable(GuiHelper.createMediumFluidStorage(this, 34, 22, tile.getTank(0)), tile, 0));
         addElement(ThermalGuiHelper.createDefaultDuration(this, 80, 35, GuiHelper.SCALE_FLAME, tile));
     }
 }

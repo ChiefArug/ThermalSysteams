@@ -1,6 +1,5 @@
 package chiefarug.mods.systeams.block_entities;
 
-import chiefarug.mods.systeams.SysteamsConfig;
 import chiefarug.mods.systeams.SysteamsRegistry;
 import chiefarug.mods.systeams.containers.DynamoSteamContainer;
 import cofh.core.client.renderer.model.ModelUtils;
@@ -42,7 +41,7 @@ public class DynamoSteamBlockEntity extends DynamoTileBase {
 
 	@Override
 	protected boolean canProcessStart() {
-		return steamTank.getAmount() > SysteamsConfig.AMOUNT.get();
+		return false;
 	}
 
 	@Override
@@ -50,8 +49,6 @@ public class DynamoSteamBlockEntity extends DynamoTileBase {
         if (cacheRenderFluid()) {
             TileStatePacket.sendToClient(this);
         }
-        fuel += fuelMax = Math.round(SysteamsConfig.ENERGY.get() * energyMod);
-        steamTank.modify(-SysteamsConfig.AMOUNT.get());
     }
 
     @Override
