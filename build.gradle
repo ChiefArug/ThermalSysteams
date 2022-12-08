@@ -129,8 +129,7 @@ def modsTomlSpec = copySpec {
 
 // This works
 def buildPaths = [
-    "$rootDir/build/main/resources", // IDEA
-    "$rootDir/out/production/resources", //IDEA the second
+    "$rootDir/out/production/resources", //IDEA
     "$rootDir/bin", // Eclipse (No idea if this is correct)
 ]
 

@@ -1,8 +1,9 @@
 package chiefarug.mods.systeams;
 
-import cofh.lib.util.constants.ModIds;
 import com.mojang.logging.LogUtils;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
@@ -10,11 +11,14 @@ import org.slf4j.Logger;
 @Mod("systeams")
 public class Systeams {
     @SuppressWarnings("unused")
-    private static final Logger LGGR = LogUtils.getLogger();
+    public static final Logger LGGR = LogUtils.getLogger();
+    public static final String MODID = "systeams";
 
     public Systeams() {
-        FMLJavaModLoadingContext.get().getModEventBus();
-        LGGR.info(ModIds.ID_THERMAL_EXPANSION);
+        var bus = FMLJavaModLoadingContext.get().getModEventBus();
+        SysteamsRegistry.init(bus);
+
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, SysteamsConfig.spec);
     }
 
 
