@@ -75,7 +75,7 @@ public class SteamFuelCategory extends ThermalFuelCategory<SteamFuel> {
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, SteamFuel recipe, @NotNull IFocusGroup focuses) {
+	public void setRecipe(IRecipeLayoutBuilder builder, SteamFuel recipe, IFocusGroup focuses) {
 		List<FluidIngredient> inputs = recipe.getInputFluids();
 
         builder.addSlot(RecipeIngredientRole.INPUT, 34, 11)

@@ -23,12 +23,12 @@ public class SysteamsJEIPlugin implements IModPlugin {
 	private static final ResourceLocation UID = new ResourceLocation(MODID, "systeams");
 
 	@Override
-	public void registerCategories(@NotNull IRecipeCategoryRegistration registration) {
+	public void registerCategories(IRecipeCategoryRegistration registration) {
 		registration.addRecipeCategories(new SteamFuelCategory(registration.getJeiHelpers().getGuiHelper(), new ItemStack(SysteamsRegistry.Items.STEAM_DYNAMO.get()), STEAM_DYNAMO_RECIPE_TYPE));
 	}
 
 	@Override
-	public void registerRecipes(@NotNull IRecipeRegistration registration) {
+	public void registerRecipes(IRecipeRegistration registration) {
 //		registration.addRecipes(STEAM_DYNAMO_RECIPE_TYPE, List.of(new Ste()));
 	}
 

@@ -6,40 +6,34 @@ import chiefarug.mods.systeams.containers.DynamoSteamContainer;
 import chiefarug.mods.systeams.recipe.SteamFuel;
 import chiefarug.mods.systeams.recipe.SteamFuelManager;
 import cofh.core.util.ProxyUtils;
+import cofh.lib.util.DeferredRegisterCoFH;
 import cofh.lib.util.constants.BlockStatePropertiesCoFH;
 import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.recipes.SerializableRecipeType;
 import cofh.thermal.core.config.ThermalCoreConfig;
 import cofh.thermal.lib.block.TileBlockDynamo;
 import cofh.thermal.lib.common.ThermalAugmentRules;
+import cofh.thermal.lib.common.ThermalRecipeManagers;
 import cofh.thermal.lib.item.BlockItemAugmentable;
 import cofh.thermal.lib.util.recipes.DynamoFuelSerializer;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
@@ -49,7 +43,7 @@ import static chiefarug.mods.systeams.Systeams.MODID;
 @SuppressWarnings("unused")
 public class SysteamsRegistry {
 
-	private static final CreativeModeTab TAB = new CreativeModeTab(MODID) {
+	static final CreativeModeTab TAB = new CreativeModeTab(MODID) {
 		@Override
 		public @NotNull ItemStack makeIcon() {
 			return new ItemStack(CONVERSION_KIT.get());
@@ -62,15 +56,15 @@ public class SysteamsRegistry {
 			.strength(2.0F)
 			.lightLevel(BlockHelper.lightValue(BlockStatePropertiesCoFH.ACTIVE, 14));
 
-	private static final DeferredRegister<Fluid> FLUID_REGISTRY = DeferredRegister.create(ForgeRegistries.Keys.FLUIDS, MODID);
-	private static final DeferredRegister<FluidType> FLUID_TYPE_REGISTRY = DeferredRegister.create(ForgeRegistries.Keys.FLUID_TYPES, MODID);
-	private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_REGISTRY = DeferredRegister.create(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES, MODID);
-	private static final DeferredRegister<Block> BLOCK_REGISTRY = DeferredRegister.create(ForgeRegistries.Keys.BLOCKS, MODID);
-	private static final DeferredRegister<Item> ITEM_REGISTRY = DeferredRegister.create(ForgeRegistries.Keys.ITEMS, MODID);
-	private static final DeferredRegister<SoundEvent> SOUND_REGISTRY = DeferredRegister.create(ForgeRegistries.Keys.SOUND_EVENTS, MODID);
-	private static final DeferredRegister<MenuType<?>> MENU_REGISTRY = DeferredRegister.create(ForgeRegistries.Keys.MENU_TYPES, MODID);
-	private static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZER_REGISTRY = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, MODID);
-	public static final DeferredRegister<RecipeType<?>> RECIPE_TYPE_REGISTRY = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, MODID);
+	private static final DeferredRegisterCoFH<Fluid> FLUID_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.FLUIDS, MODID);
+	private static final DeferredRegisterCoFH<FluidType> FLUID_TYPE_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.FLUID_TYPES, MODID);
+	private static final DeferredRegisterCoFH<BlockEntityType<?>> BLOCK_ENTITY_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES, MODID);
+	private static final DeferredRegisterCoFH<Block> BLOCK_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.BLOCKS, MODID);
+	private static final DeferredRegisterCoFH<Item> ITEM_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.ITEMS, MODID);
+	private static final DeferredRegisterCoFH<SoundEvent> SOUND_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.SOUND_EVENTS, MODID);
+	private static final DeferredRegisterCoFH<MenuType<?>> MENU_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.MENU_TYPES, MODID);
+	private static final DeferredRegisterCoFH<RecipeSerializer<?>> RECIPE_SERIALIZER_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.RECIPE_SERIALIZERS, MODID);
+	public static final DeferredRegisterCoFH<RecipeType<?>> RECIPE_TYPE_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.RECIPE_TYPES, MODID);
 
 	public static void init(IEventBus bus) {
 		// Make sure all of the classes have actually been static inited
@@ -114,40 +108,9 @@ public class SysteamsRegistry {
 		static void init() {}
 		public static final RegistryObject<Item> STEAM_DYNAMO = ITEM_REGISTRY.register(STEAM_DYNAMO_ID, () -> machineBlockItemOf(Blocks.STEAM_DYNAMO.get()));
 	}
-	public static class Fluids { // Not fun. DO NOT TOUCH ON PAIN OF REWRITING IT
-		static void init() {
-			Steam.init();
-		}
-		// Subclasses are for organisation and getting around "forward reference" compile errors.
-		public static class Steam {
-			static void init() {}
-			private static class Properties {
-				private static final FluidType.Properties FLUID_TYPE = FluidType.Properties.create()
-						.canDrown(true)
-						.canExtinguish(true)
-						.canHydrate(true)
-						.density(1);
-				private static final ForgeFlowingFluid.Properties FLUID = new ForgeFlowingFluid.Properties(Steam.FLUID_TYPE, Steam.FLUID, Steam.FLUID_FLOWING).bucket(Steam.BUCKET).block(Steam.BLOCK);
-				private static final Item.Properties ITEM = new Item.Properties().tab(TAB).craftRemainder(net.minecraft.world.item.Items.BUCKET).stacksTo(1);
-				private static final BlockBehaviour.Properties BLOCK = BlockBehaviour.Properties.of(
-					new Material.Builder(MaterialColor.COLOR_GRAY)
-							.noCollider()
-							.notSolidBlocking()
-							.nonSolid()
-							.destroyOnPush()
-							.replaceable()
-							.liquid()
-							.build(),
-					MaterialColor.COLOR_GRAY
-				);
-			}
-			public static final TagKey<Fluid> TAG = FLUID_REGISTRY.createTagKey(new ResourceLocation(MODID, STEAM_ID));
-			public static final RegistryObject<FlowingFluid> FLUID = FLUID_REGISTRY.register(STEAM_ID, () -> new ForgeFlowingFluid.Source(Properties.FLUID));
-			public static final RegistryObject<FlowingFluid> FLUID_FLOWING = FLUID_REGISTRY.register(STEAM_ID + "_flowing", () -> new ForgeFlowingFluid.Flowing(Properties.FLUID));
-			public static final RegistryObject<FluidType> FLUID_TYPE = FLUID_TYPE_REGISTRY.register(STEAM_ID, () -> new FluidType(Properties.FLUID_TYPE));
-			public static final RegistryObject<Item> BUCKET = ITEM_REGISTRY.register(STEAM_ID + "_bucket", () -> new BucketItem(FLUID, Properties.ITEM));
-			public static final RegistryObject<LiquidBlock> BLOCK = BLOCK_REGISTRY.register(STEAM_ID, () -> new LiquidBlock(FLUID, Properties.BLOCK));
-		}
+	public static class Fluids {
+		static void init() {}
+		public static final SteamFluid STEAM = new SteamFluid(FLUID_REGISTRY, FLUID_TYPE_REGISTRY, BLOCK_REGISTRY, ITEM_REGISTRY, STEAM_ID);
 	}
 	public static class Menus {
 		static void init() {}
@@ -160,6 +123,8 @@ public class SysteamsRegistry {
 		static void init() {
 			Types.init();
 			Serializers.init();
+
+			ThermalRecipeManagers.registerManager(SteamFuelManager.instance());
 		}
 		public static class Types {
 			static void init() {}

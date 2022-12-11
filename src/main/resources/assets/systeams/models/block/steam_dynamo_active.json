@@ -3,7 +3,7 @@
   "textures": {
     "top": "systeams:block/steam_dynamo_active",
     "side": "systeams:block/steam_dynamo_side_active",
-    "bottom": "systeams:block/steam_dynamo_bottom",
-     "coil": "thermal:block/dynamo_coil_rf_active"
+    "bottom": "systeams:block/steam_dynamo_active",
+     "coil": "thermal:block/dynamos/dynamo_coil_rf_active"
   }
 }

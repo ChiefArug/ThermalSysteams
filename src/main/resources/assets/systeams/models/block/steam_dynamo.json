@@ -3,6 +3,6 @@
   "textures": {
     "top": "systeams:block/steam_dynamo",
     "side": "systeams:block/steam_dynamo_side",
-    "bottom": "systeams:block/steam_dynamo_bottom"
+    "bottom": "systeams:block/steam_dynamo"
   }
 }
