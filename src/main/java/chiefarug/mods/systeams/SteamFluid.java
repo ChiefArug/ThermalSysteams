@@ -4,7 +4,10 @@ import cofh.lib.fluid.FluidCoFH;
 import cofh.lib.util.DeferredRegisterCoFH;
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Vector3f;
+import it.unimi.dsi.fastutil.shorts.Short2BooleanMap;
+import it.unimi.dsi.fastutil.shorts.Short2ObjectMap;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -18,6 +21,7 @@ import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -38,6 +42,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import static chiefarug.mods.systeams.Systeams.LGGR;
 
 public class SteamFluid /*extends FluidCoFH*/ { // We can't extend FluidCoFH because it forces you to use the base ForgeFlowingFluid, meaning I can't make it flow upwards.
 
@@ -173,22 +179,23 @@ public class SteamFluid /*extends FluidCoFH*/ { // We can't extend FluidCoFH bec
 				Direction flowDir = Direction.UP;
 				BlockPos flowToPos = pos.relative(flowDir);
 				boolean canFlowUp = this.canSpreadTo(level, pos, currentBlockState, flowDir, flowToPos, level.getBlockState(flowToPos), level.getFluidState(flowToPos), SteamFluid.this.stillFluid.get());
-//				level.setBlock(pos.above(), Blocks.DIAMOND_BLOCK.defaultBlockState(), 3);
 				if (canFlowUp) {
 					int flags = 3;
-					// if we aren't flowing into our fluid, prevent light updates. This prevents major lag
+					// if we aren't flowing into our fluid, prevent light updates. This tries to prevent major lag
 					if (level.getFluidState(flowToPos).getType() != SteamFluid.this.flowingFluid.get()) {
 						flags |= 128;
 					}
 					level.setBlock(flowToPos, currentFluidState.createLegacyBlock(), flags);
 					level.setBlock(pos, Blocks.AIR.defaultBlockState(), flags);
+					if (pos.getY() > 300) {
+						LGGR.warn("A steam block flowed above y 300! If you are experiencing major lag spikes, this is likely the cause (silly lighting updates)");
+					}
 					return;
 				}
 				this.spreadToSides(level, pos, currentFluidState, currentBlockState);
 				return;
 			}
 			// we are a flowing block
-//			level.setBlock(pos.above(), Blocks.GOLD_BLOCK.defaultBlockState(), 3);
 			int maxSurroundingLevel = 0;
 			for (Direction dir : Direction.Plane.HORIZONTAL) {
 				FluidState stateInDir = level.getFluidState(pos.relative(dir));
@@ -204,53 +211,31 @@ public class SteamFluid /*extends FluidCoFH*/ { // We can't extend FluidCoFH bec
 			maxSurroundingLevel -= this.getDropOff(level);
 			level.setBlock(pos, maxSurroundingLevel > 0 ? this.getFlowing(maxSurroundingLevel, false).createLegacyBlock() : Blocks.AIR.defaultBlockState(), 3);
 			this.spreadToSides(level, pos, currentFluidState, currentBlockState);
-//			if (!currentFluidState.isSource()) {
-//				int currentLevel = currentFluidState.getValue(LEVEL);
-//				// haha special casing go brrrrrr
-//				if (currentLevel < 8) {
-//					level.setBlock(pos, currentLevel > 1 ? currentFluidState.setValue(LEVEL, currentLevel - 1).createLegacyBlock() : Blocks.AIR.defaultBlockState(), 3);
-//					return;
-//				}
-//				FluidState newFluidstate = this.getNewLiquid(level, pos, level.getBlockState(pos));
-//				int i = this.getSpreadDelay(level, pos, currentFluidState, newFluidstate);
-//				if (newFluidstate.isEmpty()) {
-//					currentFluidState = newFluidstate;
-//					level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-//				} else if (!newFluidstate.equals(currentFluidState)) {
-//					currentFluidState = newFluidstate;
-//					BlockState blockstate = newFluidstate.createLegacyBlock();
-//					level.setBlock(pos, blockstate, 2);
-//					level.scheduleTick(pos, newFluidstate.getType(), i);
-//					level.updateNeighborsAt(pos, blockstate.getBlock());
-//				}
-//			}
-//
-//			this.spread(level, pos, currentFluidState);
 		}
 
 		@Override
 		protected boolean canSpreadTo(BlockGetter level, BlockPos fromPos, BlockState fromBlockState, Direction direction, BlockPos toPos, BlockState toBlockState, FluidState toFluidState, Fluid fluid) {
-			var fromFluidState = level.getFluidState(fromPos);
 			// if its flowing horizontally and the block above the toPos is an empty block, then do not flow
-
-			if (Direction.Plane.HORIZONTAL == direction.getAxis().getPlane() &&
-					level.getBlockState(toPos.above()).isAir()) {
-				// prevents large flooding of areas.
+			// prevents large flooding of areas.
+			if (Direction.Plane.HORIZONTAL == direction.getAxis().getPlane() && level.getBlockState(toPos.above()).isAir())
 				return false;
-			} else if (direction == Direction.UP && toFluidState.getType() == SteamFluid.this.flowingFluid.get()) { // if its trying to flow up into flowing fluid, let it
+			// if it's trying to flow up into its own flowing fluid, let it
+			 else if (direction == Direction.UP && toFluidState.getType() == SteamFluid.this.flowingFluid.get())
 				return true;
-			} else {
+			 else
 				return super.canSpreadTo(level, fromPos, fromBlockState, direction, toPos, toBlockState, toFluidState, fluid);
-			}
-		}
 
+		}
 
 		private boolean isTooColdForSteam(Level level) {
 			return false;
 //			return !level.dimensionType().ultraWarm();
 		}
 
-
+		@Override
+		protected int getSlopeDistance(LevelReader pLevel, BlockPos p_76028_, int p_76029_, Direction pDirection, BlockState p_76031_, BlockPos p_76032_, Short2ObjectMap<Pair<BlockState, FluidState>> p_76033_, Short2BooleanMap p_76034_) {
+			return 0;
+		}
 	}
 
 	public class Flowing extends SteamFlowingFluid {

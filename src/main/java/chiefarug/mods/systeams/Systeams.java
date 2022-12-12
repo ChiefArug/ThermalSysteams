@@ -15,8 +15,6 @@ public class Systeams {
     public Systeams() {
         var bus = FMLJavaModLoadingContext.get().getModEventBus();
         SysteamsRegistry.init(bus);
-
-//        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, SysteamsConfig.spec);
     }
 
 
