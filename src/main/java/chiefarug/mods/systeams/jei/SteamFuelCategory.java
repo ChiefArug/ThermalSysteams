@@ -47,7 +47,7 @@ public class SteamFuelCategory extends ThermalFuelCategory<SteamFuel> {
 		name = StringHelper.getTextComponent(SysteamsRegistry.Blocks.STEAM_DYNAMO.get().getDescriptionId());
 
 //		tankBackground = Drawables.getDrawables(guiHelper).getTank(Drawables.TANK_MEDIUM);
-        tankOverlay = Drawables.getDrawables(guiHelper).getTankOverlay(Drawables.TANK_MEDIUM);
+        tankOverlay = Drawables.getDrawables(guiHelper).getTankOverlay(Drawables.TANK_LARGE);
 		durationBackground = Drawables.getDrawables(guiHelper).getScale(Drawables.SCALE_FLAME);
 		energyBackground = Drawables.getDrawables(guiHelper).getEnergyEmpty();
 		energy = guiHelper.createAnimatedDrawable(Drawables.getDrawables(guiHelper).getEnergyFill(), 400, IDrawableAnimated.StartDirection.BOTTOM, false);
@@ -80,7 +80,7 @@ public class SteamFuelCategory extends ThermalFuelCategory<SteamFuel> {
 
         builder.addSlot(RecipeIngredientRole.INPUT, 34, 11)
                 .addIngredients(ForgeTypes.FLUID_STACK, List.of(inputs.get(0).getFluids()))
-                .setFluidRenderer(TCoreJeiPlugin.tankSize(Drawables.TANK_MEDIUM), false, 16, 40)
+                .setFluidRenderer(TCoreJeiPlugin.tankSize(Drawables.TANK_LARGE), false, 16, 40)
                 .setOverlay(tankOverlay, 0, 0)
                 .addTooltipCallback(TCoreJeiPlugin.defaultFluidTooltip());
 	}

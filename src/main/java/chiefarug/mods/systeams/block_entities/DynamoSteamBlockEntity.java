@@ -30,7 +30,7 @@ import static cofh.thermal.lib.util.managers.SingleFluidFuelManager.FLUID_FUEL_A
 public class DynamoSteamBlockEntity extends DynamoTileBase {
 
 	private final Predicate<FluidStack> isSteam = fluid -> filter.valid(fluid) && SteamFuelManager.instance().validFuel(fluid);
-	protected final FluidStorageCoFH steamTank = new FluidStorageCoFH(Constants.TANK_MEDIUM, isSteam);
+	protected final FluidStorageCoFH steamTank = new FluidStorageCoFH(Constants.TANK_LARGE, isSteam);
 
 	public DynamoSteamBlockEntity(BlockPos pos, BlockState state) {
 		super(SysteamsRegistry.BlockEntities.STEAM_DYNAMO.get(), pos, state);
@@ -72,7 +72,7 @@ public class DynamoSteamBlockEntity extends DynamoTileBase {
 	@Nullable
 	@Override
 	public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-		return new DynamoSteamContainer(i, level, worldPosition, inventory, player);
+		return new DynamoSteamContainer(i, this.level, worldPosition, inventory, player);
 	}
 
 	@Nonnull

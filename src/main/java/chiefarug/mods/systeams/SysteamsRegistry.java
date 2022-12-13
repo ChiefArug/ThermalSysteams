@@ -1,5 +1,8 @@
 package chiefarug.mods.systeams;
 
+import chiefarug.mods.systeams.block.BoilerBlockBase;
+import chiefarug.mods.systeams.block_entities.BoilerBlockEntityBase;
+import chiefarug.mods.systeams.block_entities.BoilerStirlingBlockEntity;
 import chiefarug.mods.systeams.block_entities.DynamoSteamBlockEntity;
 import chiefarug.mods.systeams.client.screens.DynamoSteamScreen;
 import chiefarug.mods.systeams.containers.DynamoSteamContainer;
@@ -26,6 +29,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Fluid;
@@ -37,6 +41,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Supplier;
 
 import static chiefarug.mods.systeams.Systeams.MODID;
 
@@ -67,7 +73,7 @@ public class SysteamsRegistry {
 	public static final DeferredRegisterCoFH<RecipeType<?>> RECIPE_TYPE_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.RECIPE_TYPES, MODID);
 
 	public static void init(IEventBus bus) {
-		// Make sure all of the classes have actually been static inited
+		// Make sure all the inner classes have actually been static inited
 		Fluids.init();
 		Blocks.init();
 		Items.init();
@@ -98,15 +104,34 @@ public class SysteamsRegistry {
 	@SuppressWarnings("ConstantConditions") // Stop it complaining about passing null to datafixer stuff
 	public static class BlockEntities {
 		static void init() {}
+
 		public static final RegistryObject<BlockEntityType<?>> STEAM_DYNAMO = BLOCK_ENTITY_REGISTRY.register(STEAM_DYNAMO_ID, () -> BlockEntityType.Builder.of(DynamoSteamBlockEntity::new, Blocks.STEAM_DYNAMO.get()).build(null));
+
+		public static final RegistryObject<BlockEntityType<?>> STIRLING_BOILER = registerBoiler(STIRLING_BOILER_ID, BoilerStirlingBlockEntity::new, () -> Blocks.STIRLING_BOILER);
+
+		// supply the supplier to avoid a NullPointerException
+		private static <T extends BoilerBlockEntityBase> RegistryObject<BlockEntityType<?>> registerBoiler(String id, BlockEntityType.BlockEntitySupplier<T> BEConstructor, Supplier<Supplier<Block>> block) {
+			return BLOCK_ENTITY_REGISTRY.register(id, () -> BlockEntityType.Builder.of(BEConstructor, block.get().get()).build(null));
+		}
 	}
 	public static class Blocks {
 		static void init() {}
+
 		public static final RegistryObject<Block> STEAM_DYNAMO = BLOCK_REGISTRY.register(STEAM_DYNAMO_ID, () -> new TileBlockDynamo(B_PROPERTIES, DynamoSteamBlockEntity.class, BlockEntities.STEAM_DYNAMO));
+
+		public static final RegistryObject<Block> STIRLING_BOILER = registerBoiler(STIRLING_BOILER_ID, BoilerStirlingBlockEntity.class, BlockEntities.STIRLING_BOILER);
+
+
+		// generics suck.
+		private static RegistryObject<Block> registerBoiler(String id, Class<? extends BlockEntity> BEClass, RegistryObject<BlockEntityType<?>> BEType) {
+			return BLOCK_REGISTRY.register(id, () -> new BoilerBlockBase(B_PROPERTIES, BEClass, BEType));
+		}
 	}
 	public static class Items {
 		static void init() {}
 		public static final RegistryObject<Item> STEAM_DYNAMO = ITEM_REGISTRY.register(STEAM_DYNAMO_ID, () -> machineBlockItemOf(Blocks.STEAM_DYNAMO.get()));
+
+		public static final RegistryObject<Item> STIRLING_BOILER = ITEM_REGISTRY.register(STIRLING_BOILER_ID, () -> machineBlockItemOf(Blocks.STIRLING_BOILER.get()));
 	}
 	public static class Fluids {
 		static void init() {}
