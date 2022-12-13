@@ -1,8 +1,0 @@
-{
-  "type": "systeams:steam",
-  "ingredient": {
-    "fluid_tag": "minecraft:water",
-    "amount": 200
-  },
-  "energy": 10000
-}
