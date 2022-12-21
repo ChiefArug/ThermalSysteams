@@ -2,7 +2,13 @@ package chiefarug.mods.systeams;
 
 import cofh.lib.fluid.FluidCoFH;
 import cofh.lib.util.DeferredRegisterCoFH;
+import com.mojang.blaze3d.shaders.FogShape;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Vector3f;
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -90,35 +96,35 @@ public class SteamFluid /*extends FluidCoFH*/ { // We can't extend FluidCoFH bec
 								return FLOW;
 							}
 
-//							@Override
-//							public ResourceLocation getOverlayTexture() {
-//								return FluidCoFH.WATER_OVERLAY;
-//							}
-//
-//							@Override
-//							public ResourceLocation getRenderOverlayTexture(Minecraft mc) {
-//								return FluidCoFH.UNDERWATER_LOCATION;
-//							}
-//
-//							@Override
-//							public @NotNull Vector3f modifyFogColor(Camera camera, float partialTick, ClientLevel level, int renderDistance, float darkenWorldAmount, Vector3f fluidFogColor) {
-//								return particleColor;
-//							}
-//
-//							@Override
-//							public void modifyFogRender(Camera camera, FogRenderer.FogMode mode, float renderDistance, float partialTick, float nearDistance, float farDistance, FogShape shape) {
-//								nearDistance = -16F;
-//								farDistance = 16F;
-//
-//								if (farDistance > renderDistance) {
-//									farDistance = renderDistance;
-//									shape = FogShape.CYLINDER;
-//								}
-//
-//								RenderSystem.setShaderFogStart(nearDistance);
-//								RenderSystem.setShaderFogEnd(farDistance);
-//								RenderSystem.setShaderFogShape(shape);
-//							}
+							@Override
+							public ResourceLocation getOverlayTexture() {
+								return FluidCoFH.WATER_OVERLAY;
+							}
+
+							@Override
+							public ResourceLocation getRenderOverlayTexture(Minecraft mc) {
+								return FluidCoFH.UNDERWATER_LOCATION;
+							}
+
+							@Override
+							public @NotNull Vector3f modifyFogColor(Camera camera, float partialTick, ClientLevel level, int renderDistance, float darkenWorldAmount, Vector3f fluidFogColor) {
+								return particleColor;
+							}
+
+							@Override
+							public void modifyFogRender(Camera camera, FogRenderer.FogMode mode, float renderDistance, float partialTick, float nearDistance, float farDistance, FogShape shape) {
+								nearDistance = -16F;
+								farDistance = 16F;
+
+								if (farDistance > renderDistance) {
+									farDistance = renderDistance;
+									shape = FogShape.CYLINDER;
+								}
+
+								RenderSystem.setShaderFogStart(nearDistance);
+								RenderSystem.setShaderFogEnd(farDistance);
+								RenderSystem.setShaderFogShape(shape);
+							}
 						});
 					}
 				}
@@ -232,8 +238,8 @@ public class SteamFluid /*extends FluidCoFH*/ { // We can't extend FluidCoFH bec
 		}
 
 		private boolean isTooColdForSteam(Level level) {
-			return false;
-//			return !level.dimensionType().ultraWarm();
+//			return false;
+			return !level.dimensionType().ultraWarm();
 		}
 	}
 
