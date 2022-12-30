@@ -1,6 +1,6 @@
 package chiefarug.mods.systeams.client.screens;
 
-import chiefarug.mods.systeams.containers.DynamoSteamContainer;
+import chiefarug.mods.systeams.containers.SteamDynamoContainer;
 import cofh.core.util.helpers.GuiHelper;
 import cofh.lib.util.constants.ModIds;
 import cofh.lib.util.helpers.StringHelper;
@@ -10,17 +10,17 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class DynamoSteamScreen extends DynamoScreenBase<DynamoSteamContainer> {
+public class SteamDynamoScreen extends DynamoScreenBase<SteamDynamoContainer> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(ModIds.ID_THERMAL, "textures/gui/container/fluid_dynamo.png");
 
-	public DynamoSteamScreen(DynamoSteamContainer container, Inventory inv, Component titleIn) {
-		super(container, inv, container.tile, StringHelper.getTextComponent("block.systeams.steam_dynamo"));
+	public SteamDynamoScreen(SteamDynamoContainer container, Inventory inv, Component titleIn) {
+		super(container, inv, container.blockEntity, StringHelper.getTextComponent("block.systeams.steam_dynamo"));
         texture = TEXTURE;
-        info = GuiHelper.appendLine(GuiHelper.generatePanelInfo("info.thermal.dynamo_stirling"), "info.thermal.dynamo.throttle");
+        info = GuiHelper.appendLine(GuiHelper.generatePanelInfo("info.systeams.steam_dynamo"), "info.thermal.dynamo.throttle");
 	}
 
-	    @Override
+	@Override
     public void init() {
         super.init();
 		addElement(GuiHelper.setClearable(GuiHelper.createMediumFluidStorage(this, 34, 22, tile.getTank(0)), tile, 0));

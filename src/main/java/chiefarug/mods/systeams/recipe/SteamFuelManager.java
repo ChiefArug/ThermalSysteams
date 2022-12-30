@@ -30,7 +30,7 @@ public class SteamFuelManager extends SingleFluidFuelManager {
     public void refresh(RecipeManager recipeManager) {
 
         clear();
-        var recipes = recipeManager.byType(SysteamsRegistry.Recipes.Types.STEAM.get());
+        var recipes = recipeManager.byType(SysteamsRegistry.Recipes.STEAM_TYPE.get());
         for (var entry : recipes.entrySet()) {
             addFuel(entry.getValue());
         }

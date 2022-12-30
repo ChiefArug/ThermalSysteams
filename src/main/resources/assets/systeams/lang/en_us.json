@@ -1,7 +1,18 @@
 {
-  "block.systeams.steam_dynamo": "Steam Dynamo",
   "item.systeams.steam_bucket": "Steam Bucket",
   "fluid_type.systeams.steam": "Steam",
   "item.systeams.steam_conversion_kit": "Boiler conversion Kit",
-  "itemGroup.systeams": "Systeams"
+  "itemGroup.systeams": "Systeams",
+
+  "block.systeams.steam_dynamo": "Steam Dynamo",
+  "info.systeams.steam_dynamo.0": "Turns steam into power.",
+  "info.systeams.steam_dynamo.1": "Rocket science!",
+
+  "block.systeams.stirling_boiler": "Stirling Boiler",
+  "info.systeams.stirling_boiler.0": "Generates Steam using solid fuels.",
+  "info.systeams.stirling_boiler.1": "Most things that work in a Furnace work here too.",
+
+  "block.systeams.magmatic_boiler": "Magmatic Boiler",
+  "block.systeams.compression_boiler": "Compression Boiler"
+
 }

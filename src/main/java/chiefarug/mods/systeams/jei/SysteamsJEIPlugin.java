@@ -1,7 +1,7 @@
 package chiefarug.mods.systeams.jei;
 
 import chiefarug.mods.systeams.SysteamsRegistry;
-import chiefarug.mods.systeams.client.screens.DynamoSteamScreen;
+import chiefarug.mods.systeams.client.screens.SteamDynamoScreen;
 import chiefarug.mods.systeams.recipe.SteamFuel;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -34,7 +34,7 @@ public class SysteamsJEIPlugin implements IModPlugin {
 
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registration) {
-		registration.addRecipeClickArea(DynamoSteamScreen.class, SteamFuelCategory.DURATION_X + 12, SteamFuelCategory.DURATION_Y + 12, 16, 16, STEAM_DYNAMO_RECIPE_TYPE);
+		registration.addRecipeClickArea(SteamDynamoScreen.class, SteamFuelCategory.DURATION_X + 12, SteamFuelCategory.DURATION_Y + 12, 16, 16, STEAM_DYNAMO_RECIPE_TYPE);
 	}
 
 	@Override

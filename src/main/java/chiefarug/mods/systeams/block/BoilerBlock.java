@@ -14,9 +14,10 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Supplier;
 
 import static cofh.lib.util.constants.BlockStatePropertiesCoFH.ACTIVE;
 import static cofh.lib.util.constants.BlockStatePropertiesCoFH.FACING_ALL;
@@ -24,9 +25,9 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 
 // Most of this is copied from dynamo code
 // I don't extend it because these are not dynamos and should not be treated as such
-public class BoilerBlockBase extends TileBlockActive6Way {
+public class BoilerBlock extends TileBlockActive6Way {
 
-	public BoilerBlockBase(Properties builder, Class<?> tileClass, RegistryObject<BlockEntityType<?>> blockEntityType) {
+	public BoilerBlock(Properties builder, Class<?> tileClass, Supplier<BlockEntityType<?>> blockEntityType) {
 		super(builder, tileClass, blockEntityType);
 		this.registerDefaultState(this.stateDefinition.any().setValue(ACTIVE, false).setValue(FACING_ALL, Direction.UP).setValue(WATERLOGGED, false));
 	}

@@ -1,7 +1,9 @@
 package chiefarug.mods.systeams;
 
 import com.mojang.logging.LogUtils;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
@@ -15,6 +17,7 @@ public class Systeams {
     public Systeams() {
         var bus = FMLJavaModLoadingContext.get().getModEventBus();
         SysteamsRegistry.init(bus);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, SysteamsConfig.spec, "systeams-server.toml");
     }
 
 

@@ -278,4 +278,12 @@ public class SteamFluid /*extends FluidCoFH*/ { // We can't extend FluidCoFH bec
 			return 8;
 		}
 	}
+
+	public Fluid getStill() {
+		return stillFluid.get();
+	}
+
+	public Fluid getFlowing() {
+		return flowingFluid.get();
+	}
 }

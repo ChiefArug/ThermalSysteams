@@ -1,7 +1,7 @@
 package chiefarug.mods.systeams.block_entities;
 
 import chiefarug.mods.systeams.SysteamsRegistry;
-import chiefarug.mods.systeams.containers.DynamoSteamContainer;
+import chiefarug.mods.systeams.containers.SteamDynamoContainer;
 import chiefarug.mods.systeams.recipe.SteamFuelManager;
 import cofh.core.client.renderer.model.ModelUtils;
 import cofh.core.network.packet.client.TileStatePacket;
@@ -27,12 +27,12 @@ import static cofh.lib.util.Constants.BUCKET_VOLUME;
 import static cofh.thermal.lib.util.managers.SingleFluidFuelManager.FLUID_FUEL_AMOUNT;
 
 
-public class DynamoSteamBlockEntity extends DynamoTileBase {
+public class SteamDynamoBlockEntity extends DynamoTileBase {
 
 	private final Predicate<FluidStack> isSteam = fluid -> filter.valid(fluid) && SteamFuelManager.instance().validFuel(fluid);
 	protected final FluidStorageCoFH steamTank = new FluidStorageCoFH(Constants.TANK_LARGE, isSteam);
 
-	public DynamoSteamBlockEntity(BlockPos pos, BlockState state) {
+	public SteamDynamoBlockEntity(BlockPos pos, BlockState state) {
 		super(SysteamsRegistry.BlockEntities.STEAM_DYNAMO.get(), pos, state);
 
 		tankInv.addTank(steamTank, StorageGroup.INPUT);
@@ -72,7 +72,7 @@ public class DynamoSteamBlockEntity extends DynamoTileBase {
 	@Nullable
 	@Override
 	public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-		return new DynamoSteamContainer(i, this.level, worldPosition, inventory, player);
+		return new SteamDynamoContainer(i, this.level, worldPosition, inventory, player);
 	}
 
 	@Nonnull

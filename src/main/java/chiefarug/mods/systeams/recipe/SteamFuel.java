@@ -18,11 +18,11 @@ public class SteamFuel extends ThermalFuel {
 
 	@Override
 	public RecipeSerializer<?> getSerializer() {
-		return SysteamsRegistry.Recipes.Serializers.STEAM.get();
+		return SysteamsRegistry.Recipes.STEAM_SERIALIZER.get();
 	}
 
 	@Override
 	public RecipeType<?> getType() {
-		return SysteamsRegistry.Recipes.Types.STEAM.get();
+		return SysteamsRegistry.Recipes.STEAM_TYPE.get();
 	}
 }
