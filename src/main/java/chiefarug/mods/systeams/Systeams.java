@@ -30,6 +30,11 @@ public class Systeams {
     Steam conversion recipes
      */
 
+    /*
+    Notes:
+    1000mb of steam, at max useable efficiency = 100,000rf
+     */
+
 
 
 }

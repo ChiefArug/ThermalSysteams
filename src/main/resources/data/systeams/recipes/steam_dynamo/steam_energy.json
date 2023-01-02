@@ -2,7 +2,7 @@
   "type": "systeams:steam",
   "ingredient": {
     "fluid": "systeams:steam",
-    "amount": 200
+    "amount": 1000
   },
-  "energy": 15000
+  "energy": 10000
 }

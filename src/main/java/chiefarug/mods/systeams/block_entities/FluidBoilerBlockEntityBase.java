@@ -6,6 +6,7 @@ import cofh.thermal.lib.util.managers.SingleFluidFuelManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public abstract class FluidBoilerBlockEntityBase extends BoilerBlockEntityBase{
 
@@ -18,4 +19,11 @@ public abstract class FluidBoilerBlockEntityBase extends BoilerBlockEntityBase{
 
 	@Override
 	protected abstract SingleFluidFuelManager getFuelManager();
+
+	@Override
+	protected int consumeFuel() {
+		int energy = getCurrentFuel().getEnergy();
+		fuelTank.drain(SingleFluidFuelManager.FLUID_FUEL_AMOUNT, IFluidHandler.FluidAction.EXECUTE);
+		return energy;
+	}
 }

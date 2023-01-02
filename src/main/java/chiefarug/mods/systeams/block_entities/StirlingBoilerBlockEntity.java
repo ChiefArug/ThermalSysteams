@@ -28,12 +28,7 @@ public class StirlingBoilerBlockEntity extends ItemBoilerBlockEntityBase {
 	}
 
 	@Override
-	protected int steamPerTick() {
-		return 0;
-	}
-
-	@Override
-	protected double getEnergyToSteamRation() {
+	protected double getEnergyToSteamRatio() {
 		return SysteamsConfig.STEAM_RATIO_STERLING.get();
 	}
 
