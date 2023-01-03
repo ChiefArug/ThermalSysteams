@@ -19,12 +19,12 @@ public class SysteamsConfig {
 		builder.comment("Systeams Config", "---------------");
 
 		builder.comment("The amount of steam 1mb of water makes");
-		WATER_TO_STEAM_RATIO = builder.defineInRange("water_to_steam_ratio", 100, 0.001, 1000);
+		WATER_TO_STEAM_RATIO = builder.defineInRange("water_to_steam_ratio", 10, 0.001, 1000);
 
 		builder.push("Steam Values");
 			builder.comment("The number of mb of steam produced per RF of energy usually produced by the same fuel in a dynamo");
-			final double defaultValue = 2;
-			final double min = 0.0001;
+			final double defaultValue = 0.1;
+			final double min = 0.001;
 			final double max = 100;
 			STEAM_RATIO_STERLING = builder.defineInRange("sterling", defaultValue, min, max);
 			STEAM_RATIO_MAGMATIC = builder.defineInRange("magmatic", defaultValue, min, max);
