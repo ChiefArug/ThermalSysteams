@@ -1,6 +1,5 @@
 package chiefarug.mods.systeams.block_entities;
 
-import chiefarug.mods.systeams.SysteamsConfig;
 import chiefarug.mods.systeams.SysteamsRegistry;
 import cofh.core.util.helpers.AugmentDataHelper;
 import cofh.core.util.helpers.AugmentableHelper;
@@ -38,6 +37,7 @@ import java.util.Map;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
+import static chiefarug.mods.systeams.SysteamsConfig.WATER_TO_STEAM_RATIO;
 import static cofh.lib.util.Constants.AUG_SCALE_MAX;
 import static cofh.lib.util.Constants.AUG_SCALE_MIN;
 import static cofh.lib.util.constants.BlockStatePropertiesCoFH.FACING_ALL;
@@ -80,8 +80,8 @@ public abstract class BoilerBlockEntityBase extends ThermalTileAugmentable imple
 			// dispense some steam
 			if (!steamTank.isEmpty())
 				transferSteamOut();
-			// if we are disabled by redstone, or don't have enough fuel to continue, then deactivate
-			if (!redstoneControl.getState() || (!isCurrentFuelValid() && fuelRemaining < 1)) {
+			// if we are disabled by redstone, or don't have enough fuel/water to continue, then deactivate
+			if (!redstoneControl.getState() || (!isCurrentFuelValid() && fuelRemaining < 1) || waterTank.isEmpty()) {
 				isActive = false;
 			// otherwise we have fuel (either in the slot/tank, or in the buffer)
 			} else if (isCurrentFuelValid() || fuelRemaining > 0){
@@ -109,17 +109,23 @@ public abstract class BoilerBlockEntityBase extends ThermalTileAugmentable imple
 
 				// turn that into a steam and water amount
 				int steam = (int) Math.round(energy * getEnergyToSteamRatio());
-				int water = (int) Math.ceil(steam / SysteamsConfig.WATER_TO_STEAM_RATIO.get());
+				if (WATER_TO_STEAM_RATIO.get() == 0) // catch it before it tries to divide by 0, to give a clearer exception
+					throw new IllegalStateException("water_to_steam_ratio can't be 0! Change it in saves/worldname/serverconfig/systeams-server.toml");
+				int water = (int) Math.ceil(steam / WATER_TO_STEAM_RATIO.get());
 
 				// drain from the water tank, and set the steam amount based on how much was drained (dont want to make more steam than the water could actually make
 				int waterDrained = waterTank.drain(water, IFluidHandler.FluidAction.EXECUTE).getAmount();
-				steam = (int) (water * SysteamsConfig.WATER_TO_STEAM_RATIO.get());
+				steam = (int) (waterDrained * WATER_TO_STEAM_RATIO.get());
 
+				if (steam > 0)
 				// now add to the steam tank
-				steamTank.fill(new FluidStack(SysteamsRegistry.Fluids.STEAM.getStill(), steam), IFluidHandler.FluidAction.EXECUTE);
+					steamTank.fill(new FluidStack(SysteamsRegistry.Fluids.STEAM.getStill(), steam), IFluidHandler.FluidAction.EXECUTE);
+				else
+					// if we didn't end up generating steam, then deactivate
+					isActive = false;
 			}
 		} else if (Utils.timeCheckQuarter()) {
-            if (redstoneControl.getState() && isCurrentFuelValid()) {
+            if (redstoneControl.getState() && isCurrentFuelValid() && !waterTank.isEmpty()) {
 				isActive = true;
 			}
         }
