@@ -6,6 +6,6 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class StirlingBoilerScreen extends ItemBoilerScreen<StirlingBoilerContainer> {
 	public StirlingBoilerScreen(StirlingBoilerContainer container, Inventory inv, Component titleIn) {
-		super("stirling_boiler", container, inv, titleIn);
+		super("stirling", container, inv, titleIn);
 	}
 }

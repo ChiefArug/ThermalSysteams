@@ -6,13 +6,45 @@
 
   "block.systeams.steam_dynamo": "Steam Dynamo",
   "info.systeams.steam_dynamo.0": "Turns steam into power.",
-  "info.systeams.steam_dynamo.1": "Rocket science!",
+  "info.systeams.steam_dynamo.1": "Almost rocket science!",
+  "block.systeams.steam_dynamo.keyword": "engine generator boiler power",
+
+  "info.systeams.boiler.throttle": "Will not waste buffered fuel when the output is full.",
 
   "block.systeams.stirling_boiler": "Stirling Boiler",
   "info.systeams.stirling_boiler.0": "Generates Steam using solid fuels.",
   "info.systeams.stirling_boiler.1": "Most things that work in a Furnace work here too.",
+  "block.systeams.stirling_boiler.keyword": "charcoal coke engine generator steam",
 
   "block.systeams.magmatic_boiler": "Magmatic Boiler",
-  "block.systeams.compression_boiler": "Compression Boiler"
+  "info.systeams.magmatic_boiler.0": "Generates Steam using extremely hot fluids.",
+  "info.systeams.magmatic_boiler.1": "Fluids dissipate into nothingness as a result of this process.",
+  "block.systeams.magmatic_boiler.keyword": "engine generator lava steam",
 
+  "block.systeams.compression_boiler": "Compression Boiler",
+  "info.systeams.compression_boiler.0": "Generates Steam using combustible fluids.",
+  "block.systeams.compression_boiler.keyword": "engine fuel generator steam",
+
+  "block.systeams.disenchantment_boiler": "Disenchantment Boiler",
+  "info.systeams.disenchantment_boiler.0": "Generates Steam using enchanted items.",
+  "info.systeams.disenchantment_boiler.1": "The item is destroyed along with the enchantment. That's why it works.",
+  "block.systeams.disenchantment_boiler.keyword": "book engine generator steam",
+
+  "block.systeams.gourmand_boiler": "Gourmand Boiler",
+  "info.systeams.gourmand_boiler.0": "Generates Steam using food!",
+  "info.systeams.gourmand_boiler.1": "Who knows what sort of beast you may be feeding.",
+  "info.systeams.gourmand_boiler.2": "It's calorific!",
+  "block.systeams.gourmand_boiler.keyword": "engine food generator steam",
+
+  "block.systeams.lapidary_boiler": "Lapidary Boiler",
+  "info.systeams.lapidary_boiler.0": "Generates Steam using gems!",
+  "info.systeams.lapidary_boiler.1": "Probably a portal to an alternate dimension of sparkle-obsessed goblins.",
+  "info.systeams.lapidary_boiler.2": "Gems are really just pretty rocks anyways.",
+  "block.systeams.lapidary_boiler.keyword": "engine gem generator steam",
+
+  "block.systeams.numismatic_boiler": "Numismatic Boiler",
+  "info.systeams.numismatic_boiler.0": "Generates Steam using economic arbitrage.",
+  "info.systeams.numismatic_boiler.1": "Might be a portal to an alternate dimension of pure avarice.",
+  "info.systeams.numismatic_boiler.2": "Don't overthink it, just insert coins.",
+  "block.systeams.numismatic_boiler.keyword": "coin engine generator steam"
 }

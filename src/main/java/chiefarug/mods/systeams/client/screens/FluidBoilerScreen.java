@@ -16,9 +16,8 @@ public class FluidBoilerScreen<T extends BoilerContainerBase<?>> extends BoilerS
 	protected static final ResourceLocation FLUID_TEXTURE = new ResourceLocation(ModIds.ID_THERMAL, "textures/gui/container/fluid_dynamo.png");
 
 	public FluidBoilerScreen(String id, T container, Inventory inv, Component titleIn) {
-		super(container, inv, container.blockEntity, titleIn);
+		super(id, container, inv, container.blockEntity, titleIn);
 		texture = FLUID_TEXTURE;
-		info = GuiHelper.generatePanelInfo("info.systeams." + id);
 	}
 
 	@Override

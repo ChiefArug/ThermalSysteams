@@ -12,9 +12,10 @@ public class BoilerScreenBase<T extends BoilerContainerBase<?>> extends ThermalT
 
 	protected BoilerBlockEntityBase blockEntity;
 
-	public BoilerScreenBase(T container, Inventory inv, BoilerBlockEntityBase blockEntity, Component titleIn) {
+	public BoilerScreenBase(String id, T container, Inventory inv, BoilerBlockEntityBase blockEntity, Component titleIn) {
 		super(container, inv, blockEntity, titleIn);
 		this.blockEntity = blockEntity;
+		info = GuiHelper.appendLine(GuiHelper.generatePanelInfo("info.systeams." + id + "_boiler"), "info.systeams.boiler.throttle");
 	}
 
 	@Override
