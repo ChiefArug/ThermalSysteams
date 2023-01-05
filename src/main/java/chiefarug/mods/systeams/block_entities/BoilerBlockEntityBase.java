@@ -38,12 +38,12 @@ import java.util.Map;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
+import static chiefarug.mods.systeams.SysteamsConfig.BASE_STEAM_GENERATION;
 import static chiefarug.mods.systeams.SysteamsConfig.WATER_TO_STEAM_RATIO;
 import static cofh.lib.util.Constants.AUG_SCALE_MAX;
 import static cofh.lib.util.Constants.AUG_SCALE_MIN;
 import static cofh.lib.util.constants.BlockStatePropertiesCoFH.FACING_ALL;
 import static cofh.lib.util.constants.NBTTags.TAG_AUGMENT_BASE_MOD;
-import static cofh.lib.util.constants.NBTTags.TAG_AUGMENT_DYNAMO_ENERGY;
 import static cofh.lib.util.constants.NBTTags.TAG_AUGMENT_DYNAMO_POWER;
 
 public abstract class BoilerBlockEntityBase extends ThermalTileAugmentable implements ITickableTile.IServerTickable, IThermalInventory {
@@ -98,8 +98,8 @@ public abstract class BoilerBlockEntityBase extends ThermalTileAugmentable imple
 					fuelMax = fuelToAdd;
 				}
 
-				// get how much energy we would be making this tick
-				int energy = (int) (20 * energyMod);
+				// get how much energy we would be making this tick (if we were a dynamo)
+				int energy = (int) (BASE_STEAM_GENERATION.get() * energyMod);
 
 				// consume fuel from the buffer
 				fuelRemaining -= energy;
@@ -198,7 +198,7 @@ public abstract class BoilerBlockEntityBase extends ThermalTileAugmentable imple
 
         AugmentableHelper.setAttributeFromAugmentAdd(augmentNBT, augmentData, TAG_AUGMENT_DYNAMO_POWER);
 
-        energyMod *= AugmentableHelper.getAttributeModWithDefault(augmentData, TAG_AUGMENT_DYNAMO_ENERGY, 1.0F);
+//        energyMod *= AugmentableHelper.getAttributeModWithDefault(augmentData, TAG_AUGMENT_DYNAMO_ENERGY, 1.0F);
     }
 
     @Override
@@ -212,22 +212,16 @@ public abstract class BoilerBlockEntityBase extends ThermalTileAugmentable imple
         float totalMod = componentModifier * powerModifier;
 
 //        baseProcessTick = Math.round(getBaseProcessTick() * totalMod);
-        energyMod = MathHelper.clamp(energyMod, AUG_SCALE_MIN, AUG_SCALE_MAX);
+        energyMod = MathHelper.clamp(totalMod, AUG_SCALE_MIN, AUG_SCALE_MAX);
 
 //        processTick = baseProcessTick;
 //        minProcessTick = throttleFeature ? 0 : baseProcessTick / 10;
-    }
-
-    protected final float getEnergyMod() {
-
-        return energyMod;
     }
     // endregion
 
 	// NBTIO
     @Override
     public void load(CompoundTag nbt) {
-
         super.load(nbt);
 
         fuelMax = nbt.getInt(NBTTags.TAG_FUEL_MAX);
