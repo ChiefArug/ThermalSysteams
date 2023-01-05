@@ -1,6 +1,7 @@
 package chiefarug.mods.systeams.block_entities;
 
 import chiefarug.mods.systeams.SysteamsRegistry;
+import cofh.core.network.packet.client.TileStatePacket;
 import cofh.core.util.helpers.AugmentDataHelper;
 import cofh.core.util.helpers.AugmentableHelper;
 import cofh.core.util.helpers.FluidHelper;
@@ -89,6 +90,8 @@ public abstract class BoilerBlockEntityBase extends ThermalTileAugmentable imple
 
 				// we don't have stuff in the buffer
 				if (fuelRemaining < 1) {
+					if (cacheRenderFluid())
+						TileStatePacket.sendToClient(this);
 					//consume some fuel from the slot/tank, and add it to the buffer
 					int fuelToAdd = consumeFuel();
 					fuelRemaining += fuelToAdd;
