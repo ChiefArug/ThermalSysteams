@@ -8,7 +8,8 @@ public class SysteamsConfig {
 	public static final ForgeConfigSpec.ConfigValue<Double>
 		STEAM_RATIO_STERLING,
 		STEAM_RATIO_MAGMATIC,
-		STEAM_RATIO_COMPRESSION
+		STEAM_RATIO_COMPRESSION,
+		STEAM_RATIO_NUMISMATIC
 		;
 
 	public static final ForgeConfigSpec.ConfigValue<Double> WATER_TO_STEAM_RATIO;
@@ -31,6 +32,7 @@ public class SysteamsConfig {
 			STEAM_RATIO_STERLING = steamRatio(builder, "sterling");
 			STEAM_RATIO_MAGMATIC = steamRatio(builder, "magmatic");
 			STEAM_RATIO_COMPRESSION = steamRatio(builder, "compression");
+			STEAM_RATIO_NUMISMATIC = steamRatio(builder, "numismatic");
 		builder.pop();
 
 

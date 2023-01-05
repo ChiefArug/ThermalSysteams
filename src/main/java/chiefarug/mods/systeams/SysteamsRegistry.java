@@ -3,14 +3,17 @@ package chiefarug.mods.systeams;
 import chiefarug.mods.systeams.block_entities.BoilerBlockEntityBase;
 import chiefarug.mods.systeams.block_entities.CompressionBoilerBlockEntity;
 import chiefarug.mods.systeams.block_entities.MagmaticBoilerBlockEntity;
+import chiefarug.mods.systeams.block_entities.NumismaticBoilerBlockEntity;
 import chiefarug.mods.systeams.block_entities.SteamDynamoBlockEntity;
 import chiefarug.mods.systeams.block_entities.StirlingBoilerBlockEntity;
 import chiefarug.mods.systeams.client.screens.CompressionBoilerScreen;
 import chiefarug.mods.systeams.client.screens.MagmaticBoilerScreen;
+import chiefarug.mods.systeams.client.screens.NumismaticBoilerScreen;
 import chiefarug.mods.systeams.client.screens.SteamDynamoScreen;
 import chiefarug.mods.systeams.client.screens.StirlingBoilerScreen;
 import chiefarug.mods.systeams.containers.CompressionBoilerContainer;
 import chiefarug.mods.systeams.containers.MagmaticBoilerContainer;
+import chiefarug.mods.systeams.containers.NumismaticBoilerContainer;
 import chiefarug.mods.systeams.containers.SteamDynamoContainer;
 import chiefarug.mods.systeams.containers.StirlingBoilerContainer;
 import chiefarug.mods.systeams.recipe.SteamFuel;
@@ -109,6 +112,7 @@ public class SysteamsRegistry {
 	public static final String STIRLING_BOILER_ID = "stirling_boiler";
 	public static final String MAGMATIC_BOILER_ID = "magmatic_boiler";
 	public static final String COMPRESSION_BOILER_ID = "compression_boiler";
+	public static final String NUMISMATIC_BOILER_ID = "numismatic_boiler";
 
 	// These classes are to prevent "forward reference" compile errors. How dare they force me to be more organized
 	@SuppressWarnings("ConstantConditions") // Stop it complaining about passing null to datafixer stuff
@@ -141,6 +145,7 @@ public class SysteamsRegistry {
 			MenuScreens.register(Boilers.STIRLING.menu(), StirlingBoilerScreen::new);
 			MenuScreens.register(Boilers.MAGMATIC.menu(), MagmaticBoilerScreen::new);
 			MenuScreens.register(Boilers.COMPRESSION.menu(), CompressionBoilerScreen::new);
+			MenuScreens.register(Boilers.NUMISMATIC.menu(), NumismaticBoilerScreen::new);
 		}
 		public static final RegistryObject<MenuType<SteamDynamoContainer>> DYNAMO_STEAM = MENU_REGISTRY.register(STEAM_DYNAMO_ID, () -> IForgeMenuType.create(SteamDynamoContainer::new));
 	}
@@ -157,6 +162,8 @@ public class SysteamsRegistry {
 		public static final Boiler<StirlingBoilerBlockEntity, StirlingBoilerContainer> STIRLING = new Boiler<>(STIRLING_BOILER_ID, StirlingBoilerBlockEntity.class, StirlingBoilerBlockEntity::new, StirlingBoilerContainer::new);
 		public static final Boiler<MagmaticBoilerBlockEntity, MagmaticBoilerContainer> MAGMATIC = new Boiler<>(MAGMATIC_BOILER_ID, MagmaticBoilerBlockEntity.class, MagmaticBoilerBlockEntity::new, MagmaticBoilerContainer::new);
 		public static final Boiler<CompressionBoilerBlockEntity, CompressionBoilerContainer> COMPRESSION = new Boiler<>(COMPRESSION_BOILER_ID, CompressionBoilerBlockEntity.class, CompressionBoilerBlockEntity::new, CompressionBoilerContainer::new);
+		public static final Boiler<NumismaticBoilerBlockEntity, NumismaticBoilerContainer> NUMISMATIC = new Boiler<>(NUMISMATIC_BOILER_ID, NumismaticBoilerBlockEntity.class, NumismaticBoilerBlockEntity::new, NumismaticBoilerContainer::new);
+
 	}
 
 

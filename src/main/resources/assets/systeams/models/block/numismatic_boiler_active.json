@@ -1,0 +1,7 @@
+{
+  "parent": "thermal:block/dynamo_numismatic_active",
+  "textures": {
+    "coil": "systeams:block/boiler_pipe_active"
+  }
+
+}
