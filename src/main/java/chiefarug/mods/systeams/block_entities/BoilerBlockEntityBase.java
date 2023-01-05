@@ -43,7 +43,7 @@ import static chiefarug.mods.systeams.SysteamsConfig.WATER_TO_STEAM_RATIO;
 import static cofh.lib.util.Constants.AUG_SCALE_MAX;
 import static cofh.lib.util.Constants.AUG_SCALE_MIN;
 import static cofh.lib.util.constants.BlockStatePropertiesCoFH.FACING_ALL;
-import static cofh.lib.util.constants.NBTTags.TAG_AUGMENT_BASE_MOD;
+import static cofh.lib.util.constants.NBTTags.TAG_AUGMENT_DYNAMO_ENERGY;
 import static cofh.lib.util.constants.NBTTags.TAG_AUGMENT_DYNAMO_POWER;
 
 public abstract class BoilerBlockEntityBase extends ThermalTileAugmentable implements ITickableTile.IServerTickable, IThermalInventory {
@@ -109,9 +109,8 @@ public abstract class BoilerBlockEntityBase extends ThermalTileAugmentable imple
 					fuelRemaining = 0;
 				}
 
-
-				// turn that into a steam and water amount
-				int steam = (int) Math.round(energy * getEnergyToSteamRatio());
+				// turn that into a steam and water amount. Take into account fuel eff here, so that the water amount is also affected
+				int steam = (int) Math.round(energy * getEnergyToSteamRatio() * fuelEff);
 				if (WATER_TO_STEAM_RATIO.get() == 0) // catch it before it tries to divide by 0, to give a clearer exception
 					throw new IllegalStateException("water_to_steam_ratio can't be 0! Change it in saves/worldname/serverconfig/systeams-server.toml");
 				int water = (int) Math.ceil(steam / WATER_TO_STEAM_RATIO.get());
@@ -172,6 +171,7 @@ public abstract class BoilerBlockEntityBase extends ThermalTileAugmentable imple
 
 	// region AUGMENTS
     protected float energyMod = 1.0F;
+	protected float fuelEff = 1.0f;
 
     @Override
     protected Predicate<ItemStack> augValidator() {
@@ -182,40 +182,32 @@ public abstract class BoilerBlockEntityBase extends ThermalTileAugmentable imple
 
     @Override
     protected void resetAttributes() {
-
         super.resetAttributes();
 
-        AugmentableHelper.setAttribute(augmentNBT, TAG_AUGMENT_DYNAMO_POWER, 1.0F);
+		energyMod = 1.0F;
+		fuelEff = 1.0F;
 
-        energyMod = 1.0F;
-
-    }
+        AugmentableHelper.setAttribute(augmentNBT, TAG_AUGMENT_DYNAMO_POWER, energyMod);
+		AugmentableHelper.setAttribute(augmentNBT, TAG_AUGMENT_DYNAMO_ENERGY, fuelEff);
+	}
 
     @Override
     protected void setAttributesFromAugment(CompoundTag augmentData) {
-
         super.setAttributesFromAugment(augmentData);
 
         AugmentableHelper.setAttributeFromAugmentAdd(augmentNBT, augmentData, TAG_AUGMENT_DYNAMO_POWER);
+		AugmentableHelper.setAttributeFromAugmentAdd(augmentNBT, augmentData, TAG_AUGMENT_DYNAMO_ENERGY);
 
-//        energyMod *= AugmentableHelper.getAttributeModWithDefault(augmentData, TAG_AUGMENT_DYNAMO_ENERGY, 1.0F);
+		energyMod *= AugmentableHelper.getAttributeModWithDefault(augmentNBT, TAG_AUGMENT_DYNAMO_POWER, 1.0F);
+		fuelEff *= AugmentableHelper.getAttributeModWithDefault(augmentNBT, TAG_AUGMENT_DYNAMO_ENERGY, 1.0F);
     }
 
     @Override
     protected void finalizeAttributes(Map<Enchantment, Integer> enchantmentMap) {
-
-        creativeEnergy = false;
-
         super.finalizeAttributes(enchantmentMap);
-        float componentModifier = AugmentableHelper.getAttributeModWithDefault(augmentNBT, TAG_AUGMENT_BASE_MOD, 1.0F);
-        float powerModifier = AugmentableHelper.getAttributeModWithDefault(augmentNBT, TAG_AUGMENT_DYNAMO_POWER, 1.0F);
-        float totalMod = componentModifier * powerModifier;
 
-//        baseProcessTick = Math.round(getBaseProcessTick() * totalMod);
-        energyMod = MathHelper.clamp(totalMod, AUG_SCALE_MIN, AUG_SCALE_MAX);
-
-//        processTick = baseProcessTick;
-//        minProcessTick = throttleFeature ? 0 : baseProcessTick / 10;
+        energyMod = MathHelper.clamp(energyMod, AUG_SCALE_MIN, AUG_SCALE_MAX);
+		fuelEff = MathHelper.clamp(fuelEff, AUG_SCALE_MIN, AUG_SCALE_MAX);
     }
     // endregion
 
