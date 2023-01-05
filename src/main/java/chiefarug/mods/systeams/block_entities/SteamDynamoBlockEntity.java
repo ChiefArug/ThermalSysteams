@@ -45,7 +45,8 @@ public class SteamDynamoBlockEntity extends DynamoTileBase {
 
 	@Override
 	protected int getBaseProcessTick() {
-		return SteamFuelManager.instance().getBasePower();
+		return 20;
+//		return SteamFuelManager.instance().getBasePower();
 	}
 
 	@Override

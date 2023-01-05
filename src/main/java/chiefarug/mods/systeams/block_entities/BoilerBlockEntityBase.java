@@ -127,7 +127,7 @@ public abstract class BoilerBlockEntityBase extends ThermalTileAugmentable imple
 					isActive = false;
 			}
 		} else if (Utils.timeCheckQuarter()) {
-            if (redstoneControl.getState() && isCurrentFuelValid() && !waterTank.isEmpty()) {
+            if (redstoneControl.getState() && (isCurrentFuelValid() || fuelRemaining > 0) && !waterTank.isEmpty()) {
 				isActive = true;
 			}
         }
@@ -198,15 +198,15 @@ public abstract class BoilerBlockEntityBase extends ThermalTileAugmentable imple
         AugmentableHelper.setAttributeFromAugmentAdd(augmentNBT, augmentData, TAG_AUGMENT_DYNAMO_POWER);
 		AugmentableHelper.setAttributeFromAugmentAdd(augmentNBT, augmentData, TAG_AUGMENT_DYNAMO_ENERGY);
 
-		energyMod *= AugmentableHelper.getAttributeModWithDefault(augmentNBT, TAG_AUGMENT_DYNAMO_POWER, 1.0F);
-		fuelEff *= AugmentableHelper.getAttributeModWithDefault(augmentNBT, TAG_AUGMENT_DYNAMO_ENERGY, 1.0F);
+		energyMod *= AugmentableHelper.getAttributeModWithDefault(augmentData, TAG_AUGMENT_DYNAMO_POWER, 1.0F);
+		fuelEff *= AugmentableHelper.getAttributeModWithDefault(augmentData, TAG_AUGMENT_DYNAMO_ENERGY, 1.0F);
     }
 
     @Override
     protected void finalizeAttributes(Map<Enchantment, Integer> enchantmentMap) {
         super.finalizeAttributes(enchantmentMap);
 
-        energyMod = MathHelper.clamp(energyMod, AUG_SCALE_MIN, AUG_SCALE_MAX);
+        energyMod = MathHelper.clamp(energyMod * AugmentableHelper.getAttributeModWithDefault(augmentNBT, NBTTags.TAG_AUGMENT_BASE_MOD, 1.0F), AUG_SCALE_MIN, AUG_SCALE_MAX);
 		fuelEff = MathHelper.clamp(fuelEff, AUG_SCALE_MIN, AUG_SCALE_MAX);
     }
     // endregion
