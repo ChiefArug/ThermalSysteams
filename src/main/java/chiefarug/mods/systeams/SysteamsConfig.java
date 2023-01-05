@@ -6,7 +6,7 @@ public class SysteamsConfig {
 
 	// Steam ratios
 	public static final ForgeConfigSpec.ConfigValue<Double>
-		STEAM_RATIO_STERLING,
+			STEAM_RATIO_STIRLING,
 		STEAM_RATIO_MAGMATIC,
 		STEAM_RATIO_COMPRESSION,
 		STEAM_RATIO_NUMISMATIC
@@ -29,7 +29,7 @@ public class SysteamsConfig {
 		builder.push("Steam Values");
 			builder.comment("The number of mb of steam produced per RF of energy usually produced by the same fuel in a dynamo");
 
-			STEAM_RATIO_STERLING = steamRatio(builder, "sterling");
+			STEAM_RATIO_STIRLING = steamRatio(builder, "stirling");
 			STEAM_RATIO_MAGMATIC = steamRatio(builder, "magmatic");
 			STEAM_RATIO_COMPRESSION = steamRatio(builder, "compression");
 			STEAM_RATIO_NUMISMATIC = steamRatio(builder, "numismatic");

@@ -29,7 +29,7 @@ public class LapidaryBoilerBlockEntity extends ItemBoilerBlockEntityBase {
 
 	@Override
 	protected double getEnergyToSteamRatio() {
-		return SysteamsConfig.STEAM_RATIO_STERLING.get();
+		return SysteamsConfig.STEAM_RATIO_LAPIDARY.get();
 	}
 
 	@Override
