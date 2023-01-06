@@ -21,7 +21,7 @@ public abstract class ItemBoilerBlockEntityBase extends BoilerBlockEntityBase {
 
 	@Override
 	protected int consumeFuel() {
-		int energy = getCurrentFuel().getEnergy();
+		int energy = getCurrentEnergy();;
 		fuelSlot.consume(1);
 		return energy;
 	}

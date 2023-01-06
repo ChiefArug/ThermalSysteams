@@ -145,11 +145,12 @@ public abstract class BoilerBlockEntityBase extends ThermalTileAugmentable imple
 	 * @return If this inventory has valid fuel
 	 */
 	protected boolean isCurrentFuelValid() {
-		return getCurrentFuel() != null;
+		return getCurrentEnergy() > 0;
 	}
 
-	protected IDynamoFuel getCurrentFuel() {
-		return getFuelManager().getFuel(this);
+	protected int getCurrentEnergy() {
+		IDynamoFuel fuel = getFuelManager().getFuel(this);
+		return fuel == null ? 0 : fuel.getEnergy();
 	}
 
 	protected abstract double getEnergyToSteamRatio();

@@ -1,0 +1,7 @@
+{
+  "parent": "thermal:block/dynamo_disenchantment",
+  "textures": {
+    "coil": "systeams:block/boiler_pipe"
+  }
+
+}

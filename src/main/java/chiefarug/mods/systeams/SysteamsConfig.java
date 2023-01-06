@@ -6,10 +6,13 @@ public class SysteamsConfig {
 
 	// Steam ratios
 	public static final ForgeConfigSpec.ConfigValue<Double>
-			STEAM_RATIO_STIRLING,
+		STEAM_RATIO_STIRLING,
 		STEAM_RATIO_MAGMATIC,
 		STEAM_RATIO_COMPRESSION,
-		STEAM_RATIO_NUMISMATIC
+		STEAM_RATIO_NUMISMATIC,
+		STEAM_RATIO_LAPIDARY,
+		STEAM_RATIO_DISENCHANTMENT,
+		STEAM_RATIO_GOURMAND
 		;
 
 	public static final ForgeConfigSpec.ConfigValue<Double> WATER_TO_STEAM_RATIO;
@@ -33,6 +36,10 @@ public class SysteamsConfig {
 			STEAM_RATIO_MAGMATIC = steamRatio(builder, "magmatic");
 			STEAM_RATIO_COMPRESSION = steamRatio(builder, "compression");
 			STEAM_RATIO_NUMISMATIC = steamRatio(builder, "numismatic");
+			STEAM_RATIO_LAPIDARY = steamRatio(builder, "lapidary");
+			STEAM_RATIO_DISENCHANTMENT = steamRatio(builder, "disenchantment");
+			STEAM_RATIO_GOURMAND = steamRatio(builder, "gourmand");
+
 		builder.pop();
 
 

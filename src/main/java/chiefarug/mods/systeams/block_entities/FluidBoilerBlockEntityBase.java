@@ -43,7 +43,7 @@ public abstract class FluidBoilerBlockEntityBase extends BoilerBlockEntityBase{
 
 	@Override
 	protected int consumeFuel() {
-		int energy = getCurrentFuel().getEnergy();
+		int energy = getCurrentEnergy();
 		fuelTank.drain(SingleFluidFuelManager.FLUID_FUEL_AMOUNT, IFluidHandler.FluidAction.EXECUTE);
 		return energy;
 	}
@@ -53,7 +53,7 @@ public abstract class FluidBoilerBlockEntityBase extends BoilerBlockEntityBase{
 	}
 
 	@Override
-    protected boolean cacheRenderFluid() { //FIXME doesnt render fluid bah. maybe need to handle packet? see comp dynamo
+    protected boolean cacheRenderFluid() {
         FluidStack prevFluid = renderFluid;
         renderFluid = new FluidStack(fuelTank.getFluidStack(), BUCKET_VOLUME);
         return !FluidHelper.fluidsEqual(renderFluid, prevFluid);
