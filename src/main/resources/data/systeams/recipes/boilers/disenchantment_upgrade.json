@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {"item":"thermal:dynamo_disenchantment"},
-    {"item":"systeams:boiler_conversion_kit"}
+    {"item":"systeams:boiler_pipe"}
   ],
   "result": {
     "item": "systeams:disenchantment_boiler"

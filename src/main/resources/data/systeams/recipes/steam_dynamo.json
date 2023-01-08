@@ -1,11 +1,8 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "R": {
-       "item": "thermal:cured_rubber"
-    },
     "C": {
-      "tag": "thermal:glass/hardened"
+      "item": "thermal:rf_coil"
     },
     "G": {
       "tag": "forge:gears/bronze"

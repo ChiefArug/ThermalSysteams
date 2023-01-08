@@ -61,10 +61,11 @@ public class ConversionKitItem extends Item {
 
 	@Override
 	public @NotNull InteractionResult useOn(UseOnContext context) {
-		Systeams.LGGR.debug("to boiler, start: " + context.getLevel().isClientSide());
 		BlockPos pos = context.getClickedPos();
 		Level level = context.getLevel();
 		BlockState oldState = level.getBlockState(pos);
+		ItemStack stack = context.getItemInHand();
+		InteractionHand hand = context.getHand();
 
 		Block dynamo = oldState.getBlock();
 		@SuppressWarnings("SuspiciousMethodCalls") // i believe this is because its getting passed the wrong class type. it works tho
@@ -81,8 +82,11 @@ public class ConversionKitItem extends Item {
 		// if we have a player, replace with a coil. otherwise just shrink the itemstack
 		if (player != null) {
 			if (!player.getAbilities().instabuild) {
-				Systeams.LGGR.debug("To boiler, modify stack: " + context.getLevel().isClientSide());
-				player.setItemInHand(context.getHand(), context.getItemInHand().getCraftingRemainingItem());
+				stack.shrink(1);
+				if (stack.isEmpty())
+					player.setItemInHand(hand, new ItemStack(RF_COIL.get()));
+				else
+					player.addItem(new ItemStack(RF_COIL.get()));
 			}
 		} else {
 			context.getItemInHand().shrink(1);
@@ -136,6 +140,6 @@ public class ConversionKitItem extends Item {
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag isAdvanced) {
 		super.appendHoverText(stack, level, components, isAdvanced);
-		components.add(Component.translatable(getDescriptionId(stack) + ".tooltip0").withStyle(ChatFormatting.GOLD));
+		components.add(Component.translatable(getDescriptionId(stack) + ".desc").withStyle(ChatFormatting.GOLD));
 	}
 }

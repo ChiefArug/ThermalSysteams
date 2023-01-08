@@ -72,7 +72,7 @@ public class SysteamsRegistry {
 	static final CreativeModeTab TAB = new CreativeModeTab(MODID) {
 		@Override
 		public @NotNull ItemStack makeIcon() {
-			return new ItemStack(Items.CONVERSION_KIT.get());
+			return new ItemStack(Items.BOILER_PIPE.get());
 		}
 	};
 	static final Item.Properties I_PROPERTIES = new Item.Properties().tab(TAB);
@@ -143,7 +143,7 @@ public class SysteamsRegistry {
 	public static class Items {
 		static void init() {}
 		public static final RegistryObject<Item> STEAM_DYNAMO = ITEM_REGISTRY.register(STEAM_DYNAMO_ID, () -> machineBlockItemOf(Blocks.STEAM_DYNAMO.get()));
-		public static final RegistryObject<ConversionKitItem> CONVERSION_KIT = ITEM_REGISTRY.register("boiler_conversion_kit", () -> new ConversionKitItem(new Item.Properties().tab(TAB).craftRemainder(ThermalCore.ITEMS.get("thermal:rf_coil")).stacksTo(1)));
+		public static final RegistryObject<ConversionKitItem> BOILER_PIPE = ITEM_REGISTRY.register("boiler_pipe", () -> new ConversionKitItem(new Item.Properties().tab(TAB).craftRemainder(RF_COIL.get())));
 }
 	public static class Fluids {
 		static void init() {}

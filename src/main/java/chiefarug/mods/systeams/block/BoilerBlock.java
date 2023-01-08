@@ -101,7 +101,6 @@ public class BoilerBlock extends TileBlockActive6Way {
 
 	@SubscribeEvent // Block#use does not trigger when crouching, so use the event
 	public static void use(PlayerInteractEvent.RightClickBlock event) {
-		Systeams.LGGR.debug("to dynamo, start:" + event.getLevel().isClientSide());
 		Level level = event.getLevel();
 		BlockPos pos = event.getHitVec().getBlockPos();
 		BlockState oldState = level.getBlockState(pos);
@@ -109,11 +108,11 @@ public class BoilerBlock extends TileBlockActive6Way {
 		InteractionHand hand = event.getHand();
 
 		ItemStack item = player.getItemInHand(hand);
-		if (item.getItem() != ThermalCore.ITEMS.get("thermal:rf_coil") || !player.isCrouching()) return;
+		if (item.getItem() != RF_COIL.get() || !player.isCrouching()) return;
 
 		Block boiler = oldState.getBlock();
 		@SuppressWarnings("SuspiciousMethodCalls") // I believe this is because its getting passed the wrong class type. it works tho
-		Block dynamo = SysteamsRegistry.Items.CONVERSION_KIT.get().dynamoBoilerMap.inverse().get(boiler);
+		Block dynamo = SysteamsRegistry.Items.BOILER_PIPE.get().dynamoBoilerMap.inverse().get(boiler);
 		if (dynamo == null)
 			return;
 
@@ -125,7 +124,10 @@ public class BoilerBlock extends TileBlockActive6Way {
 		if (!player.getAbilities().instabuild) {
 			Systeams.LGGR.debug("to dynamo, item: " + event.getLevel().isClientSide());
 			item.shrink(1);
-			player.addItem(new ItemStack(SysteamsRegistry.Items.CONVERSION_KIT.get(), 1));
+			if (item.isEmpty())
+				player.setItemInHand(hand, new ItemStack(BOILER_PIPE.get()));
+			else
+				player.addItem(new ItemStack(BOILER_PIPE.get()));
 		}
 		if (level.isClientSide())
 			player.swing(hand);
