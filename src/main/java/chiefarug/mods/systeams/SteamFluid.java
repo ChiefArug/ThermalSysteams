@@ -173,6 +173,7 @@ public class SteamFluid /*extends FluidCoFH*/ { // We can't extend FluidCoFH bec
 			return direction == Direction.UP && !this.isSame(fluidIn);
 		}
 
+		public static boolean warnOnFlow = true;
 		@Override
 		public void tick(Level level, BlockPos pos, FluidState currentFluidState) {
 			BlockState currentBlockState = level.getBlockState(pos);
@@ -197,8 +198,9 @@ public class SteamFluid /*extends FluidCoFH*/ { // We can't extend FluidCoFH bec
 					}
 					level.setBlock(flowToPos, currentFluidState.createLegacyBlock(), flags);
 					level.setBlock(pos, Blocks.AIR.defaultBlockState(), flags);
-					if (pos.getY() > 300) {
-						LGGR.warn("A steam block flowed above y 300! If you are experiencing major lag spikes, this is likely the cause (silly lighting updates)");
+					if (pos.getY() > 100 && warnOnFlow) {
+						LGGR.warn("A steam block flowed above y 100! If you are experiencing major lag spikes, this is likely the cause (silly lighting updates)");
+						LGGR.warn("Also.. how on earth did you place a steam fluid block?? These aren't even registered!");
 					}
 					return;
 				}
