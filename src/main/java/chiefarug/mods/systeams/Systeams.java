@@ -36,15 +36,15 @@ public class Systeams {
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, SysteamsConfig.spec, "systeams-server.toml");
     }
 
-
-    /*
-    Stuff to do:
-
-    Steam fluid. Should rise up
-    Steam dynamos
-    Steam conversion kits
-    Steam conversion recipes
-     */
+    private static boolean first = true;
+    @SubscribeEvent(priority = LOWEST)
+    static void loginLogger(PlayerEvent.PlayerLoggedInEvent _e) {
+        // if you recognise the quote, good job
+        if (first) {
+            LGGR.info("Welcome aboard Captain. All Systeams online");
+            first = false;
+        }
+    }
 
     @SubscribeEvent
     static void tooltipEvent(ItemTooltipEvent event) {
