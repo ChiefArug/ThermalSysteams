@@ -16,13 +16,12 @@ import net.minecraftforge.registries.RegistryObject;
 // Holder and helper class for making boilers
 public class Boiler<B extends BoilerBlockEntityBase, C extends BoilerContainerBase<B>> {
 
-	private final RegistryObject<Block> block;
+	private final RegistryObject<BoilerBlock> block;
 	private final RegistryObject<Item> blockItem;
 	private final RegistryObject<BlockEntityType<B>> blockEntity;
 	private final RegistryObject<MenuType<C>> menu;
 
 	private static final BlockBehaviour.Properties bProperties = SysteamsRegistry.B_PROPERTIES;
-	private static final Item.Properties iProperties = SysteamsRegistry.I_PROPERTIES;
 
 	public Boiler(String id, Class<B> blockEntityClass, BlockEntityType.BlockEntitySupplier<B> BEConstructor, IContainerFactory<C> containerConstructor) {
 		this(id, blockEntityClass, BEConstructor, containerConstructor, SysteamsRegistry.BLOCK_REGISTRY, SysteamsRegistry.ITEM_REGISTRY, SysteamsRegistry.BLOCK_ENTITY_REGISTRY, SysteamsRegistry.MENU_REGISTRY);
@@ -31,11 +30,12 @@ public class Boiler<B extends BoilerBlockEntityBase, C extends BoilerContainerBa
 	public Boiler(String id, Class<B> blockEntityClass, BlockEntityType.BlockEntitySupplier<B> BEConstructor, IContainerFactory<C> containerConstructor, DeferredRegisterCoFH<Block> blockRegistry, DeferredRegisterCoFH<Item> itemRegistry, DeferredRegisterCoFH<BlockEntityType<?>> blockEntityRegistry, DeferredRegisterCoFH<MenuType<?>> menuRegistry) {
 		block = blockRegistry.register(id, () -> new BoilerBlock(bProperties, blockEntityClass, this::blockEntity));
 		blockItem = itemRegistry.register(id, () -> SysteamsRegistry.machineBlockItemOf(block()));
+		//noinspection DataFlowIssue // i can pass null to datafixers alright
 		blockEntity = blockEntityRegistry.register(id, () -> BlockEntityType.Builder.of(BEConstructor, block()).build(null));
 		menu = menuRegistry.register(id, () -> IForgeMenuType.create(containerConstructor));
 	}
 
-	public Block block() {
+	public BoilerBlock block() {
 		return block.get();
 	}
 

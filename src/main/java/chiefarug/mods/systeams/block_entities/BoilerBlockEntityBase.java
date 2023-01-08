@@ -176,7 +176,6 @@ public abstract class BoilerBlockEntityBase extends ThermalTileAugmentable imple
 
     @Override
     protected Predicate<ItemStack> augValidator() {
-
         BiPredicate<ItemStack, List<ItemStack>> validator = tankInv.hasTanks() ? ThermalAugmentRules.DYNAMO_VALIDATOR : ThermalAugmentRules.DYNAMO_NO_FLUID_VALIDATOR;
         return item -> AugmentDataHelper.hasAugmentData(item) && validator.test(item, getAugmentsAsList());
     }

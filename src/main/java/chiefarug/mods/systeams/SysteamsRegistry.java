@@ -72,7 +72,7 @@ public class SysteamsRegistry {
 	static final CreativeModeTab TAB = new CreativeModeTab(MODID) {
 		@Override
 		public @NotNull ItemStack makeIcon() {
-			return new ItemStack(CONVERSION_KIT.get());
+			return new ItemStack(Items.CONVERSION_KIT.get());
 		}
 	};
 	static final Item.Properties I_PROPERTIES = new Item.Properties().tab(TAB);
@@ -115,8 +115,6 @@ public class SysteamsRegistry {
 		bus.addListener((FMLClientSetupEvent event) -> event.enqueueWork(Menus::registerFactories));
 	}
 
-	public static final RegistryObject<Item> CONVERSION_KIT = ITEM_REGISTRY.register("steam_conversion_kit", () -> new Item(I_PROPERTIES));
-
 	public static final String STEAM_ID = "steam";
 	public static final String STEAM_DYNAMO_ID = "steam_dynamo";
 	public static final String STIRLING_BOILER_ID = "stirling_boiler";
@@ -145,6 +143,7 @@ public class SysteamsRegistry {
 	public static class Items {
 		static void init() {}
 		public static final RegistryObject<Item> STEAM_DYNAMO = ITEM_REGISTRY.register(STEAM_DYNAMO_ID, () -> machineBlockItemOf(Blocks.STEAM_DYNAMO.get()));
+		public static final RegistryObject<ConversionKitItem> CONVERSION_KIT = ITEM_REGISTRY.register("boiler_conversion_kit", () -> new ConversionKitItem(new Item.Properties().tab(TAB).craftRemainder(ThermalCore.ITEMS.get("thermal:rf_coil")).stacksTo(1)));
 }
 	public static class Fluids {
 		static void init() {}
@@ -185,8 +184,7 @@ public class SysteamsRegistry {
 	}
 
 
-
-	private static BlockItemAugmentable machineBlockItemOf(Block block) {
+	static BlockItemAugmentable machineBlockItemOf(Block block) {
 		return (BlockItemAugmentable) new BlockItemAugmentable(block, I_PROPERTIES)
 						.setNumSlots(() -> ThermalCoreConfig.dynamoAugments)
 						.setAugValidator(ThermalAugmentRules.DYNAMO_VALIDATOR)

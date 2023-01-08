@@ -1,0 +1,56 @@
+{
+  "variants": {
+    "facing=north,active=false": {
+      "model": "systeams:block/gourmand_boiler",
+      "x": 90
+    },
+    "facing=east,active=false": {
+      "model": "systeams:block/gourmand_boiler",
+      "x": 90,
+      "y": 90
+    },
+    "facing=south,active=false": {
+      "model": "systeams:block/gourmand_boiler",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west,active=false": {
+      "model": "systeams:block/gourmand_boiler",
+      "x": 90,
+      "y": 270
+    },
+    "facing=up,active=false": {
+      "model": "systeams:block/gourmand_boiler"
+    },
+    "facing=down,active=false": {
+      "model": "systeams:block/gourmand_boiler",
+      "x": 180
+    },
+    "facing=north,active=true": {
+      "model": "systeams:block/gourmand_boiler_active",
+      "x": 90
+    },
+    "facing=east,active=true": {
+      "model": "systeams:block/gourmand_boiler_active",
+      "x": 90,
+      "y": 90
+    },
+    "facing=south,active=true": {
+      "model": "systeams:block/gourmand_boiler_active",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west,active=true": {
+      "model": "systeams:block/gourmand_boiler_active",
+      "x": 90,
+      "y": 270
+    },
+    "facing=up,active=true": {
+      "model": "systeams:block/gourmand_boiler_active"
+    },
+    "facing=down,active=true": {
+      "model": "systeams:block/gourmand_boiler_active",
+      "x": 180
+    }
+  }
+}

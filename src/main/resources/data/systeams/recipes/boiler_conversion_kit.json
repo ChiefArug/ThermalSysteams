@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "R": {
+       "item": "thermal:cured_rubber"
+    },
+    "G": {
+      "tag": "thermal:glass/hardened"
+    }
+  },
+  "pattern": [
+    "RGR"
+  ],
+  "result": {
+    "item": "systeams:boiler_conversion_kit"
+  }
+}
