@@ -142,6 +142,8 @@ public class SysteamsRegistry {
 	}
 	public static class Items {
 		static void init() {}
+		public static final Supplier<Item> RF_COIL = () -> ThermalCore.ITEMS.get("thermal:rf_coil");
+
 		public static final RegistryObject<Item> STEAM_DYNAMO = ITEM_REGISTRY.register(STEAM_DYNAMO_ID, () -> machineBlockItemOf(Blocks.STEAM_DYNAMO.get()));
 		public static final RegistryObject<ConversionKitItem> BOILER_PIPE = ITEM_REGISTRY.register("boiler_pipe", () -> new ConversionKitItem(new Item.Properties().tab(TAB).craftRemainder(RF_COIL.get())));
 }

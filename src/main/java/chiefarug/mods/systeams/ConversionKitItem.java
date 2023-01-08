@@ -11,6 +11,7 @@ import com.google.common.collect.ImmutableBiMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -36,6 +37,7 @@ import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.LAPIDARY;
 import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.MAGMATIC;
 import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.NUMISMATIC;
 import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.STIRLING;
+import static chiefarug.mods.systeams.SysteamsRegistry.Items.RF_COIL;
 import static cofh.lib.util.constants.BlockStatePropertiesCoFH.FACING_ALL;
 import static cofh.thermal.lib.block.TileBlockDynamo.WATERLOGGED;
 

@@ -4,7 +4,6 @@ import chiefarug.mods.systeams.ConversionKitItem;
 import chiefarug.mods.systeams.Systeams;
 import chiefarug.mods.systeams.SysteamsRegistry;
 import cofh.core.block.TileBlockActive6Way;
-import cofh.thermal.core.ThermalCore;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -30,6 +29,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
+import static chiefarug.mods.systeams.SysteamsRegistry.Items.BOILER_PIPE;
+import static chiefarug.mods.systeams.SysteamsRegistry.Items.RF_COIL;
 import static cofh.lib.util.constants.BlockStatePropertiesCoFH.ACTIVE;
 import static cofh.lib.util.constants.BlockStatePropertiesCoFH.FACING_ALL;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
@@ -122,7 +123,6 @@ public class BoilerBlock extends TileBlockActive6Way {
 		ConversionKitItem.transformDynamoBoiler(pos, level, oldState, newState, player);
 
 		if (!player.getAbilities().instabuild) {
-			Systeams.LGGR.debug("to dynamo, item: " + event.getLevel().isClientSide());
 			item.shrink(1);
 			if (item.isEmpty())
 				player.setItemInHand(hand, new ItemStack(BOILER_PIPE.get()));
@@ -132,6 +132,5 @@ public class BoilerBlock extends TileBlockActive6Way {
 		if (level.isClientSide())
 			player.swing(hand);
 		event.setCanceled(true);
-
 	}
 }
