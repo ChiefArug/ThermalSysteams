@@ -3,7 +3,7 @@
   "fluid_type.systeams.steam": "Steam",
   "item.systeams.boiler_pipe": "Boiler Pipe",
   "item.systeams.boiler_pipe.desc": "Shift-use on a Dynamo to convert to a Boiler. Returns the Flux Coil",
-  "items.thermal.rf_coil.desc": "Shift-use on a Boiler to convert to a Dynamo. Returns the Pipe",
+  "item.thermal.rf_coil.desc": "Shift-use on a Boiler to convert to a Dynamo. Returns the Pipe",
   "itemGroup.systeams": "Systeams",
 
   "block.systeams.steam_dynamo": "Steam Dynamo",
