@@ -9,7 +9,9 @@
     }
   },
   "pattern": [
-    "RGR"
+    "  R",
+    " G ",
+    "R  "
   ],
   "result": {
     "item": "systeams:boiler_pipe"

@@ -1,17 +1,14 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "R": {
-       "item": "thermal:cured_rubber"
-    },
     "C": {
-      "tag": "thermal:glass/hardened"
+      "item": "systeams:boiler_pipe"
     },
     "G": {
       "tag": "forge:gears/gold"
     },
     "I": {
-      "tag": "forge:ingots/iron"
+      "tag": "forge:ingots/copper"
     },
     "X": {
       "tag": "forge:dusts/redstone"
@@ -21,7 +18,7 @@
     }
   },
   "pattern": [
-    "RCR",
+    " C ",
     "IGI",
     "YXY"
   ],
