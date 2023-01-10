@@ -27,6 +27,7 @@ import chiefarug.mods.systeams.containers.SteamDynamoContainer;
 import chiefarug.mods.systeams.containers.StirlingBoilerContainer;
 import chiefarug.mods.systeams.recipe.SteamFuel;
 import chiefarug.mods.systeams.recipe.SteamFuelManager;
+import chiefarug.mods.systeams.recipe.UpgradeShapelessRecipe;
 import cofh.lib.util.DeferredRegisterCoFH;
 import cofh.lib.util.constants.BlockStatePropertiesCoFH;
 import cofh.lib.util.helpers.BlockHelper;
@@ -58,8 +59,10 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.tags.ITag;
+import net.minecraftforge.registries.tags.ITagManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
@@ -124,6 +127,7 @@ public class SysteamsRegistry {
 	public static final String LAPIDARY_BOILER_ID = "lapidary_boiler";
 	public static final String DISENCHANTMENT_BOILER_ID = "disenchantment_boiler";
 	public static final String GOURMAND_BOILER_ID = "gourmand_boiler";
+	public static final String UPGRADE_RECIPE_ID = "upgrade_shapeless";
 
 	// These classes are to prevent "forward reference" compile errors. How dare they force me to be more organized
 	@SuppressWarnings("ConstantConditions") // Stop it complaining about passing null to datafixer stuff
@@ -143,13 +147,14 @@ public class SysteamsRegistry {
 	public static class Items {
 		static void init() {}
 		public static final Supplier<Item> RF_COIL = () -> ThermalCore.ITEMS.get("thermal:rf_coil");
+		public static final ITag<Item> UPGRADE_COPY_NBT = tag(ForgeRegistries.ITEMS, "upgrade_copy_nbt");
 
 		public static final RegistryObject<Item> STEAM_DYNAMO = ITEM_REGISTRY.register(STEAM_DYNAMO_ID, () -> machineBlockItemOf(Blocks.STEAM_DYNAMO.get()));
-		public static final RegistryObject<ConversionKitItem> BOILER_PIPE = ITEM_REGISTRY.register("boiler_pipe", () -> new ConversionKitItem(new Item.Properties().tab(TAB).craftRemainder(RF_COIL.get())));
+		public static final RegistryObject<ConversionKitItem> BOILER_PIPE = ITEM_REGISTRY.register("boiler_pipe", () -> new ConversionKitItem(new Item.Properties().tab(TAB)));
 }
 	public static class Fluids {
 		static void init() {}
-		public static final ITag<Fluid> WATER = ForgeRegistries.FLUIDS.tags().getTag(ForgeRegistries.FLUIDS.tags().createTagKey(new ResourceLocation(MODID, "water")));
+		public static final ITag<Fluid> WATER = tag(ForgeRegistries.FLUIDS, "water");
 		public static final SteamFluid STEAM = new SteamFluid(FLUID_REGISTRY, FLUID_TYPE_REGISTRY, BLOCK_REGISTRY, ITEM_REGISTRY, STEAM_ID);
 	}
 	public static class Menus {
@@ -169,6 +174,14 @@ public class SysteamsRegistry {
 	public static class Recipes {
 		public static final RegistryObject<DynamoFuelSerializer<SteamFuel>> STEAM_SERIALIZER = RECIPE_SERIALIZER_REGISTRY.register(STEAM_ID, () -> new DynamoFuelSerializer<>(SteamFuel::new, SteamFuelManager.instance().getDefaultEnergy(), SteamFuelManager.MIN_ENERGY, SteamFuelManager.MAX_ENERGY));
 		public static final RegistryObject<SerializableRecipeType<SteamFuel>> STEAM_TYPE = RECIPE_TYPE_REGISTRY.register(STEAM_ID, () -> new SerializableRecipeType<>(MODID, STEAM_ID));
+
+		public static final RegistryObject<UpgradeShapelessRecipe.Serializer> UPGRADE_SERIALIZER = RECIPE_SERIALIZER_REGISTRY.register(UPGRADE_RECIPE_ID, UpgradeShapelessRecipe.Serializer::new);
+		public static final RegistryObject<RecipeType<UpgradeShapelessRecipe>> UPGRADE_TYPE = RECIPE_TYPE_REGISTRY.register(UPGRADE_RECIPE_ID, () -> new RecipeType<>() {
+			@Override
+			public String toString() {
+				return MODID + ':' + UPGRADE_RECIPE_ID;
+			}
+		});
 
 		static void init() {
 			ThermalRecipeManagers.registerManager(SteamFuelManager.instance());
@@ -191,5 +204,12 @@ public class SysteamsRegistry {
 						.setNumSlots(() -> ThermalCoreConfig.dynamoAugments)
 						.setAugValidator(ThermalAugmentRules.DYNAMO_VALIDATOR)
 						.setModId(MODID);
+	}
+
+	static <T> ITag<T> tag(IForgeRegistry<T> registry, String key) {
+		ITagManager<T> manager = registry.tags();
+		if (manager == null) throw new IllegalArgumentException("Registry " + registry.getRegistryKey() + " does not support tags");
+
+		return manager.getTag(manager.createTagKey(new ResourceLocation(MODID, key)));
 	}
 }

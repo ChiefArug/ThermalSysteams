@@ -5,7 +5,7 @@ import cofh.lib.util.Utils;
 import cofh.lib.util.constants.ModIds;
 import cofh.lib.util.helpers.StringHelper;
 import com.mojang.logging.LogUtils;
-import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -16,13 +16,14 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.List;
 
 import static net.minecraftforge.eventbus.api.EventPriority.LOWEST;
 
-// The value here should match an entry in the META-INF/mods.toml file
 @Mod("systeams")
 @Mod.EventBusSubscriber(modid = Systeams.MODID)
 public class Systeams {
@@ -34,6 +35,22 @@ public class Systeams {
         var bus = FMLJavaModLoadingContext.get().getModEventBus();
         SysteamsRegistry.init(bus);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, SysteamsConfig.spec, "systeams-server.toml");
+    }
+
+    /**
+     * @param first The first tag
+     * @param second The second tag. Will override any duplicate values in first
+     * @return A new tag
+     */
+    @Nullable
+    @Contract("null,null -> null;!null,_ -> !null;_,!null -> !null")
+    public static CompoundTag mergeTags(@Nullable CompoundTag first, @Nullable CompoundTag second) {
+        if (first == null && second == null) return null;
+        if (first == null)
+            return second.copy();
+        else if (second == null)
+            return first.copy();
+        return first.copy().merge(second);
     }
 
     private static boolean first = true;
