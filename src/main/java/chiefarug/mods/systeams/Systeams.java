@@ -64,11 +64,11 @@ public class Systeams {
             }
         }
 
-        if (CoreClientConfig.enableItemDescriptions.get()) {
-            if (stack.getItem().equals(SysteamsRegistry.Items.RF_COIL.get())) {
-                tooltip.add(Component.translatable(stack.getDescriptionId() + ".desc").withStyle(ChatFormatting.GOLD));
-            }
-        }
+//        if (CoreClientConfig.enableItemDescriptions.get()) {
+//            if (stack.getItem().equals(SysteamsRegistry.Items.RF_COIL.get())) {
+//                tooltip.add(Component.translatable(stack.getDescriptionId() + ".desc").withStyle(ChatFormatting.GOLD));
+//            }
+//        }
     }
 
 }
