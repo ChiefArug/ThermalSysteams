@@ -41,7 +41,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static chiefarug.mods.systeams.Systeams.LGGR;
-
+@SuppressWarnings("unused")// ignore unused code, its probably for the block form.
 public class SteamFluid /*extends FluidCoFH*/ { // We can't extend FluidCoFH because it forces you to use the base ForgeFlowingFluid, meaning I can't make it flow upwards.
 
 	public final RegistryObject<FluidType> type;
@@ -77,7 +77,7 @@ public class SteamFluid /*extends FluidCoFH*/ { // We can't extend FluidCoFH bec
 						.canDrown(true)
 						.canExtinguish(true)
 						.canHydrate(true)
-						.density(1)
+						.density(-250)
 						.sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
 						.sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)) {
 					@Override
