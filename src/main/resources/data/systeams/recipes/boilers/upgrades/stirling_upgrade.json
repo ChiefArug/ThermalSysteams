@@ -1,10 +1,14 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "systeams:upgrade_shapeless",
   "ingredients": [
     {"item":"thermal:dynamo_stirling"},
     {"item":"systeams:boiler_pipe"}
   ],
   "result": {
     "item": "systeams:stirling_boiler"
-  }
+  },
+  "replacements": [
+    "",
+    "thermal:rf_coil"
+  ]
 }

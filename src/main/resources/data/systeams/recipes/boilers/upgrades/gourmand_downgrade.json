@@ -1,10 +1,14 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "systeams:upgrade_shapeless",
   "ingredients": [
     {"item":"systeams:gourmand_boiler"},
     {"item":"thermal:rf_coil"}
   ],
   "result": {
     "item": "thermal:dynamo_gourmand"
-  }
+  },
+  "replacements": [
+    "",
+    "systeams:boiler_pipe"
+  ]
 }
