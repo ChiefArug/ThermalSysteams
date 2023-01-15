@@ -1,5 +1,6 @@
 package chiefarug.mods.systeams;
 
+import chiefarug.mods.systeams.networking.RecipeCheckerChannel;
 import cofh.core.config.CoreClientConfig;
 import cofh.lib.util.Utils;
 import cofh.lib.util.constants.ModIds;
@@ -35,6 +36,7 @@ public class Systeams {
         var bus = FMLJavaModLoadingContext.get().getModEventBus();
         SysteamsRegistry.init(bus);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, SysteamsConfig.spec, "systeams-server.toml");
+        RecipeCheckerChannel.init();
     }
 
     /**
