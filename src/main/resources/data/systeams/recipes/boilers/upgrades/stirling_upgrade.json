@@ -7,8 +7,5 @@
   "result": {
     "item": "systeams:stirling_boiler"
   },
-  "replacements": [
-    "",
-    "thermal:rf_coil"
-  ]
+  "replacement": "thermal:rf_coil"
 }

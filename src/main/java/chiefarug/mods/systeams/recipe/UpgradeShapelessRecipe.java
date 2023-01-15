@@ -1,6 +1,5 @@
 package chiefarug.mods.systeams.recipe;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
@@ -17,34 +16,34 @@ import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
+import static chiefarug.mods.systeams.Systeams.LGGR;
 import static chiefarug.mods.systeams.Systeams.mergeTags;
-import static chiefarug.mods.systeams.SysteamsRegistry.Items.UPGRADE_COPY_NBT;
+import static chiefarug.mods.systeams.SysteamsRegistry.Items.UPGRADE_MAIN;
 
 public class UpgradeShapelessRecipe extends ShapelessRecipe {
 
-	private final NonNullList<ItemStack> replacements;
+	private final ItemStack replacement;
 
-	public UpgradeShapelessRecipe(ShapelessRecipe original, NonNullList<ItemStack> replacements) {
-		this(original.getId(), original.getGroup(), original.getResultItem(), original.getIngredients(), replacements);
+	public UpgradeShapelessRecipe(ShapelessRecipe original, ItemStack replacement) {
+		this(original.getId(), original.getGroup(), original.getResultItem(), original.getIngredients(), replacement);
 	}
 
-	public UpgradeShapelessRecipe(ResourceLocation id, String group, ItemStack result, NonNullList<Ingredient> ingredients, NonNullList<ItemStack> replacements) {
+	public UpgradeShapelessRecipe(ResourceLocation id, String group, ItemStack result, NonNullList<Ingredient> ingredients, ItemStack replacement) {
 		super(id, group, result, ingredients);
-		this.replacements = replacements;
+		this.replacement = replacement;
 	}
 
 	@NotNull
 	@Override
 	public ItemStack assemble(CraftingContainer inv) {
 		ItemStack result = super.assemble(inv);
-		ItemStack input = ItemStack.EMPTY;
 
-		for (int i = 0; i < inv.getContainerSize(); i++) {
-			input = inv.getItem(i);
-			if (input.is(UPGRADE_COPY_NBT.getKey())) {
-				break;
-			}
+		int index = getMainItem(inv);
+		if (index == -1) {
+			LGGR.warn("Just crafted a Systeams upgrade recipe but couldn't find a main item! Did tags fail to load, or has someone changed the recipe but not the tags? Check the status of the #systeams:recipe_logic/upgrade_main item tag!");
+			return result;
 		}
+		ItemStack input = inv.getItem(index);
 
 		result.setTag(mergeTags(result.getTag(), input.getTag()));
 		return result;
@@ -56,13 +55,30 @@ public class UpgradeShapelessRecipe extends ShapelessRecipe {
 	public NonNullList<ItemStack> getRemainingItems(CraftingContainer container) {
 		NonNullList<ItemStack> original = super.getRemainingItems(container);
 
-		for (int i = 0; i < Math.min(original.size(), replacements.size()); i++) {
-			ItemStack replacement = replacements.get(i).copy();
-			if (!replacement.isEmpty())
-				original.set(i, replacement);
-		}
+		int index = getMainItem(container);
+		if (!replacement.isEmpty() && index > -1)
+			original.set(index, replacement.copy());
+
 		return original;
 	}
+
+	private int getMainItem(CraftingContainer container) {
+		int i;
+		boolean matchFound = false;
+
+		for (i = 0; i < container.getContainerSize(); i++) {
+			ItemStack item = container.getItem(i);
+			if (item.is(UPGRADE_MAIN.getKey())) {
+				matchFound = true;
+				break;
+			}
+		}
+		if (!matchFound) {
+			return -1;
+		}
+		return i;
+	}
+
 	// this is mainly so we can use the super methods
 	public static class Serializer extends ShapelessRecipe.Serializer {
 
@@ -71,36 +87,21 @@ public class UpgradeShapelessRecipe extends ShapelessRecipe {
 		public UpgradeShapelessRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 			ShapelessRecipe original = super.fromJson(recipeId, json);
 
-			NonNullList<ItemStack> replacements = NonNullList.create();
+			ItemStack replacement = ItemStack.EMPTY;
 
-			if (json.has("replacements")) {
-				JsonElement replacementsElement = json.get("replacements");
-				if (!replacementsElement.isJsonArray())
-					throw new JsonSyntaxException("Expected replacements to be an array");
-
-				JsonArray replacementsArray = replacementsElement.getAsJsonArray();
-				replacements = NonNullList.withSize(replacementsArray.size(), ItemStack.EMPTY);
-
-				for (int i = 0; i < replacementsArray.size();i++) {
-					JsonElement element = replacementsArray.get(i);
-					replacements.set(i, itemFromJson(element));
-				}
+			if (json.has("replacement")) {
+				replacement = itemFromJson(json.get("replacement"));
 			}
 
-
-			return new UpgradeShapelessRecipe(original, replacements);
+			return new UpgradeShapelessRecipe(original, replacement);
 		}
-		@SuppressWarnings("Java8ListReplaceAll ") //stop it telling me to use replaceAll for the for loop, cause it makes the code harder to read (especially since this is half of a whole)
+
 		public UpgradeShapelessRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 			ShapelessRecipe original = super.fromNetwork(recipeId, buffer);
 
-			int i = buffer.readInt();
-			NonNullList<ItemStack> replacements = NonNullList.withSize(i, ItemStack.EMPTY);
-			for (int j = 0; j < replacements.size();j++) {
-				replacements.set(j, buffer.readItem());
-			}
+			ItemStack replacement = buffer.readItem();
 
-			return new UpgradeShapelessRecipe(original, replacements);
+			return new UpgradeShapelessRecipe(original, replacement);
 		}
 
 		@Override
@@ -112,11 +113,7 @@ public class UpgradeShapelessRecipe extends ShapelessRecipe {
 		public void toNetwork(FriendlyByteBuf buffer, UpgradeShapelessRecipe recipe) {
 			super.toNetwork(buffer, recipe);
 
-			int i = recipe.replacements.size();
-			buffer.writeInt(i);
-			for (ItemStack item : recipe.replacements) {
-				buffer.writeItemStack(item, true);
-			}
+			buffer.writeItemStack(recipe.replacement, true);
 		}
 
 		private ItemStack itemFromJson(JsonElement json) {
@@ -126,7 +123,7 @@ public class UpgradeShapelessRecipe extends ShapelessRecipe {
 					try {
 						item.setTag(TagParser.parseTag(o.get("nbt").getAsString()));
 					} catch (CommandSyntaxException e) {
-						throw new JsonSyntaxException("Error while parsing NBT for item '" + item.getItem() + "':",e);
+						throw new JsonSyntaxException("Error while parsing NBT for item '" + item.getItem() + "'",e);
 					}
 				}
 				return item;

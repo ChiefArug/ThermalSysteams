@@ -7,8 +7,5 @@
   "result": {
     "item": "thermal:dynamo_stirling"
   },
-  "replacements": [
-    "",
-    "systeams:boiler_pipe"
-  ]
+  "replacement": "systeams:boiler_pipe"
 }

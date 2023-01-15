@@ -7,8 +7,5 @@
   "result": {
     "item": "thermal:dynamo_compression"
   },
-  "replacements": [
-    "",
-    "systeams:boiler_pipe"
-  ]
+  "replacement": "systeams:boiler_pipe"
 }
