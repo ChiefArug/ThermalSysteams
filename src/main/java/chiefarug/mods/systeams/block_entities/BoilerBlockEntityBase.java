@@ -48,7 +48,7 @@ import static cofh.lib.util.constants.NBTTags.TAG_AUGMENT_DYNAMO_POWER;
 
 public abstract class BoilerBlockEntityBase extends ThermalTileAugmentable implements ITickableTile.IServerTickable, IThermalInventory {
 
-	private final Predicate<FluidStack> isWater = fluid -> filter.valid(fluid) && SysteamsRegistry.Fluids.WATER.contains(fluid.getFluid());
+	private final Predicate<FluidStack> isWater = fluid -> filter.valid(fluid) && SysteamsRegistry.Fluids.WATER_TAG.contains(fluid.getFluid());
 	public final FluidStorageCoFH waterTank = new FluidStorageCoFH(Constants.TANK_MEDIUM, isWater);
 	private final Predicate<FluidStack> isSteam = fluid -> fluid.getFluid() == SysteamsRegistry.Fluids.STEAM.stillFluid.get();
 	public final FluidStorageCoFH steamTank = new FluidStorageCoFH(Constants.TANK_LARGE, isSteam);

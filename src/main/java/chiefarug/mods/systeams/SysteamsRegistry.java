@@ -69,7 +69,7 @@ import java.util.function.Supplier;
 
 import static chiefarug.mods.systeams.Systeams.MODID;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "SameParameterValue"})
 public class SysteamsRegistry {
 
 	static final CreativeModeTab TAB = new CreativeModeTab(MODID) {
@@ -147,14 +147,15 @@ public class SysteamsRegistry {
 	public static class Items {
 		static void init() {}
 		public static final Supplier<Item> RF_COIL = () -> ThermalCore.ITEMS.get("thermal:rf_coil");
-		public static final ITag<Item> UPGRADE_MAIN = tag(ForgeRegistries.ITEMS, "recipe_control/upgrade_main");
+		public static final ITag<Item> UPGRADE_MAIN = modTag(ForgeRegistries.ITEMS, "recipe_control/upgrade_main");
 
 		public static final RegistryObject<Item> STEAM_DYNAMO = ITEM_REGISTRY.register(STEAM_DYNAMO_ID, () -> machineBlockItemOf(Blocks.STEAM_DYNAMO.get()));
 		public static final RegistryObject<ConversionKitItem> BOILER_PIPE = ITEM_REGISTRY.register("boiler_pipe", () -> new ConversionKitItem(new Item.Properties().tab(TAB)));
 }
 	public static class Fluids {
 		static void init() {}
-		public static final ITag<Fluid> WATER = tag(ForgeRegistries.FLUIDS, "water");
+		public static final ITag<Fluid> WATER_TAG = modTag(ForgeRegistries.FLUIDS, "water");
+		public static final ITag<Fluid> STEAM_TAG = forgeTag(ForgeRegistries.FLUIDS, "forge:steam");
 		public static final SteamFluid STEAM = new SteamFluid(FLUID_REGISTRY, FLUID_TYPE_REGISTRY, BLOCK_REGISTRY, ITEM_REGISTRY, STEAM_ID);
 	}
 	public static class Menus {
@@ -206,10 +207,19 @@ public class SysteamsRegistry {
 						.setModId(MODID);
 	}
 
-	static <T> ITag<T> tag(IForgeRegistry<T> registry, String key) {
+
+	static <T> ITag<T> modTag(IForgeRegistry<T> registry, String key) {
+		return tag(registry, new ResourceLocation(MODID, key));
+	}
+
+	static <T> ITag<T> forgeTag(IForgeRegistry<T> registry, String key) {
+		return tag(registry, new ResourceLocation("forge", key));
+	}
+
+	static <T> ITag<T> tag(IForgeRegistry<T> registry, ResourceLocation key) {
 		ITagManager<T> manager = registry.tags();
 		if (manager == null) throw new IllegalArgumentException("Registry " + registry.getRegistryKey() + " does not support tags");
 
-		return manager.getTag(manager.createTagKey(new ResourceLocation(MODID, key)));
+		return manager.getTag(manager.createTagKey(key));
 	}
 }
