@@ -50,7 +50,7 @@ public abstract class BoilerBlockEntityBase extends ThermalTileAugmentable imple
 
 	private final Predicate<FluidStack> isWater = fluid -> filter.valid(fluid) && SysteamsRegistry.Fluids.WATER_TAG.contains(fluid.getFluid());
 	public final FluidStorageCoFH waterTank = new FluidStorageCoFH(Constants.TANK_MEDIUM, isWater);
-	private final Predicate<FluidStack> isSteam = fluid -> fluid.getFluid() == SysteamsRegistry.Fluids.STEAM.stillFluid.get();
+	private final Predicate<FluidStack> isSteam = fluid -> SysteamsRegistry.Fluids.STEAM_TAG.contains(fluid.getFluid());
 	public final FluidStorageCoFH steamTank = new FluidStorageCoFH(Constants.TANK_LARGE, isSteam);
 
 	private Direction facing;
