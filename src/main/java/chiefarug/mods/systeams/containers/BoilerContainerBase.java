@@ -13,6 +13,7 @@ public class BoilerContainerBase<T extends BoilerBlockEntityBase> extends TileCo
 
 	public final T blockEntity;
 
+	@SuppressWarnings("unchecked") // if its not a T, then something else has gone wrong
 	public BoilerContainerBase(@Nullable MenuType<?> type, int windowId, Level world, BlockPos pos, Inventory inventory, Player player) {
 		super(type, windowId, world, pos, inventory, player);
 		blockEntity = (T) world.getBlockEntity(pos);

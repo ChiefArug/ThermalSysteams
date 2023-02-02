@@ -4,8 +4,8 @@ import chiefarug.mods.systeams.block.BoilerBlock;
 import cofh.lib.fluid.SimpleTankInv;
 import cofh.lib.inventory.SimpleItemInv;
 import cofh.thermal.core.ThermalCore;
-import cofh.thermal.lib.block.TileBlockDynamo;
-import cofh.thermal.lib.tileentity.ThermalTileAugmentable;
+import cofh.thermal.lib.block.DynamoBlock;
+import cofh.thermal.lib.block.entity.AugmentableBlockEntity;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 import net.minecraft.ChatFormatting;
@@ -39,7 +39,7 @@ import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.NUMISMATIC;
 import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.STIRLING;
 import static chiefarug.mods.systeams.SysteamsRegistry.Items.RF_COIL;
 import static cofh.lib.util.constants.BlockStatePropertiesCoFH.FACING_ALL;
-import static cofh.thermal.lib.block.TileBlockDynamo.WATERLOGGED;
+import static cofh.thermal.lib.block.DynamoBlock.WATERLOGGED;
 
 public class ConversionKitItem extends Item {
 	public ConversionKitItem(Properties pProperties) {
@@ -47,7 +47,7 @@ public class ConversionKitItem extends Item {
 	}
 
 	// this isn't static, so that the block registry is filled before we get all these block objects
-	public BiMap<TileBlockDynamo, BoilerBlock> dynamoBoilerMap = ImmutableBiMap.of(
+	public BiMap<DynamoBlock, BoilerBlock> dynamoBoilerMap = ImmutableBiMap.of(
 			getDynamo("stirling"), STIRLING.block(),
 			getDynamo("compression"), COMPRESSION.block(),
 			getDynamo("magmatic"), MAGMATIC.block(),
@@ -57,8 +57,8 @@ public class ConversionKitItem extends Item {
 			getDynamo("gourmand"), GOURMAND.block()
 	);
 
-	private static TileBlockDynamo getDynamo(String id) {
-		return (TileBlockDynamo) ThermalCore.BLOCKS.get("thermal:dynamo_" + id);
+	private static DynamoBlock getDynamo(String id) {
+		return (DynamoBlock) ThermalCore.BLOCKS.get("thermal:dynamo_" + id);
 	}
 
 	@Override
@@ -101,7 +101,7 @@ public class ConversionKitItem extends Item {
 		List<ItemStack> oldItems = new ArrayList<>();
 		List<FluidStack> oldFluids = new ArrayList<>();
 		if (!level.isClientSide()) {
-			ThermalTileAugmentable oldBE = (ThermalTileAugmentable) level.getBlockEntity(pos);
+			AugmentableBlockEntity oldBE = (AugmentableBlockEntity) level.getBlockEntity(pos);
 			assert oldBE != null;
 
 			SimpleItemInv oldInv = oldBE.getItemInv();
@@ -118,7 +118,7 @@ public class ConversionKitItem extends Item {
 		}
 
 		if (!level.isClientSide()) {
-			ThermalTileAugmentable newBE = (ThermalTileAugmentable) level.getBlockEntity(pos);
+			AugmentableBlockEntity newBE = (AugmentableBlockEntity) level.getBlockEntity(pos);
 			assert newBE != null;
 
 			SimpleItemInv newInv = newBE.getItemInv();

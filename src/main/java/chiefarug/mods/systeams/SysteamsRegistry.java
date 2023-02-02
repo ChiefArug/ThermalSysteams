@@ -34,7 +34,7 @@ import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.recipes.SerializableRecipeType;
 import cofh.thermal.core.ThermalCore;
 import cofh.thermal.core.config.ThermalCoreConfig;
-import cofh.thermal.lib.block.TileBlockDynamo;
+import cofh.thermal.lib.block.DynamoBlock;
 import cofh.thermal.lib.common.ThermalAugmentRules;
 import cofh.thermal.lib.common.ThermalRecipeManagers;
 import cofh.thermal.lib.item.BlockItemAugmentable;
@@ -142,7 +142,7 @@ public class SysteamsRegistry {
 	}
 	public static class Blocks {
 		static void init() {}
-		public static final RegistryObject<Block> STEAM_DYNAMO = BLOCK_REGISTRY.register(STEAM_DYNAMO_ID, () -> new TileBlockDynamo(B_PROPERTIES, SteamDynamoBlockEntity.class, BlockEntities.STEAM_DYNAMO));
+		public static final RegistryObject<Block> STEAM_DYNAMO = BLOCK_REGISTRY.register(STEAM_DYNAMO_ID, () -> new DynamoBlock(B_PROPERTIES, SteamDynamoBlockEntity.class, BlockEntities.STEAM_DYNAMO));
 	}
 	public static class Items {
 		static void init() {}

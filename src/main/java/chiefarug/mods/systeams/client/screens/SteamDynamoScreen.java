@@ -5,12 +5,12 @@ import cofh.core.util.helpers.GuiHelper;
 import cofh.lib.util.constants.ModIds;
 import cofh.lib.util.helpers.StringHelper;
 import cofh.thermal.core.client.gui.ThermalGuiHelper;
-import cofh.thermal.lib.client.gui.DynamoScreenBase;
+import cofh.thermal.lib.client.gui.DynamoScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class SteamDynamoScreen extends DynamoScreenBase<SteamDynamoContainer> {
+public class SteamDynamoScreen extends DynamoScreen<SteamDynamoContainer> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(ModIds.ID_THERMAL, "textures/gui/container/fluid_dynamo.png");
 

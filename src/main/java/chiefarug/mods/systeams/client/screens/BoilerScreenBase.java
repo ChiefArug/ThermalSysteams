@@ -4,11 +4,11 @@ import chiefarug.mods.systeams.block_entities.BoilerBlockEntityBase;
 import chiefarug.mods.systeams.containers.BoilerContainerBase;
 import cofh.core.util.helpers.GuiHelper;
 import cofh.thermal.core.client.gui.ThermalGuiHelper;
-import cofh.thermal.lib.client.gui.ThermalTileScreenBase;
+import cofh.thermal.lib.client.gui.AugmentableScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class BoilerScreenBase<T extends BoilerContainerBase<?>> extends ThermalTileScreenBase<T> {
+public class BoilerScreenBase<T extends BoilerContainerBase<?>> extends AugmentableScreen<T> {
 
 	protected BoilerBlockEntityBase blockEntity;
 

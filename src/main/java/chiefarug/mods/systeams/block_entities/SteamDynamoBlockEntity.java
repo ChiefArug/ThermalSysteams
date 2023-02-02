@@ -11,7 +11,7 @@ import cofh.lib.api.StorageGroup;
 import cofh.lib.fluid.FluidStorageCoFH;
 import cofh.lib.util.Constants;
 import cofh.thermal.core.config.ThermalCoreConfig;
-import cofh.thermal.lib.tileentity.DynamoTileBase;
+import cofh.thermal.lib.block.entity.DynamoBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -28,7 +28,7 @@ import static cofh.lib.util.Constants.BUCKET_VOLUME;
 import static cofh.thermal.lib.util.managers.SingleFluidFuelManager.FLUID_FUEL_AMOUNT;
 
 
-public class SteamDynamoBlockEntity extends DynamoTileBase {
+public class SteamDynamoBlockEntity extends DynamoBlockEntity {
 
 	private final Predicate<FluidStack> isSteam = fluid -> filter.valid(fluid) && SteamFuelManager.instance().validFuel(fluid);
 	protected final FluidStorageCoFH steamTank = new FluidStorageCoFH(Constants.TANK_LARGE, isSteam);

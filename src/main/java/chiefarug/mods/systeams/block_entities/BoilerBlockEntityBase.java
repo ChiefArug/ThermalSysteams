@@ -15,8 +15,8 @@ import cofh.lib.util.Utils;
 import cofh.lib.util.constants.NBTTags;
 import cofh.lib.util.helpers.MathHelper;
 import cofh.thermal.core.config.ThermalCoreConfig;
+import cofh.thermal.lib.block.entity.AugmentableBlockEntity;
 import cofh.thermal.lib.common.ThermalAugmentRules;
-import cofh.thermal.lib.tileentity.ThermalTileAugmentable;
 import cofh.thermal.lib.util.managers.IFuelManager;
 import cofh.thermal.lib.util.recipes.IThermalInventory;
 import cofh.thermal.lib.util.recipes.internal.IDynamoFuel;
@@ -46,7 +46,7 @@ import static cofh.lib.util.constants.BlockStatePropertiesCoFH.FACING_ALL;
 import static cofh.lib.util.constants.NBTTags.TAG_AUGMENT_DYNAMO_ENERGY;
 import static cofh.lib.util.constants.NBTTags.TAG_AUGMENT_DYNAMO_POWER;
 
-public abstract class BoilerBlockEntityBase extends ThermalTileAugmentable implements ITickableTile.IServerTickable, IThermalInventory {
+public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity implements ITickableTile.IServerTickable, IThermalInventory {
 
 	private final Predicate<FluidStack> isWater = fluid -> filter.valid(fluid) && SysteamsRegistry.Fluids.WATER_TAG.contains(fluid.getFluid());
 	public final FluidStorageCoFH waterTank = new FluidStorageCoFH(Constants.TANK_MEDIUM, isWater);
