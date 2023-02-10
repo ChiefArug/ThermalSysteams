@@ -47,6 +47,7 @@ public class ConversionKitItem extends Item {
 	}
 
 	// this isn't static, so that the block registry is filled before we get all these block objects
+	// relies on item reg (therefore Item instance initialization) happening AFTER block init.
 	public BiMap<DynamoBlock, BoilerBlock> dynamoBoilerMap = ImmutableBiMap.of(
 			getDynamo("stirling"), STIRLING.block(),
 			getDynamo("compression"), COMPRESSION.block(),
