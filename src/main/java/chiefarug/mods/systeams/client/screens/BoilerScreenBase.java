@@ -25,7 +25,7 @@ public class BoilerScreenBase<T extends BoilerContainerBase<?>> extends Augmenta
 		super.init();
 
 		addPanel(new ResourcePanel(this)
-				.setResource(CoreTextures.ICON_ENERGY, "info.systeams.steam", true)
+				.setResource(CoreTextures.ICON_STEAM, "info.systeams.steam", true)
 				.setEfficiency(tile::getEfficiency)
 				.setCurrent(tile::getCurSpeed, "info.systeams.steam_prod", "info.cofh.unit_mb_t")
 				.setMax(blockEntity::getWaterConsumption, "info.systeams.water_cons", "info.cofh.unit_mb_t")
