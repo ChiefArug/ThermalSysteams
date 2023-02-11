@@ -54,11 +54,11 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 
 	private Direction facing;
 	/**
-	 * The amount of energy the last consumed fuel has left. Decrements each tick as more steam is generated
+	 * The amount of steam the last consumed fuel has left. Decrements each tick as more steam is generated
 	 */
 	protected int fuelRemaining;
 	/**
-	 * The amount of energy the last consumed fuel could generate (used to work out the size of the flame in the gui)
+	 * The amount of steam the last consumed fuel could generate (used to work out the size of the flame in the gui)
 	 */
 	protected int fuelMax = 0;
 
@@ -106,7 +106,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 
 	protected void processStart() {
 		if (fuelRemaining <= 0) {
-			int fuelToAdd = (int) (consumeFuel() * efficiencyModifier);
+			int fuelToAdd = energyToSteam((int) (consumeFuel() * efficiencyModifier));
 			fuelRemaining += fuelToAdd;
 			fuelMax = fuelToAdd;
 		}
