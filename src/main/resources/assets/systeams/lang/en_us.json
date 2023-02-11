@@ -11,7 +11,6 @@
   "info.systeams.steam": "Steam",
   "info.systeams.steam_prod": "Steam prod",
   "info.systeams.water_cons": "Water cons",
-  "info.systeams.unit_mb_t": "mB/t",
 
   "block.systeams.steam_dynamo": "Steam Dynamo",
   "info.systeams.steam_dynamo.0": "Turns steam into power.",
