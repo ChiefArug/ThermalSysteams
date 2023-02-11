@@ -16,7 +16,6 @@ public class SysteamsConfig {
 		;
 
 	public static final ForgeConfigSpec.ConfigValue<Double> WATER_TO_STEAM_RATIO;
-	public static final ForgeConfigSpec.ConfigValue<Integer> BASE_STEAM_GENERATION;
 	public static final ForgeConfigSpec.ConfigValue<Double> STEAM_DYNAMO_MULTIPLIER;
 
 	static final ForgeConfigSpec spec;
@@ -25,11 +24,10 @@ public class SysteamsConfig {
 
 		builder.comment("Systeams Config", "---------------");
 
-		builder.comment("The amount of steam 1mb of water makes.","Note that making this bigger than the default value can cause augments to have a much lesser effect unless the amount of steam is equally.");
+		builder.comment("The amount of steam 1mb of water makes.");
 		WATER_TO_STEAM_RATIO = builder.defineInRange("water_to_steam_ratio", 2.0, 0.1, 10.0);
-		builder.comment("The base amount of steam generated. Goes through some complicated maths and rounding before being turned into the actual steam value, so find what works with trial and error.");
-		BASE_STEAM_GENERATION = builder.defineInRange("base_steam_generation", 40, 10, 400);
-		STEAM_DYNAMO_MULTIPLIER = builder.defineInRange("steam_dynamo_output_multipler", 2, 0.1, 10);
+		builder.comment("The multiplier on the steam dynamo's output rate");
+		STEAM_DYNAMO_MULTIPLIER = builder.defineInRange("steam_dynamo_output_multiplier", 2, 0.1, 10);
 
 		builder.push("Steam Values");
 			builder.comment("The number of mb of steam produced per RF of energy usually produced by the same fuel in a dynamo");
@@ -43,7 +41,6 @@ public class SysteamsConfig {
 			STEAM_RATIO_GOURMAND = steamRatio(builder, "gourmand");
 
 		builder.pop();
-
 
 		spec = builder.build();
 	}
