@@ -1,7 +1,6 @@
 package chiefarug.mods.systeams.block_entities;
 
 import chiefarug.mods.systeams.SysteamsRegistry;
-import cofh.core.network.packet.client.TileStatePacket;
 import cofh.core.util.helpers.AugmentDataHelper;
 import cofh.core.util.helpers.AugmentableHelper;
 import cofh.core.util.helpers.FluidHelper;
@@ -30,7 +29,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -38,13 +36,14 @@ import java.util.Map;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
-import static chiefarug.mods.systeams.SysteamsConfig.BASE_STEAM_GENERATION;
 import static chiefarug.mods.systeams.SysteamsConfig.WATER_TO_STEAM_RATIO;
 import static cofh.lib.util.Constants.AUG_SCALE_MAX;
 import static cofh.lib.util.Constants.AUG_SCALE_MIN;
 import static cofh.lib.util.constants.BlockStatePropertiesCoFH.FACING_ALL;
 import static cofh.lib.util.constants.NBTTags.TAG_AUGMENT_DYNAMO_ENERGY;
 import static cofh.lib.util.constants.NBTTags.TAG_AUGMENT_DYNAMO_POWER;
+import static cofh.lib.util.constants.NBTTags.TAG_PROCESS_TICK;
+import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE;
 
 public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity implements ITickableTile.IServerTickable, IThermalInventory {
 
@@ -63,6 +62,10 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	 */
 	protected int fuelMax = 0;
 
+	protected int baseEnergyPerTick = getBaseProcessTick();
+	protected int steamPerTick = energyToSteam(baseEnergyPerTick);
+	protected int waterPerTick = steamToWater(steamPerTick);
+
 	public BoilerBlockEntityBase(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
 		super(tileEntityTypeIn, pos, state);
 		tankInv.addTank(waterTank, StorageGroup.INPUT);
@@ -76,77 +79,72 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	// ticking 🐊
 	@Override
 	public void tickServer() {
-		final boolean startedActive = isActive;
-		if (startedActive) {
-			// dispense some steam
-			if (!steamTank.isEmpty())
-				transferSteamOut();
-			// if we are disabled by redstone, or don't have enough fuel/water to continue, then deactivate
-			if (!redstoneControl.getState() || (!isCurrentFuelValid() && fuelRemaining < 1) || waterTank.isEmpty()) {
-				isActive = false;
-			// otherwise we have fuel (either in the slot/tank, or in the buffer)
-			} else if (isCurrentFuelValid() || fuelRemaining > 0){
-				// generate steam
-
-				// we don't have stuff in the buffer
-				if (fuelRemaining < 1) {
-					if (cacheRenderFluid())
-						TileStatePacket.sendToClient(this);
-					//consume some fuel from the slot/tank, and add it to the buffer
-					int fuelToAdd = consumeFuel();
-					fuelRemaining += fuelToAdd;
-					fuelMax = fuelToAdd;
-				}
-
-				// get how much energy we would be making this tick (if we were a dynamo)
-				int energy = (int) (BASE_STEAM_GENERATION.get() * energyMod);
-
-				// consume fuel from the buffer
-				fuelRemaining -= energy;
-				// if we went over the amount in our fuel buffer, then generate less steam this tick, and reset fuelRemaining to 0 so it doesnt potentially cause errors later on
-				if (fuelRemaining < 0) {
-					energy = -fuelRemaining;
-					fuelRemaining = 0;
-				}
-
-				// turn that into a steam and water amount. Take into account fuel eff here, so that the water amount is also affected
-				int steam = (int) Math.round(energy * getEnergyToSteamRatio() * fuelEff);
-				if (WATER_TO_STEAM_RATIO.get() == 0) // catch it before it tries to divide by 0, to give a clearer exception
-					throw new IllegalStateException("water_to_steam_ratio can't be 0! Change it in saves/worldname/serverconfig/systeams-server.toml");
-				int water = (int) Math.ceil(steam / WATER_TO_STEAM_RATIO.get());
-
-				// drain from the water tank, and set the steam amount based on how much was drained (dont want to make more steam than the water could actually make
-				int waterDrained = waterTank.drain(water, IFluidHandler.FluidAction.EXECUTE).getAmount();
-				steam = (int) (waterDrained * WATER_TO_STEAM_RATIO.get());
-
-				if (steam > 0)
-				// now add to the steam tank
-					steamTank.fill(new FluidStack(SysteamsRegistry.Fluids.STEAM.getStill(), steam), IFluidHandler.FluidAction.EXECUTE);
-				else
-					// if we didn't end up generating steam, then deactivate
+		boolean curActive = isActive;
+		if (isActive) {
+			processTick();
+			if (canProcessFinish()) {
+				processFinish();
+				if (!redstoneControl.getState() || !canProcessStart()) {
 					isActive = false;
+				} else {
+					processStart();
+				}
 			}
 		} else if (Utils.timeCheckQuarter()) {
-            if (redstoneControl.getState() && (isCurrentFuelValid() || fuelRemaining > 0) && !waterTank.isEmpty()) {
+			if (redstoneControl.getState() && canProcessStart()) {
+				processStart();
+				processTick();
 				isActive = true;
 			}
-        }
-        updateActiveState(startedActive);
+		}
+		updateActiveState(curActive);
+	}
+
+	protected boolean canProcessStart() {
+		return (getCurrentEnergy() > 0 || fuelRemaining > 0) && waterTank.getAmount() >= waterPerTick;
+	}
+
+	protected void processStart() {
+		if (fuelRemaining <= 0) {
+			int fuelToAdd = (int) (consumeFuel() * efficiencyModifier);
+			fuelRemaining += fuelToAdd;
+			fuelMax = fuelToAdd;
+		}
+
+		transferSteamOut();
+	}
+
+	protected void processFinish() {
+		transferSteamOut();
+	}
+
+	protected boolean canProcessFinish() {
+		return fuelRemaining <= 0 || waterTank.getAmount() <= waterPerTick;
+	}
+
+	protected void processTick() {
+		transferSteamOut();
+		generateSteam();
+	}
+
+	/**
+	 * Calculates, consumes water, consumes fuel and fills steam
+	 * These are all done together to avoid doing the maths over and over again.
+	 */
+	private void generateSteam() {
+		fuelRemaining -= steamPerTick;
+		// fill steam
+		steamTank.fill(new FluidStack(SysteamsRegistry.Fluids.STEAM.getStill(), steamPerTick), EXECUTE);
+		// and drain water
+		waterTank.drain((int) (double) waterPerTick, EXECUTE);
 	}
 
 	/**
 	 * Consumes fuel from the internal buffer
+	 *
 	 * @return How much energy would have been generated by the fuel, had it been in a regular dynamo
 	 */
 	protected abstract int consumeFuel();
-
-	/**
-	 * Checks if this inventory has a valid fuel
-	 * @return If this inventory has valid fuel
-	 */
-	protected boolean isCurrentFuelValid() {
-		return getCurrentEnergy() > 0;
-	}
 
 	protected int getCurrentEnergy() {
 		IDynamoFuel fuel = getFuelManager().getFuel(this);
@@ -160,9 +158,9 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	@Override
 	public int getScaledDuration(int scale) {
 		if (fuelMax <= 0 || fuelRemaining <= 0) {
-            return 0;
-        }
-        return scale * fuelRemaining / fuelMax;
+			return 0;
+		}
+		return (int) (scale * (double) fuelRemaining / fuelMax);
 	}
 
 	@Override
@@ -171,91 +169,125 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	}
 
 	// region AUGMENTS
-    protected float energyMod = 1.0F;
-	protected float fuelEff = 1.0f;
+	protected float generationModifier = 1.0F;
+	protected float efficiencyModifier = 1.0f;
 
-    @Override
-    protected Predicate<ItemStack> augValidator() {
-        BiPredicate<ItemStack, List<ItemStack>> validator = tankInv.hasTanks() ? ThermalAugmentRules.DYNAMO_VALIDATOR : ThermalAugmentRules.DYNAMO_NO_FLUID_VALIDATOR;
-        return item -> AugmentDataHelper.hasAugmentData(item) && validator.test(item, getAugmentsAsList());
-    }
-
-    @Override
-    protected void resetAttributes() {
-        super.resetAttributes();
-
-		energyMod = 1.0F;
-		fuelEff = 1.0F;
-
-        AugmentableHelper.setAttribute(augmentNBT, TAG_AUGMENT_DYNAMO_POWER, energyMod);
-		AugmentableHelper.setAttribute(augmentNBT, TAG_AUGMENT_DYNAMO_ENERGY, fuelEff);
+	@Override
+	protected Predicate<ItemStack> augValidator() {
+		BiPredicate<ItemStack, List<ItemStack>> validator = tankInv.hasTanks() ? ThermalAugmentRules.DYNAMO_VALIDATOR : ThermalAugmentRules.DYNAMO_NO_FLUID_VALIDATOR;
+		return item -> AugmentDataHelper.hasAugmentData(item) && validator.test(item, getAugmentsAsList());
 	}
 
-    @Override
-    protected void setAttributesFromAugment(CompoundTag augmentData) {
-        super.setAttributesFromAugment(augmentData);
+	@Override
+	protected void resetAttributes() {
+		super.resetAttributes();
 
-        AugmentableHelper.setAttributeFromAugmentAdd(augmentNBT, augmentData, TAG_AUGMENT_DYNAMO_POWER);
+		generationModifier = 1.0F;
+		efficiencyModifier = 1.0F;
+
+		AugmentableHelper.setAttribute(augmentNBT, TAG_AUGMENT_DYNAMO_POWER, generationModifier);
+		AugmentableHelper.setAttribute(augmentNBT, TAG_AUGMENT_DYNAMO_ENERGY, efficiencyModifier);
+	}
+
+	// Fuel Eff: TAG_AUGMENT_DYNAMO_ENERGY
+	// Gen Speed: TAG_AUGMENT_DYNAMO_POWER
+
+	/**
+	 * Sets the BlockEntities attributes from the inserted augment
+	 * Is run once per augment inserted
+	 * @param augmentData The augment data
+	 */
+	@Override
+	protected void setAttributesFromAugment(CompoundTag augmentData) {
+		super.setAttributesFromAugment(augmentData);
+
+		AugmentableHelper.setAttributeFromAugmentAdd(augmentNBT, augmentData, TAG_AUGMENT_DYNAMO_POWER);
 		AugmentableHelper.setAttributeFromAugmentAdd(augmentNBT, augmentData, TAG_AUGMENT_DYNAMO_ENERGY);
 
-		energyMod *= AugmentableHelper.getAttributeModWithDefault(augmentData, TAG_AUGMENT_DYNAMO_POWER, 1.0F);
-		fuelEff *= AugmentableHelper.getAttributeModWithDefault(augmentData, TAG_AUGMENT_DYNAMO_ENERGY, 1.0F);
-    }
+		generationModifier *= AugmentableHelper.getAttributeModWithDefault(augmentData, TAG_AUGMENT_DYNAMO_POWER, 1.0F);
+		efficiencyModifier *= AugmentableHelper.getAttributeModWithDefault(augmentData, TAG_AUGMENT_DYNAMO_ENERGY, 1.0F);
+	}
 
-    @Override
-    protected void finalizeAttributes(Map<Enchantment, Integer> enchantmentMap) {
-        super.finalizeAttributes(enchantmentMap);
+	@Override
+	protected void finalizeAttributes(Map<Enchantment, Integer> enchantmentMap) {
+		super.finalizeAttributes(enchantmentMap);
 
-        energyMod = MathHelper.clamp(energyMod * AugmentableHelper.getAttributeModWithDefault(augmentNBT, NBTTags.TAG_AUGMENT_BASE_MOD, 1.0F), AUG_SCALE_MIN, AUG_SCALE_MAX);
-		fuelEff = MathHelper.clamp(fuelEff, AUG_SCALE_MIN, AUG_SCALE_MAX);
-    }
-    // endregion
+		generationModifier = MathHelper.clamp(generationModifier * AugmentableHelper.getAttributeModWithDefault(augmentNBT, NBTTags.TAG_AUGMENT_BASE_MOD, 1.0F), AUG_SCALE_MIN, AUG_SCALE_MAX);
+		efficiencyModifier = MathHelper.clamp(efficiencyModifier, AUG_SCALE_MIN, AUG_SCALE_MAX);
+
+		baseEnergyPerTick = Math.round(getBaseProcessTick() * generationModifier);
+
+		steamPerTick = energyToSteam(baseEnergyPerTick);
+		waterPerTick = steamToWater(steamPerTick);
+	}
+	// endregion
 
 	// NBTIO
-    @Override
-    public void load(CompoundTag nbt) {
-        super.load(nbt);
+	@Override
+	public void load(CompoundTag nbt) {
+		super.load(nbt);
 
-        fuelMax = nbt.getInt(NBTTags.TAG_FUEL_MAX);
-        fuelRemaining = nbt.getInt(NBTTags.TAG_FUEL);
+		fuelMax = nbt.getInt(NBTTags.TAG_FUEL_MAX);
+		fuelRemaining = nbt.getInt(NBTTags.TAG_FUEL);
 //        coolantMax = nbt.getInt(TAG_COOLANT_MAX);
 //        coolant = nbt.getInt(TAG_COOLANT);
-//        processTick = nbt.getInt(TAG_PROCESS_TICK);
+        steamPerTick = nbt.getInt(TAG_PROCESS_TICK);
 
-        updateHandlers();
-    }
+		updateHandlers();
+	}
 
-    @Override
-    public void saveAdditional(CompoundTag nbt) {
+	@Override
+	public void saveAdditional(CompoundTag nbt) {
 
-        super.saveAdditional(nbt);
+		super.saveAdditional(nbt);
 
-        nbt.putInt(NBTTags.TAG_FUEL_MAX, fuelMax);
-        nbt.putInt(NBTTags.TAG_FUEL, fuelRemaining);
+		nbt.putInt(NBTTags.TAG_FUEL_MAX, fuelMax);
+		nbt.putInt(NBTTags.TAG_FUEL, fuelRemaining);
 //        nbt.putInt(TAG_COOLANT_MAX, coolantMax);
 //        nbt.putInt(TAG_COOLANT, coolant);
-//        nbt.putInt(TAG_PROCESS_TICK, processTick);
-    }
+        nbt.putInt(TAG_PROCESS_TICK, steamPerTick);
+	}
 
 	// Networking
 	@Override
-    public FriendlyByteBuf getGuiPacket(FriendlyByteBuf buffer) {
-        super.getGuiPacket(buffer);
+	public FriendlyByteBuf getGuiPacket(FriendlyByteBuf buffer) {
+		super.getGuiPacket(buffer);
 
-        buffer.writeInt(fuelMax);
-        buffer.writeInt(fuelRemaining);
+		buffer.writeInt(fuelMax);
+		buffer.writeInt(fuelRemaining);
 
-        return buffer;
+		return buffer;
+	}
+
+	@Override
+	public void handleGuiPacket(FriendlyByteBuf buffer) {
+		super.handleGuiPacket(buffer);
+
+		fuelMax = buffer.readInt();
+		fuelRemaining = buffer.readInt();
+	}
+
+
+	@Override
+    public double getEfficiency() {
+        if (getFuelEfficiencyMod() <= 0) {
+            return Double.MIN_VALUE;
+        }
+        return getFuelEfficiencyMod();
     }
 
-    @Override
-    public void handleGuiPacket(FriendlyByteBuf buffer) {
-        super.handleGuiPacket(buffer);
+	private float getFuelEfficiencyMod() {
+		return efficiencyModifier;
+	}
 
-        fuelMax = buffer.readInt();
-        fuelRemaining = buffer.readInt();
-    }
+	@Override
+	public int getCurSpeed() {
+		return isActive ? steamPerTick : 0;
+	}
 
+	public int getWaterConsumption() {
+		return waterPerTick;
+	}
 
 	// IThermalInventory
 	@Override
@@ -273,37 +305,45 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 
 	protected void transferSteamOut() {
 		FluidHelper.insertIntoAdjacent(this, steamTank, 1000, getFacing());
-    }
+	}
+
+	private int energyToSteam(int energy) {
+		return (int) Math.round(energy * getEnergyToSteamRatio());
+	}
+
+	private int steamToWater(int steam) {
+		return (int) Math.round(steam / WATER_TO_STEAM_RATIO.get());
+	}
 
 
 	// General helpers
-    protected Direction getFacing() {
-        if (facing == null) {
-            updateFacing();
-        }
-        return facing;
-    }
+	protected Direction getFacing() {
+		if (facing == null) {
+			updateFacing();
+		}
+		return facing;
+	}
 
-    protected void updateFacing() {
-        facing = getBlockState().getValue(FACING_ALL);
-        updateHandlers();
-    }
+	protected void updateFacing() {
+		facing = getBlockState().getValue(FACING_ALL);
+		updateHandlers();
+	}
 
 
 	// Capabilities
-    @Override
-    protected <T> LazyOptional<T> getItemHandlerCapability(@Nullable Direction side) {
-        if (side != null && side.equals(getFacing())) {
-            return LazyOptional.empty();
-        }
-        return super.getItemHandlerCapability(side);
-    }
+	@Override
+	protected <T> LazyOptional<T> getItemHandlerCapability(@Nullable Direction side) {
+		if (side != null && side.equals(getFacing())) {
+			return LazyOptional.empty();
+		}
+		return super.getItemHandlerCapability(side);
+	}
 
-    @Override
-    protected <T> LazyOptional<T> getFluidHandlerCapability(@Nullable Direction side) {
-        if (side != null && side.equals(getFacing())) {
-            return LazyOptional.empty();
-        }
-        return super.getFluidHandlerCapability(side);
-    }
+	@Override
+	protected <T> LazyOptional<T> getFluidHandlerCapability(@Nullable Direction side) {
+		if (side != null && side.equals(getFacing())) {
+			return LazyOptional.empty();
+		}
+		return super.getFluidHandlerCapability(side);
+	}
 }

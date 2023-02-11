@@ -1,6 +1,7 @@
 package chiefarug.mods.systeams.block_entities;
 
 import cofh.core.client.renderer.model.ModelUtils;
+import cofh.core.network.packet.client.TileStatePacket;
 import cofh.core.util.helpers.FluidHelper;
 import cofh.lib.api.StorageGroup;
 import cofh.lib.api.fluid.IFluidStackHolder;
@@ -42,6 +43,14 @@ public abstract class FluidBoilerBlockEntityBase extends BoilerBlockEntityBase{
 	}
 
 	@Override
+	protected void processStart() {
+		if (cacheRenderFluid()) {
+			TileStatePacket.sendToClient(this);
+		}
+		super.processStart();
+	}
+
+	@Override
 	protected int consumeFuel() {
 		int energy = getCurrentEnergy();
 		fuelTank.drain(SingleFluidFuelManager.FLUID_FUEL_AMOUNT, IFluidHandler.FluidAction.EXECUTE);
@@ -62,7 +71,7 @@ public abstract class FluidBoilerBlockEntityBase extends BoilerBlockEntityBase{
 	@Override
 	public void handleStatePacket(FriendlyByteBuf buffer) {
 		super.handleStatePacket(buffer);
-		requestModelDataUpdate(); // this isn't called by thermal.. at all. No idea how they get theirs
+		requestModelDataUpdate(); // this isn't called by thermal... at all. No idea how they get theirs
 	}
 
 	@Nonnull

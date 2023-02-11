@@ -8,6 +8,11 @@
   "item.thermal.rf_coil.desc": "Shift-use on a Boiler to convert to a Dynamo. Returns the Steam Pipe",
   "itemGroup.systeams": "Systeams",
 
+  "info.systeams.steam": "Steam",
+  "info.systeams.steam_prod": "Steam prod",
+  "info.systeams.water_cons": "Water cons",
+  "info.systeams.unit_mb_t": "mB/t",
+
   "block.systeams.steam_dynamo": "Steam Dynamo",
   "info.systeams.steam_dynamo.0": "Turns steam into power.",
   "info.systeams.steam_dynamo.1": "Almost rocket science!",

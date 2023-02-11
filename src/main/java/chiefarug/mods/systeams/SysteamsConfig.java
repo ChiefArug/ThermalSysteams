@@ -49,7 +49,7 @@ public class SysteamsConfig {
 	}
 
 
-	private static final double defaultValue = 0.4;
+	private static final double defaultValue = 0.5;
 	private static final double min = 0.1;
 	private static final double max = 100;
 	private static ForgeConfigSpec.ConfigValue<Double> steamRatio(ForgeConfigSpec.Builder builder, String name) {
