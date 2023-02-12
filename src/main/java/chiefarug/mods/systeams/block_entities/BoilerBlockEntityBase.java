@@ -101,7 +101,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	}
 
 	protected boolean canProcessStart() {
-		return (getCurrentEnergy() > 0 || fuelRemaining > 0) && waterTank.getAmount() >= waterPerTick;
+		return (getCurrentEnergy() > 0 || fuelRemaining > 0) && waterTank.getAmount() >= waterPerTick && !steamTank.isFull();
 	}
 
 	protected void processStart() {
@@ -119,7 +119,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	}
 
 	protected boolean canProcessFinish() {
-		return fuelRemaining <= 0 || waterTank.getAmount() <= waterPerTick;
+		return fuelRemaining <= 0 || waterTank.getAmount() <= waterPerTick || steamTank.isFull();
 	}
 
 	protected void processTick() {
