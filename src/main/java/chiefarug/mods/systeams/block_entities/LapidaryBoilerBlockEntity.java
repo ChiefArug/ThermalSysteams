@@ -1,6 +1,5 @@
 package chiefarug.mods.systeams.block_entities;
 
-import chiefarug.mods.systeams.SysteamsConfig;
 import chiefarug.mods.systeams.SysteamsRegistry;
 import chiefarug.mods.systeams.containers.LapidaryBoilerContainer;
 import cofh.thermal.core.util.managers.dynamo.LapidaryFuelManager;
@@ -11,6 +10,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+
+import static chiefarug.mods.systeams.SysteamsConfig.SPEED_LAPIDARY;
+import static chiefarug.mods.systeams.SysteamsConfig.STEAM_RATIO_LAPIDARY;
 
 public class LapidaryBoilerBlockEntity extends ItemBoilerBlockEntityBase {
 
@@ -29,11 +31,16 @@ public class LapidaryBoilerBlockEntity extends ItemBoilerBlockEntityBase {
 
 	@Override
 	protected double getEnergyToSteamRatio() {
-		return SysteamsConfig.STEAM_RATIO_LAPIDARY.get();
+		return STEAM_RATIO_LAPIDARY.get();
 	}
 
 	@Override
 	protected SingleItemFuelManager getFuelManager() {
 		return LapidaryFuelManager.instance();
+	}
+
+	@Override
+	protected double getSpeedMultiplier() {
+		return SPEED_LAPIDARY.get();
 	}
 }

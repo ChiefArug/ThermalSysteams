@@ -63,8 +63,8 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	protected int fuelMax = 0;
 
 	protected int baseEnergyPerTick = getBaseProcessTick();
-	protected int steamPerTick = energyToSteam(baseEnergyPerTick);
-	protected int waterPerTick = steamToWater(steamPerTick);
+	protected int steamPerTick = calcSteam(baseEnergyPerTick);
+	protected int waterPerTick = calcWater(steamPerTick);
 
 	public BoilerBlockEntityBase(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
 		super(tileEntityTypeIn, pos, state);
@@ -106,7 +106,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 
 	protected void processStart() {
 		if (fuelRemaining <= 0) {
-			int fuelToAdd = energyToSteam((int) (consumeFuel() * efficiencyModifier));
+			int fuelToAdd = calcSteam((int) (consumeFuel() * efficiencyModifier));
 			fuelRemaining += fuelToAdd;
 			fuelMax = fuelToAdd;
 		}
@@ -154,6 +154,8 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	protected abstract double getEnergyToSteamRatio();
 
 	protected abstract IFuelManager getFuelManager();
+
+	protected abstract double getSpeedMultiplier();
 
 	@Override
 	public int getScaledDuration(int scale) {
@@ -217,8 +219,8 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 
 		baseEnergyPerTick = Math.round(getBaseProcessTick() * generationModifier);
 
-		steamPerTick = energyToSteam(baseEnergyPerTick);
-		waterPerTick = steamToWater(steamPerTick);
+		steamPerTick = calcSteam(baseEnergyPerTick);
+		waterPerTick = calcWater(steamPerTick);
 	}
 	// endregion
 
@@ -307,11 +309,11 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 		FluidHelper.insertIntoAdjacent(this, steamTank, 1000, getFacing());
 	}
 
-	private int energyToSteam(int energy) {
-		return (int) Math.round(energy * getEnergyToSteamRatio());
+	private int calcSteam(int energy) {
+		return (int) Math.round(energy * getEnergyToSteamRatio() * getSpeedMultiplier());
 	}
 
-	private int steamToWater(int steam) {
+	private int calcWater(int steam) {
 		return (int) Math.round(steam / WATER_TO_STEAM_RATIO.get());
 	}
 

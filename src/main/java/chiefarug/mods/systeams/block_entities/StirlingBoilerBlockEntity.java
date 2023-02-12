@@ -1,7 +1,5 @@
 package chiefarug.mods.systeams.block_entities;
 
-import chiefarug.mods.systeams.SysteamsConfig;
-import chiefarug.mods.systeams.SysteamsRegistry;
 import chiefarug.mods.systeams.containers.StirlingBoilerContainer;
 import cofh.thermal.core.util.managers.dynamo.StirlingFuelManager;
 import cofh.thermal.lib.util.managers.SingleItemFuelManager;
@@ -12,10 +10,14 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
+import static chiefarug.mods.systeams.SysteamsConfig.SPEED_STIRLING;
+import static chiefarug.mods.systeams.SysteamsConfig.STEAM_RATIO_STIRLING;
+import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.STIRLING;
+
 public class StirlingBoilerBlockEntity extends ItemBoilerBlockEntityBase {
 
 	public StirlingBoilerBlockEntity(BlockPos pos, BlockState state) {
-		super(SysteamsRegistry.Boilers.STIRLING.blockEntity(), pos, state);
+		super(STIRLING.blockEntity(), pos, state);
 
         initHandlers();
 	}
@@ -29,11 +31,16 @@ public class StirlingBoilerBlockEntity extends ItemBoilerBlockEntityBase {
 
 	@Override
 	protected double getEnergyToSteamRatio() {
-		return SysteamsConfig.STEAM_RATIO_STIRLING.get();
+		return STEAM_RATIO_STIRLING.get();
 	}
 
 	@Override
 	protected SingleItemFuelManager getFuelManager() {
 		return StirlingFuelManager.instance();
+	}
+
+	@Override
+	protected double getSpeedMultiplier() {
+		return SPEED_STIRLING.get();
 	}
 }

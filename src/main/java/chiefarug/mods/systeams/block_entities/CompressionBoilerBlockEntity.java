@@ -1,7 +1,5 @@
 package chiefarug.mods.systeams.block_entities;
 
-import chiefarug.mods.systeams.SysteamsConfig;
-import chiefarug.mods.systeams.SysteamsRegistry;
 import chiefarug.mods.systeams.containers.CompressionBoilerContainer;
 import cofh.thermal.core.util.managers.dynamo.CompressionFuelManager;
 import cofh.thermal.lib.util.managers.SingleFluidFuelManager;
@@ -12,21 +10,30 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
+import static chiefarug.mods.systeams.SysteamsConfig.SPEED_COMPRESSION;
+import static chiefarug.mods.systeams.SysteamsConfig.STEAM_RATIO_COMPRESSION;
+import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.COMPRESSION;
+
 public class CompressionBoilerBlockEntity extends FluidBoilerBlockEntityBase{
 	public CompressionBoilerBlockEntity(BlockPos pos, BlockState state) {
-		super(SysteamsRegistry.Boilers.COMPRESSION.blockEntity(), pos, state);
+		super(COMPRESSION.blockEntity(), pos, state);
 
 		initHandlers();
 	}
 
 	@Override
 	protected double getEnergyToSteamRatio() {
-		return SysteamsConfig.STEAM_RATIO_COMPRESSION.get();
+		return STEAM_RATIO_COMPRESSION.get();
 	}
 
 	@Override
 	protected SingleFluidFuelManager getFuelManager() {
 		return CompressionFuelManager.instance();
+	}
+
+	@Override
+	protected double getSpeedMultiplier() {
+		return SPEED_COMPRESSION.get();
 	}
 
 	@Override

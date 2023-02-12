@@ -1,7 +1,5 @@
 package chiefarug.mods.systeams.block_entities;
 
-import chiefarug.mods.systeams.SysteamsConfig;
-import chiefarug.mods.systeams.SysteamsRegistry;
 import chiefarug.mods.systeams.containers.NumismaticBoilerContainer;
 import cofh.thermal.core.util.managers.dynamo.NumismaticFuelManager;
 import cofh.thermal.lib.util.managers.SingleItemFuelManager;
@@ -12,21 +10,30 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
+import static chiefarug.mods.systeams.SysteamsConfig.SPEED_NUMISMATIC;
+import static chiefarug.mods.systeams.SysteamsConfig.STEAM_RATIO_NUMISMATIC;
+import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.NUMISMATIC;
+
 public class NumismaticBoilerBlockEntity extends ItemBoilerBlockEntityBase{
 	public NumismaticBoilerBlockEntity(BlockPos pos, BlockState state) {
-		super(SysteamsRegistry.Boilers.NUMISMATIC.blockEntity(), pos, state);
+		super(NUMISMATIC.blockEntity(), pos, state);
 
 		initHandlers();
 	}
 
 	@Override
 	protected double getEnergyToSteamRatio() {
-		return SysteamsConfig.STEAM_RATIO_NUMISMATIC.get();
+		return STEAM_RATIO_NUMISMATIC.get();
 	}
 
 	@Override
 	protected SingleItemFuelManager getFuelManager() {
 		return NumismaticFuelManager.instance();
+	}
+
+	@Override
+	protected double getSpeedMultiplier() {
+		return SPEED_NUMISMATIC.get();
 	}
 
 	@Override

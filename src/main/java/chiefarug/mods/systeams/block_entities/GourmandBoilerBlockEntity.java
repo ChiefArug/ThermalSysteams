@@ -1,7 +1,5 @@
 package chiefarug.mods.systeams.block_entities;
 
-import chiefarug.mods.systeams.SysteamsConfig;
-import chiefarug.mods.systeams.SysteamsRegistry;
 import chiefarug.mods.systeams.containers.GourmandBoilerContainer;
 import cofh.thermal.core.util.managers.dynamo.GourmandFuelManager;
 import cofh.thermal.lib.util.recipes.internal.IDynamoFuel;
@@ -12,10 +10,14 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
+import static chiefarug.mods.systeams.SysteamsConfig.SPEED_GOURMAND;
+import static chiefarug.mods.systeams.SysteamsConfig.STEAM_RATIO_GOURMAND;
+import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.GOURMAND;
+
 public class GourmandBoilerBlockEntity extends ItemBoilerBlockEntityBase {
 
 	public GourmandBoilerBlockEntity(BlockPos pos, BlockState state) {
-		super(SysteamsRegistry.Boilers.GOURMAND.blockEntity(), pos, state);
+		super(GOURMAND.blockEntity(), pos, state);
 
         initHandlers();
 	}
@@ -28,7 +30,7 @@ public class GourmandBoilerBlockEntity extends ItemBoilerBlockEntityBase {
 
 	@Override
 	protected double getEnergyToSteamRatio() {
-		return SysteamsConfig.STEAM_RATIO_GOURMAND.get();
+		return STEAM_RATIO_GOURMAND.get();
 	}
 
 	@Override
@@ -40,5 +42,10 @@ public class GourmandBoilerBlockEntity extends ItemBoilerBlockEntityBase {
 	@Override
 	protected GourmandFuelManager getFuelManager() {
 		return GourmandFuelManager.instance();
+	}
+
+	@Override
+	protected double getSpeedMultiplier() {
+		return SPEED_GOURMAND.get();
 	}
 }
