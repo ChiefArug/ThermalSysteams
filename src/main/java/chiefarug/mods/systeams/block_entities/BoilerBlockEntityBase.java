@@ -204,7 +204,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 		AugmentableHelper.setAttributeFromAugmentAdd(augmentNBT, augmentData, TAG_AUGMENT_DYNAMO_POWER);
 		AugmentableHelper.setAttributeFromAugmentAdd(augmentNBT, augmentData, TAG_AUGMENT_DYNAMO_ENERGY);
 
-		generationModifier *= AugmentableHelper.getAttributeModWithDefault(augmentData, TAG_AUGMENT_DYNAMO_POWER, 1.0F);
+		generationModifier += AugmentableHelper.getAttributeModWithDefault(augmentData, TAG_AUGMENT_DYNAMO_POWER, 0.0F);
 		efficiencyModifier *= AugmentableHelper.getAttributeModWithDefault(augmentData, TAG_AUGMENT_DYNAMO_ENERGY, 1.0F);
 	}
 
@@ -286,7 +286,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	}
 
 	public int getWaterConsumption() {
-		return waterPerTick;
+		return isActive ? waterPerTick : 0;
 	}
 
 	// IThermalInventory
