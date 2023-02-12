@@ -23,7 +23,7 @@ public class FluidBoilerScreen<T extends BoilerContainerBase<?>> extends BoilerS
 	@Override
 	public void init() {
 		super.init();
-		addElement(GuiHelper.setClearable(GuiHelper.createSmallFluidStorage(this, 34, 26, ((FluidBoilerBlockEntityBase) tile).getFuelTank()), tile, 0));
+		addElement(GuiHelper.setClearable(GuiHelper.createSmallFluidStorage(this, 34, 26, ((FluidBoilerBlockEntityBase) tile).getFuelTank()), tile, 2));
         addElement(ThermalGuiHelper.createDefaultDuration(this, 80, 35, SCALE_FLAME, tile));
 	}
 }
