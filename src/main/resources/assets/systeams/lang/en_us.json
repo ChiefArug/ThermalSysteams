@@ -1,6 +1,10 @@
 {
   "item.systeams.steam_bucket": "Steam Bucket",
   "fluid_type.systeams.steam": "Steam",
+
+  "fluid_type.systeams.grassoline": "Grassoline",
+  "item.systeams.grassoline_bucket": "Grassoline Bucket",
+
   "item.systeams.boiler_pipe": "Steam Pipe",
   "item.systeams.boiler_pipe.keyword": "steam dynamo boiler",
   "item.thermal.rf_coil.keyword": "steam dynamo boiler",
