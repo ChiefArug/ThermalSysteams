@@ -25,8 +25,6 @@ import chiefarug.mods.systeams.containers.MagmaticBoilerContainer;
 import chiefarug.mods.systeams.containers.NumismaticBoilerContainer;
 import chiefarug.mods.systeams.containers.SteamDynamoContainer;
 import chiefarug.mods.systeams.containers.StirlingBoilerContainer;
-import chiefarug.mods.systeams.fluid.GrassolineFluid;
-import chiefarug.mods.systeams.fluid.SteamFluid;
 import chiefarug.mods.systeams.recipe.SteamFuel;
 import chiefarug.mods.systeams.recipe.SteamFuelManager;
 import chiefarug.mods.systeams.recipe.UpgradeShapelessRecipe;
@@ -74,7 +72,7 @@ import static chiefarug.mods.systeams.Systeams.MODID;
 @SuppressWarnings({"unused", "SameParameterValue"})
 public class SysteamsRegistry {
 
-	public static final CreativeModeTab TAB = new CreativeModeTab(MODID) {
+	static final CreativeModeTab TAB = new CreativeModeTab(MODID) {
 		@Override
 		public @NotNull ItemStack makeIcon() {
 			return new ItemStack(Items.BOILER_PIPE.get());
@@ -153,13 +151,12 @@ public class SysteamsRegistry {
 
 		public static final RegistryObject<Item> STEAM_DYNAMO = ITEM_REGISTRY.register(STEAM_DYNAMO_ID, () -> machineBlockItemOf(Blocks.STEAM_DYNAMO.get()));
 		public static final RegistryObject<ConversionKitItem> BOILER_PIPE = ITEM_REGISTRY.register("boiler_pipe", () -> new ConversionKitItem(new Item.Properties().tab(TAB)));
-	}
+}
 	public static class Fluids {
 		static void init() {}
 		public static final ITag<Fluid> WATER_TAG = modTag(ForgeRegistries.FLUIDS, "water");
 		public static final ITag<Fluid> STEAM_TAG = forgeTag(ForgeRegistries.FLUIDS, "steam");
 		public static final SteamFluid STEAM = new SteamFluid(FLUID_REGISTRY, FLUID_TYPE_REGISTRY, BLOCK_REGISTRY, ITEM_REGISTRY, STEAM_ID);
-		public static final GrassolineFluid GRASSOLINE = new GrassolineFluid(FLUID_TYPE_REGISTRY, FLUID_REGISTRY, BLOCK_REGISTRY, ITEM_REGISTRY, "grassoline");
 	}
 	public static class Menus {
 		static void init() {}

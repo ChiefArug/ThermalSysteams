@@ -1,6 +1,5 @@
-package chiefarug.mods.systeams.fluid;
+package chiefarug.mods.systeams;
 
-import chiefarug.mods.systeams.SysteamsRegistry;
 import cofh.lib.fluid.FluidCoFH;
 import cofh.lib.util.DeferredRegisterCoFH;
 import com.mojang.blaze3d.shaders.FogShape;

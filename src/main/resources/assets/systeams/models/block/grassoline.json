@@ -1,6 +1,0 @@
-{
-    "textures": {
-        "particle": "systeams:block/grassoline_still"
-    },
-    "render_type": "minecraft:translucent"
-}
