@@ -80,9 +80,28 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 repositories {
     maven { // JEI
         url 'https://dvs1.progwml6.com/files/maven/'
+        content {
+            includeGroup 'mezz.jei'
+        }
     }
     maven { // Thermal
+        // Human Browsable: https://nexus.covers1624.net/#browse/browse:cofh-releases
         url 'https://maven.covers1624.net/'
+        content {
+            includeGroup 'com.teamcofh'
+        }
+    }
+    maven { // Mekanism
+        url 'https://modmaven.dev/'
+        content {
+            includeGroup 'mekanism'
+        }
+    }
+    maven { // Pipez
+        url 'https://cursemaven.com'
+        content {
+            includeGroup "curse.maven"
+        }
     }
 }
 
@@ -90,7 +109,7 @@ dependencies {
     // Specify the version of Minecraft to use. If this is any group other than 'net.minecraft', it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.19.2-43.1.25'
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     // compile against the JEI API but do not include it at runtime
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"))
@@ -102,6 +121,11 @@ dependencies {
     implementation fg.deobf("com.teamcofh:thermal_core:${minecraft_version}-${thermal_core_version}")
     implementation fg.deobf("com.teamcofh:thermal_foundation:${minecraft_version}-${thermal_foundation_version}")
     implementation fg.deobf("com.teamcofh:thermal_expansion:${minecraft_version}-${thermal_expansion_version}")
+
+    // run game with a few extra mods for testing
+    runtimeOnly fg.deobf("com.teamcofh:thermal_dynamics:${minecraft_version}-${thermal_dynamics_version}")
+    runtimeOnly fg.deobf("mekanism:Mekanism:${minecraft_version}-${mekanism_version}")
+    runtimeOnly fg.deobf("curse.maven:pipez-443900:${pipez_fid}")
 }
 
 // Example for how to get properties into the manifest for reading at runtime.

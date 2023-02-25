@@ -2,7 +2,6 @@ package chiefarug.mods.systeams.block_entities;
 
 import chiefarug.mods.systeams.containers.StirlingBoilerContainer;
 import cofh.thermal.core.util.managers.dynamo.StirlingFuelManager;
-import cofh.thermal.lib.util.managers.SingleItemFuelManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -35,8 +34,13 @@ public class StirlingBoilerBlockEntity extends ItemBoilerBlockEntityBase {
 	}
 
 	@Override
-	protected SingleItemFuelManager getFuelManager() {
+	protected StirlingFuelManager getFuelManager() {
 		return StirlingFuelManager.instance();
+	}
+
+	@Override
+	protected int getEnergy() {
+		return getFuelManager().getEnergy(fuelSlot.getItemStack());
 	}
 
 	@Override

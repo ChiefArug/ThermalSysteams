@@ -3,7 +3,6 @@ package chiefarug.mods.systeams.block_entities;
 import chiefarug.mods.systeams.SysteamsConfig;
 import chiefarug.mods.systeams.containers.DisenchantmentBoilerContainer;
 import cofh.thermal.core.util.managers.dynamo.DisenchantmentFuelManager;
-import cofh.thermal.lib.util.recipes.internal.IDynamoFuel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -34,14 +33,13 @@ public class DisenchantmentBoilerBlockEntity extends ItemBoilerBlockEntityBase {
 	}
 
 	@Override
-	protected int getCurrentEnergy() {
-		IDynamoFuel fuel = getFuelManager().getFuel(this);
-		return fuel == null ? getFuelManager().getEnergyFromEnchantments(fuelSlot.getItemStack()) : fuel.getEnergy();
+	protected DisenchantmentFuelManager getFuelManager() {
+		return DisenchantmentFuelManager.instance();
 	}
 
 	@Override
-	protected DisenchantmentFuelManager getFuelManager() {
-		return DisenchantmentFuelManager.instance();
+	protected int getEnergy() {
+		return getFuelManager().getEnergy(fuelSlot.getItemStack());
 	}
 
 	@Override

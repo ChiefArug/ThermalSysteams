@@ -7,6 +7,7 @@ import cofh.lib.api.StorageGroup;
 import cofh.lib.api.fluid.IFluidStackHolder;
 import cofh.lib.fluid.FluidStorageCoFH;
 import cofh.lib.util.Constants;
+import cofh.thermal.core.config.ThermalCoreConfig;
 import cofh.thermal.lib.util.managers.SingleFluidFuelManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -31,6 +32,8 @@ public abstract class FluidBoilerBlockEntityBase extends BoilerBlockEntityBase{
 		tankInv.addTank(fuelTank, StorageGroup.INPUT);
 
 		renderFluid = new FluidStack(Fluids.WATER, BUCKET_VOLUME);
+
+		addAugmentSlots(ThermalCoreConfig.dynamoAugments);
 	}
 
 	@Override
@@ -52,7 +55,7 @@ public abstract class FluidBoilerBlockEntityBase extends BoilerBlockEntityBase{
 
 	@Override
 	protected int consumeFuel() {
-		int energy = getCurrentEnergy();
+		int energy = getEnergy();
 		fuelTank.drain(SingleFluidFuelManager.FLUID_FUEL_AMOUNT, IFluidHandler.FluidAction.EXECUTE);
 		return energy;
 	}

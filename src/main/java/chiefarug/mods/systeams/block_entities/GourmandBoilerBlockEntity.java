@@ -2,7 +2,6 @@ package chiefarug.mods.systeams.block_entities;
 
 import chiefarug.mods.systeams.containers.GourmandBoilerContainer;
 import cofh.thermal.core.util.managers.dynamo.GourmandFuelManager;
-import cofh.thermal.lib.util.recipes.internal.IDynamoFuel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -34,14 +33,13 @@ public class GourmandBoilerBlockEntity extends ItemBoilerBlockEntityBase {
 	}
 
 	@Override
-	protected int getCurrentEnergy() {
-		IDynamoFuel fuel = getFuelManager().getFuel(this);
-		return fuel == null ? getFuelManager().getEnergyFromFood(fuelSlot.getItemStack()) : fuel.getEnergy();
+	protected GourmandFuelManager getFuelManager() {
+		return GourmandFuelManager.instance();
 	}
 
 	@Override
-	protected GourmandFuelManager getFuelManager() {
-		return GourmandFuelManager.instance();
+	protected int getEnergy() {
+		return getFuelManager().getEnergy(fuelSlot.getItemStack());
 	}
 
 	@Override

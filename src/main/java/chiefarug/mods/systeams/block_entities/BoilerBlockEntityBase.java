@@ -13,7 +13,6 @@ import cofh.lib.util.Constants;
 import cofh.lib.util.Utils;
 import cofh.lib.util.constants.NBTTags;
 import cofh.lib.util.helpers.MathHelper;
-import cofh.thermal.core.config.ThermalCoreConfig;
 import cofh.thermal.lib.block.entity.AugmentableBlockEntity;
 import cofh.thermal.lib.common.ThermalAugmentRules;
 import cofh.thermal.lib.util.managers.IFuelManager;
@@ -52,6 +51,8 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	private final Predicate<FluidStack> isSteam = fluid -> SysteamsRegistry.Fluids.STEAM_TAG.contains(fluid.getFluid());
 	public final FluidStorageCoFH steamTank = new FluidStorageCoFH(Constants.TANK_LARGE, isSteam);
 
+	private LazyOptional<?> steamCap = LazyOptional.empty();
+
 	private Direction facing;
 	/**
 	 * The amount of steam the last consumed fuel has left. Decrements each tick as more steam is generated
@@ -70,8 +71,6 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 		super(tileEntityTypeIn, pos, state);
 		tankInv.addTank(waterTank, StorageGroup.INPUT);
 		tankInv.addTank(steamTank, StorageGroup.OUTPUT);
-
-		addAugmentSlots(ThermalCoreConfig.dynamoAugments);
 
 		facing = state.getValue(FACING_ALL);
 	}
@@ -101,7 +100,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	}
 
 	protected boolean canProcessStart() {
-		return (getCurrentEnergy() > 0 || fuelRemaining > 0) && waterTank.getAmount() >= waterPerTick && !steamTank.isFull();
+		return (getEnergy() > 0 || fuelRemaining > 0) && waterTank.getAmount() >= waterPerTick && !steamTank.isFull();
 	}
 
 	protected void processStart() {
@@ -146,7 +145,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	 */
 	protected abstract int consumeFuel();
 
-	protected int getCurrentEnergy() {
+	protected int getEnergy() {
 		IDynamoFuel fuel = getFuelManager().getFuel(this);
 		return fuel == null ? 0 : fuel.getEnergy();
 	}
@@ -344,7 +343,10 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	@Override
 	protected <T> LazyOptional<T> getFluidHandlerCapability(@Nullable Direction side) {
 		if (side != null && side.equals(getFacing())) {
-			return LazyOptional.empty();
+			if (!steamCap.isPresent()) {
+				steamCap = LazyOptional.of(() -> tankInv.getHandler(StorageGroup.OUTPUT));
+			}
+			return steamCap.cast();
 		}
 		return super.getFluidHandlerCapability(side);
 	}
