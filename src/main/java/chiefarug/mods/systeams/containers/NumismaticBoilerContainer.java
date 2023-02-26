@@ -22,9 +22,9 @@ public class NumismaticBoilerContainer extends BoilerContainerBase<NumismaticBoi
 		BoilerBlockEntityBase blockEntity = (BoilerBlockEntityBase) level.getBlockEntity(pos);
         InvWrapperCoFH blockEntityInv = new InvWrapperCoFH(blockEntity.getItemInv());
 
-		addSlot(new SlotCoFH(blockEntityInv, 4, 44, 35));
+		addSlot(new SlotCoFH(blockEntityInv, 0, 44, 35));
 
-        bindAugmentSlots(blockEntityInv, 0, blockEntity.augSize());
+        bindAugmentSlots(blockEntityInv, 1, blockEntity.augSize());
         bindPlayerInventory(inventory);
 	}
 }
