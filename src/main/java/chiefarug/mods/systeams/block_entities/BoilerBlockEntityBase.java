@@ -12,6 +12,7 @@ import cofh.lib.fluid.FluidStorageCoFH;
 import cofh.lib.util.Constants;
 import cofh.lib.util.Utils;
 import cofh.lib.util.constants.NBTTags;
+import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.helpers.MathHelper;
 import cofh.thermal.lib.block.entity.AugmentableBlockEntity;
 import cofh.thermal.lib.common.ThermalAugmentRules;
@@ -24,10 +25,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.EmptyFluidHandler;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -43,8 +47,10 @@ import static cofh.lib.util.constants.NBTTags.TAG_AUGMENT_DYNAMO_ENERGY;
 import static cofh.lib.util.constants.NBTTags.TAG_AUGMENT_DYNAMO_POWER;
 import static cofh.lib.util.constants.NBTTags.TAG_PROCESS_TICK;
 import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE;
+import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction.SIMULATE;
 
 public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity implements ITickableTile.IServerTickable, IThermalInventory {
+	private static final int TRANSFER_PER_TICK = 1000;
 
 	private final Predicate<FluidStack> isWater = fluid -> filter.valid(fluid) && SysteamsRegistry.Fluids.WATER_TAG.contains(fluid.getFluid());
 	public final FluidStorageCoFH waterTank = new FluidStorageCoFH(Constants.TANK_MEDIUM, isWater);
@@ -100,7 +106,11 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	}
 
 	protected boolean canProcessStart() {
-		return (getEnergy() > 0 || fuelRemaining > 0) && waterTank.getAmount() >= waterPerTick && !steamTank.isFull();
+		return (getFuelEnergy() > 0 || fuelRemaining > 0) && waterTank.getAmount() >= waterPerTick && hasSteamSpace();
+	}
+
+	private boolean hasSteamSpace() {
+		return !steamTank.isFull() || simulateInsertToAdjacent(this, steamTank, TRANSFER_PER_TICK, getFacing());
 	}
 
 	protected void processStart() {
@@ -118,7 +128,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	}
 
 	protected boolean canProcessFinish() {
-		return fuelRemaining <= 0 || waterTank.getAmount() <= waterPerTick || steamTank.isFull();
+		return fuelRemaining <= 0 || waterTank.getAmount() < waterPerTick || !hasSteamSpace();
 	}
 
 	protected void processTick() {
@@ -145,7 +155,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	 */
 	protected abstract int consumeFuel();
 
-	protected int getEnergy() {
+	protected int getFuelEnergy() {
 		IDynamoFuel fuel = getFuelManager().getFuel(this);
 		return fuel == null ? 0 : fuel.getEnergy();
 	}
@@ -305,7 +315,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	// Steam helpers
 
 	protected void transferSteamOut() {
-		FluidHelper.insertIntoAdjacent(this, steamTank, 1000, getFacing());
+		FluidHelper.insertIntoAdjacent(this, steamTank, TRANSFER_PER_TICK, getFacing());
 	}
 
 	private int calcSteam(int energy) {
@@ -349,5 +359,28 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 			return steamCap.cast();
 		}
 		return super.getFluidHandlerCapability(side);
+	}
+
+	// Copied from CoFH's FluidHelper class because theirs doesn't support simulating the insert
+	private boolean simulateInsertToAdjacent(BlockEntity tile, FluidStorageCoFH tank, @SuppressWarnings("SameParameterValue") int amount, Direction side) {
+		IFluidHandler.FluidAction action = SIMULATE;
+		if (tank.isEmpty()) {
+			return false;
+		}
+		amount = Math.min(amount, tank.getAmount());
+
+		BlockEntity adjTile = BlockHelper.getAdjacentTileEntity(tile, side);
+		Direction opposite = side.getOpposite();
+
+		IFluidHandler handler = FluidHelper.getFluidHandlerCap(adjTile, opposite);
+		if (handler == EmptyFluidHandler.INSTANCE) {
+			return false;
+		}
+		int fillAmount = handler.fill(new FluidStack(tank.getFluidStack(), amount), action);
+		if (fillAmount > 0) {
+			tank.drain(fillAmount, action).getAmount();
+			return true;
+		}
+		return false;
 	}
 }

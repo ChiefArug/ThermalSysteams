@@ -55,7 +55,7 @@ public abstract class FluidBoilerBlockEntityBase extends BoilerBlockEntityBase{
 
 	@Override
 	protected int consumeFuel() {
-		int energy = getEnergy();
+		int energy = getFuelEnergy();
 		fuelTank.drain(SingleFluidFuelManager.FLUID_FUEL_AMOUNT, IFluidHandler.FluidAction.EXECUTE);
 		return energy;
 	}

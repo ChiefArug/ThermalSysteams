@@ -38,7 +38,7 @@ public class DisenchantmentBoilerBlockEntity extends ItemBoilerBlockEntityBase {
 	}
 
 	@Override
-	protected int getEnergy() {
+	protected int getFuelEnergy() {
 		return getFuelManager().getEnergy(fuelSlot.getItemStack());
 	}
 

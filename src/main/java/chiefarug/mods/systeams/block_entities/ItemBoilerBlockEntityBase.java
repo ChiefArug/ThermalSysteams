@@ -24,14 +24,14 @@ public abstract class ItemBoilerBlockEntityBase extends BoilerBlockEntityBase {
 	protected abstract SingleItemFuelManager getFuelManager();
 
 	@Override
-	protected int getEnergy() {
+	protected int getFuelEnergy() {
 		IDynamoFuel fuel = getFuelManager().getFuel(this);
 		return fuel == null ? 0 : fuel.getEnergy();
 	}
 
 	@Override
 	protected int consumeFuel() {
-		int energy = getEnergy();;
+		int energy = getFuelEnergy();
 		fuelSlot.consume(1);
 		return energy;
 	}
