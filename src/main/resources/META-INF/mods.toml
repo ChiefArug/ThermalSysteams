@@ -19,17 +19,15 @@ Addon for the Thermal Series that adds Steam dynamos back to modern versions!
     modId="forge" #mandatory
     mandatory=true #mandatory
     versionRange="${forge_range}" #mandatory
-    ordering="NONE"
-    side="BOTH"
 [[dependencies.systeams]]
     modId="minecraft"
     mandatory=true
     versionRange="${minecraft_range}"
-    ordering="NONE"
-    side="BOTH"
 [[dependencies.systeams]] #optional
     modId="thermal" #mandatory
     mandatory=true #mandatory
     versionRange="${thermal_core_range}" #mandatory
     ordering="AFTER"
-    side="BOTH"
+[[dependencies.systeams]]
+    modId="thermal_expansion"
+    mandatory=true
