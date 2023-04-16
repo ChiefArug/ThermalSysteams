@@ -3,6 +3,7 @@ plugins {
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '5.1.+'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id 'org.spongepowered.mixin' version '0.7.+'
 }
 
 version = systeams_version
@@ -91,10 +92,11 @@ repositories {
             includeGroup 'com.teamcofh'
         }
     }
-    maven { // Mekanism
+    maven { // Mekanism and PneumaticCraft
         url 'https://modmaven.dev/'
         content {
             includeGroup 'mekanism'
+            includeGroup 'me.desht.pneumaticcraft'
         }
     }
     maven { // Pipez
@@ -121,6 +123,8 @@ dependencies {
     implementation fg.deobf("com.teamcofh:thermal_core:${minecraft_version}-${thermal_core_version}")
     implementation fg.deobf("com.teamcofh:thermal_foundation:${minecraft_version}-${thermal_foundation_version}")
     implementation fg.deobf("com.teamcofh:thermal_expansion:${minecraft_version}-${thermal_expansion_version}")
+
+    implementation fg.deobf("me.desht.pneumaticcraft:pneumaticcraft-repressurized:${minecraft_version}-${pncr_version}")
 
     // run game with a few extra mods for testing
     runtimeOnly fg.deobf("com.teamcofh:thermal_dynamics:${minecraft_version}-${thermal_dynamics_version}")
