@@ -14,7 +14,7 @@
 
   "block.systeams.steam_dynamo": "Steam Dynamo",
   "info.systeams.steam_dynamo.0": "Turns steam into power.",
-  "info.systeams.steam_dynamo.1": "Almost rocket science!",
+  "info.systeams.steam_dynamo.1": "It's getting steamy in here",
   "block.systeams.steam_dynamo.keyword": "engine generator boiler power",
 
   "info.systeams.boiler.throttle": "Will not waste buffered fuel when the output is full.",
@@ -54,5 +54,11 @@
   "info.systeams.numismatic_boiler.0": "Generates Steam using economic arbitrage.",
   "info.systeams.numismatic_boiler.1": "Might be a portal to an alternate dimension of pure avarice.",
   "info.systeams.numismatic_boiler.2": "Don't overthink it, just insert coins.",
-  "block.systeams.numismatic_boiler.keyword": "coin engine generator steam"
+  "block.systeams.numismatic_boiler.keyword": "coin engine generator steam",
+
+  "block.systeams.pneumatic_boiler": "Pneumatic Boiler",
+  "info.systeams.pneumatic_boiler.0": "Generates Steam using pressurized air.",
+  "info.systeams.pneumatic_boiler.1": "Some say it's a load of hot air",
+  "info.systeams.pneumatic_boiler.2": "Don't worry, only the water heats up in here!",
+  "block.systeams.pneumatic_boiler.keyword": "air pressure engine generator steam"
 }

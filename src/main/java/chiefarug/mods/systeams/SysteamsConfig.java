@@ -12,7 +12,8 @@ public class SysteamsConfig {
 		STEAM_RATIO_NUMISMATIC,
 		STEAM_RATIO_LAPIDARY,
 		STEAM_RATIO_DISENCHANTMENT,
-		STEAM_RATIO_GOURMAND
+		STEAM_RATIO_GOURMAND,
+		STEAM_RATIO_PNEUMATIC
 		;
 	// Boiler sped multipliers
 	public static final ForgeConfigSpec.ConfigValue<Double>
@@ -22,7 +23,8 @@ public class SysteamsConfig {
 		SPEED_NUMISMATIC,
 		SPEED_LAPIDARY,
 		SPEED_DISENCHANTMENT,
-		SPEED_GOURMAND
+		SPEED_GOURMAND,
+		SPEED_PNEUMATIC
 		;
 
 
@@ -50,6 +52,7 @@ public class SysteamsConfig {
 			STEAM_RATIO_LAPIDARY = steamRatio(builder, "lapidary");
 			STEAM_RATIO_DISENCHANTMENT = steamRatio(builder, "disenchantment");
 			STEAM_RATIO_GOURMAND = steamRatio(builder, "gourmand");
+			STEAM_RATIO_PNEUMATIC = steamRatio(builder, "pneumatic");
 
 		builder.pop();
 
@@ -63,6 +66,7 @@ public class SysteamsConfig {
 			SPEED_LAPIDARY = speed(builder, "lapidary");
 			SPEED_DISENCHANTMENT = speed(builder, "disenchantment");
 			SPEED_GOURMAND = speed(builder, "gourmand");
+			SPEED_PNEUMATIC = speed(builder, "pneumatic");
 
 		spec = builder.build();
 	}
