@@ -31,3 +31,4 @@ Addon for the Thermal Series that adds Steam dynamos back to modern versions!
 [[dependencies.systeams]]
     modId="thermal_expansion"
     mandatory=true
+    versionRange="[10,)"
