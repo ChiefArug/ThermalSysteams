@@ -35,7 +35,6 @@ public class SysteamsPNCRCompat {
 
 	class Registry {
 		static void init () {}
-//		public static final Boiler<PneumaticBoilerBlockEntity, PneumaticBoilerContainer> PNEUMATIC = new Boiler<>(PNEUMATIC_BOILER_ID, PneumaticBoilerBlockEntity.class, PneumaticBoilerBlockEntity::new, PneumaticBoilerContainer::new);
 		public static final RegistryObject<BoilerBlock> PNEUMATIC_BOILER_BLOCK = SysteamsRegistry.BLOCK_REGISTRY.register(PNEUMATIC_BOILER_ID, () -> new PneumaticBoilerBlock(SysteamsRegistry.B_PROPERTIES, PneumaticBoilerBlockEntity.class, Registry::pneumaticBoilerBE));
 		public static final RegistryObject<BlockEntityType<?>> PNEUMATIC_BOILER_BLOCK_ENTITY = SysteamsRegistry.BLOCK_ENTITY_REGISTRY.register(PNEUMATIC_BOILER_ID, () -> BlockEntityType.Builder.of(PneumaticBoilerBlockEntity::new, PNEUMATIC_BOILER_BLOCK.get()).build(null));
 		public static final RegistryObject<Item> PNEUMATIC_BOILER_BLOCK_ITEM = SysteamsRegistry.ITEM_REGISTRY.register(PNEUMATIC_BOILER_ID, () -> SysteamsRegistry.machineBlockItemOf(PNEUMATIC_BOILER_BLOCK.get()));

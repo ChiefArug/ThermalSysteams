@@ -3,17 +3,22 @@ package chiefarug.mods.systeams.compat;
 import chiefarug.mods.systeams.block_entities.BoilerBlockEntityBase;
 import cofh.thermal.lib.util.managers.IFuelManager;
 import me.desht.pneumaticcraft.api.PneumaticRegistry;
+import me.desht.pneumaticcraft.api.lib.NBTKeys;
 import me.desht.pneumaticcraft.api.pressure.PressureTier;
 import me.desht.pneumaticcraft.api.tileentity.IAirHandlerMachine;
 import me.desht.pneumaticcraft.lib.PneumaticValues;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import org.apache.commons.lang3.NotImplementedException;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.IdentityHashMap;
@@ -28,6 +33,10 @@ public class PneumaticBoilerBlockEntity extends BoilerBlockEntityBase {
 	protected final IAirHandlerMachine airHandler;
 	private final LazyOptional<IAirHandlerMachine> airHandlerCap;
 	private final Map<IAirHandlerMachine, List<Direction>> airHandlerMap = new IdentityHashMap<>();
+	private int airPerTick;
+	/*
+	Each unit of air makes 1 unit of fuel
+	 */
 
 	public PneumaticBoilerBlockEntity(BlockPos pos, BlockState blockState) {
 		super(SysteamsPNCRCompat.Registry.PNEUMATIC_BOILER_BLOCK_ENTITY.get(), pos, blockState);
@@ -37,8 +46,45 @@ public class PneumaticBoilerBlockEntity extends BoilerBlockEntityBase {
 	}
 
 	@Override
+	public void saveAdditional(CompoundTag nbt) {
+		super.saveAdditional(nbt);
+		nbt.put(NBTKeys.NBT_AIR_HANDLER, airHandler.serializeNBT());
+	}
+
+	@Override
+	public FriendlyByteBuf getGuiPacket(FriendlyByteBuf buffer) {
+		super.getGuiPacket(buffer);
+		buffer.writeInt(airHandler.getAir());
+		return buffer;
+	}
+
+	@Override
+	public void handleGuiPacket(FriendlyByteBuf buffer) {
+		super.handleGuiPacket(buffer);
+		addAir(buffer.readInt());
+	}
+
+	@Override
+	public void load(CompoundTag nbt) {
+		super.load(nbt);
+		airHandler.deserializeNBT(nbt.getCompound(NBTKeys.NBT_AIR_HANDLER));
+        if (nbt.contains(NBTKeys.NBT_AIR_AMOUNT)) {
+            // when restoring from item NBT
+            airHandler.addAir(nbt.getInt(NBTKeys.NBT_AIR_AMOUNT));
+        }
+	}
+
+	@Override
+	protected void processTick() {
+		super.processTick();
+		 airHandlerMap.keySet().forEach(handler -> handler.tick(this));
+	}
+
+	@Override
 	protected int consumeFuel() {
-		return 0;
+		int air = getAirPerTick();
+		this.addAir(-air);
+		return air;
 	}
 
 	@Override
@@ -66,5 +112,36 @@ public class PneumaticBoilerBlockEntity extends BoilerBlockEntityBase {
 	public AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player) {
 		assert this.level != null;
 		return new PneumaticBoilerContainer(containerId, this.level, this.getBlockPos(), playerInv, player);
+	}
+
+	@NotNull
+	@Override
+	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+		if (cap == SysteamsPNCRCompat.AIR_HANDLER) {
+			if (side == null || side != getFacing()) {
+				return airHandlerCap.cast();
+			} else {
+				return LazyOptional.empty();
+			}
+		} else {
+			return super.getCapability(cap, side);
+		}
+	}
+
+	// Pressure
+	public float getPressure() {
+		return airHandler.getPressure();
+	}
+
+	public float getMinWorkingPressure() {
+		return PneumaticValues.MIN_PRESSURE_PNEUMATIC_DYNAMO;
+	}
+
+	public void addAir(int air) {
+		airHandler.addAir(air);
+	}
+
+	public int getAirPerTick() {
+		return airPerTick;
 	}
 }
