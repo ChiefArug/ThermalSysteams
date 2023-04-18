@@ -20,6 +20,10 @@ public class BoilerScreenBase<T extends BoilerContainerBase<?>> extends Augmenta
 		info = GuiHelper.appendLine(GuiHelper.generatePanelInfo("info.systeams." + id + "_boiler"), "info.systeams.boiler.throttle");
 	}
 
+	protected int getFlameXOffset() {
+		return 0;
+	}
+
 	@Override
 	public void init() {
 		super.init();
@@ -32,7 +36,7 @@ public class BoilerScreenBase<T extends BoilerContainerBase<?>> extends Augmenta
 		);
 
 
-		addElement(ThermalGuiHelper.createDefaultDuration(this, 80, 35, GuiHelper.SCALE_FLAME, tile));
+		addElement(ThermalGuiHelper.createDefaultDuration(this, 80 + getFlameXOffset(), 35, GuiHelper.SCALE_FLAME, tile));
 		addElement(GuiHelper.setClearable(GuiHelper.createMediumFluidStorage(this, 10, 22, blockEntity.waterTank), blockEntity, 0));
 		addElement(GuiHelper.setClearable(GuiHelper.createMediumFluidStorage(this, 128, 22, blockEntity.steamTank), blockEntity, 1));
 	}

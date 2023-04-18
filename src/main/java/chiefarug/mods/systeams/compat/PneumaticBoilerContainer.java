@@ -16,7 +16,7 @@ public class PneumaticBoilerContainer extends BoilerContainerBase<PneumaticBoile
 	}
 
 	public PneumaticBoilerContainer(int windowId, Level level, BlockPos pos, Inventory inventory, Player player) {
-		super(SysteamsPNCRCompat.Registry.PNEUMATIC.menu(), windowId, level, pos, inventory, player);
+		super(SysteamsPNCRCompat.Registry.PNEUMATIC_BOILER_MENU.get(), windowId, level, pos, inventory, player);
 		BoilerBlockEntityBase blockEntity = (BoilerBlockEntityBase) level.getBlockEntity(pos);
         InvWrapperCoFH blockEntityInv = new InvWrapperCoFH(blockEntity.getItemInv());
 

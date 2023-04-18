@@ -1,0 +1,9 @@
+{
+  "parent": "thermal:block/dynamo_base",
+  "textures": {
+    "top": "systeams:block/pneumatic_boiler",
+    "side": "systeams:block/pneumatic_boiler_side",
+    "bottom": "systeams:block/pneumatic_boiler",
+    "coil": "systeams:block/boiler_pipe"
+  }
+}

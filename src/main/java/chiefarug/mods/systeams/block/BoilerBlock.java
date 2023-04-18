@@ -2,7 +2,6 @@ package chiefarug.mods.systeams.block;
 
 import chiefarug.mods.systeams.ConversionKitItem;
 import chiefarug.mods.systeams.Systeams;
-import chiefarug.mods.systeams.SysteamsRegistry;
 import cofh.core.block.TileBlockActive6Way;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -85,6 +84,9 @@ public class BoilerBlock extends TileBlockActive6Way {
 		builder.add(WATERLOGGED);
 	}
 
+	public ItemStack getConverstionReturn() {
+		return new ItemStack(RF_COIL);
+	}
 
 	@NotNull
 	@Override
@@ -109,11 +111,11 @@ public class BoilerBlock extends TileBlockActive6Way {
 		InteractionHand hand = event.getHand();
 
 		ItemStack item = player.getItemInHand(hand);
-		if (item.getItem() != RF_COIL.get() || !player.isCrouching()) return;
+		if (item.getItem() != RF_COIL.asItem() || !player.isCrouching()) return;
 
 		Block boiler = oldState.getBlock();
 		@SuppressWarnings("SuspiciousMethodCalls") // I believe this is because its getting passed the wrong class type. it works tho
-		Block dynamo = SysteamsRegistry.Items.BOILER_PIPE.get().dynamoBoilerMap.inverse().get(boiler);
+		Block dynamo = ConversionKitItem.getDynamoBoilerMap().inverse().get(boiler);
 		if (dynamo == null)
 			return;
 

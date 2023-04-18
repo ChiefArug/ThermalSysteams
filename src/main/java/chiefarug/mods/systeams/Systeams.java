@@ -41,7 +41,7 @@ public class Systeams {
         RecipeCheckerChannel.init();
         
         if (ModList.get().isLoaded("pneumaticcraft")) {
-            SysteamsPNCRCompat.unfoldPressurizedManifold();
+            SysteamsPNCRCompat.unfoldPressurizedManifold(bus);
         }
     }
 

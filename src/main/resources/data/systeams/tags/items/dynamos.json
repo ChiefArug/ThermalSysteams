@@ -7,6 +7,10 @@
     "thermal:dynamo_lapidary",
     "thermal:dynamo_disenchantment",
     "thermal:dynamo_gourmand",
-    "systeams:steam_dynamo"
+    "systeams:steam_dynamo",
+    {
+      "required": false,
+      "id": "pneumaticcraft:pneumatic_dynamo"
+    }
   ]
 }

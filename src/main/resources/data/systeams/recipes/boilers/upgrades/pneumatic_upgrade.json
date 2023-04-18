@@ -1,0 +1,17 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "pneumaticcraft"
+    }
+  ],
+  "type": "systeams:upgrade_shapeless",
+  "ingredients": [
+    {"item":"pneumaticcraft:pneumatic_dynamo"},
+    {"item":"systeams:boiler_pipe"}
+  ],
+  "result": {
+    "item": "systeams:pneumatic_boiler"
+  },
+  "replacement": "pneumaticcraft:advanced_pressure_tube"
+}

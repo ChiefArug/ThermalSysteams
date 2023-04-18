@@ -37,7 +37,6 @@ import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.LAPIDARY;
 import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.MAGMATIC;
 import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.NUMISMATIC;
 import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.STIRLING;
-import static chiefarug.mods.systeams.SysteamsRegistry.Items.RF_COIL;
 import static cofh.lib.util.constants.BlockStatePropertiesCoFH.FACING_ALL;
 import static cofh.thermal.lib.block.DynamoBlock.WATERLOGGED;
 
@@ -48,7 +47,7 @@ public class ConversionKitItem extends Item {
 
 	// this isn't static, so that the block registry is filled before we get all these block objects
 	// relies on item reg (therefore Item instance initialization) happening AFTER block init.
-	public BiMap<DynamoBlock, BoilerBlock> dynamoBoilerMap = ImmutableBiMap.of(
+	public BiMap<Block, BoilerBlock> dynamoBoilerMap = ImmutableBiMap.of(
 			getDynamo("stirling"), STIRLING.block(),
 			getDynamo("compression"), COMPRESSION.block(),
 			getDynamo("magmatic"), MAGMATIC.block(),
@@ -57,6 +56,10 @@ public class ConversionKitItem extends Item {
 			getDynamo("disenchantment"), DISENCHANTMENT.block(),
 			getDynamo("gourmand"), GOURMAND.block()
 	);
+
+	public static BiMap<Block, BoilerBlock> getDynamoBoilerMap() {
+		return SysteamsRegistry.Items.BOILER_PIPE.get().dynamoBoilerMap;
+	}
 
 	private static DynamoBlock getDynamo(String id) {
 		return (DynamoBlock) ThermalCore.BLOCKS.get("thermal:dynamo_" + id);
@@ -71,7 +74,6 @@ public class ConversionKitItem extends Item {
 		InteractionHand hand = context.getHand();
 
 		Block dynamo = oldState.getBlock();
-		@SuppressWarnings("SuspiciousMethodCalls") // i believe this is because its getting passed the wrong class type. it works tho
 		Block boiler = dynamoBoilerMap.get(dynamo);
 		if (boiler == null)
 			return super.useOn(context);
@@ -85,11 +87,12 @@ public class ConversionKitItem extends Item {
 		// if we have a player, replace with a coil. otherwise just shrink the itemstack
 		if (player != null) {
 			if (!player.getAbilities().instabuild) {
+				ItemStack converstionReturn = ((BoilerBlock) boiler).getConverstionReturn();
 				stack.shrink(1);
 				if (stack.isEmpty())
-					player.setItemInHand(hand, new ItemStack(RF_COIL.get()));
+					player.setItemInHand(hand, converstionReturn);
 				else
-					player.addItem(new ItemStack(RF_COIL.get()));
+					player.addItem(converstionReturn);
 			}
 		} else {
 			context.getItemInHand().shrink(1);

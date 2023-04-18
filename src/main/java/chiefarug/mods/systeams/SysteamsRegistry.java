@@ -48,6 +48,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -69,7 +70,7 @@ import java.util.function.Supplier;
 
 import static chiefarug.mods.systeams.Systeams.MODID;
 
-@SuppressWarnings({"unused", "SameParameterValue"})
+@SuppressWarnings("unused")
 public class SysteamsRegistry {
 
 	static final CreativeModeTab TAB = new CreativeModeTab(MODID) {
@@ -78,21 +79,21 @@ public class SysteamsRegistry {
 			return new ItemStack(Items.BOILER_PIPE.get());
 		}
 	};
-	static final Item.Properties I_PROPERTIES = new Item.Properties().tab(TAB);
-	static final BlockBehaviour.Properties B_PROPERTIES = BlockBehaviour.Properties
+	public static final Item.Properties I_PROPERTIES = new Item.Properties().tab(TAB);
+	public static final BlockBehaviour.Properties B_PROPERTIES = BlockBehaviour.Properties
 			.of(Material.METAL)
 			.sound(SoundType.NETHERITE_BLOCK)
 			.strength(2.0F)
 			.lightLevel(BlockHelper.lightValue(BlockStatePropertiesCoFH.ACTIVE, 14));
 
-	static final DeferredRegisterCoFH<Fluid> FLUID_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.FLUIDS, MODID);
-	static final DeferredRegisterCoFH<FluidType> FLUID_TYPE_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.FLUID_TYPES, MODID);
-	static final DeferredRegisterCoFH<BlockEntityType<?>> BLOCK_ENTITY_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES, MODID);
-	static final DeferredRegisterCoFH<Block> BLOCK_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.BLOCKS, MODID);
-	static final DeferredRegisterCoFH<Item> ITEM_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.ITEMS, MODID);
-	static final DeferredRegisterCoFH<SoundEvent> SOUND_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.SOUND_EVENTS, MODID);
-	static final DeferredRegisterCoFH<MenuType<?>> MENU_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.MENU_TYPES, MODID);
-	static final DeferredRegisterCoFH<RecipeSerializer<?>> RECIPE_SERIALIZER_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.RECIPE_SERIALIZERS, MODID);
+	public static final DeferredRegisterCoFH<Fluid> FLUID_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.FLUIDS, MODID);
+	public static final DeferredRegisterCoFH<FluidType> FLUID_TYPE_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.FLUID_TYPES, MODID);
+	public static final DeferredRegisterCoFH<BlockEntityType<?>> BLOCK_ENTITY_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES, MODID);
+	public static final DeferredRegisterCoFH<Block> BLOCK_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.BLOCKS, MODID);
+	public static final DeferredRegisterCoFH<Item> ITEM_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.ITEMS, MODID);
+	public static final DeferredRegisterCoFH<SoundEvent> SOUND_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.SOUND_EVENTS, MODID);
+	public static final DeferredRegisterCoFH<MenuType<?>> MENU_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.MENU_TYPES, MODID);
+	public static final DeferredRegisterCoFH<RecipeSerializer<?>> RECIPE_SERIALIZER_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.RECIPE_SERIALIZERS, MODID);
 	public static final DeferredRegisterCoFH<RecipeType<?>> RECIPE_TYPE_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.RECIPE_TYPES, MODID);
 
 	public static void init(IEventBus bus) {
@@ -146,7 +147,7 @@ public class SysteamsRegistry {
 	}
 	public static class Items {
 		static void init() {}
-		public static final Supplier<Item> RF_COIL = () -> ThermalCore.ITEMS.get("thermal:rf_coil");
+		public static final ItemLike RF_COIL = () -> ThermalCore.ITEMS.get("thermal:rf_coil");
 		public static final ITag<Item> UPGRADE_MAIN = modTag(ForgeRegistries.ITEMS, "recipe_control/upgrade_main");
 
 		public static final RegistryObject<Item> STEAM_DYNAMO = ITEM_REGISTRY.register(STEAM_DYNAMO_ID, () -> machineBlockItemOf(Blocks.STEAM_DYNAMO.get()));
@@ -200,7 +201,7 @@ public class SysteamsRegistry {
 	}
 
 
-	static BlockItemAugmentable machineBlockItemOf(Block block) {
+	public static BlockItemAugmentable machineBlockItemOf(Block block) {
 		return (BlockItemAugmentable) new BlockItemAugmentable(block, I_PROPERTIES)
 						.setNumSlots(() -> ThermalCoreConfig.dynamoAugments)
 						.setAugValidator(ThermalAugmentRules.DYNAMO_VALIDATOR)

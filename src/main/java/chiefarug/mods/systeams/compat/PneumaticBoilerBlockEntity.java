@@ -30,7 +30,7 @@ public class PneumaticBoilerBlockEntity extends BoilerBlockEntityBase {
 	private final Map<IAirHandlerMachine, List<Direction>> airHandlerMap = new IdentityHashMap<>();
 
 	public PneumaticBoilerBlockEntity(BlockPos pos, BlockState blockState) {
-		super(SysteamsPNCRCompat.Registry.PNEUMATIC.blockEntity(), pos, blockState);
+		super(SysteamsPNCRCompat.Registry.PNEUMATIC_BOILER_BLOCK_ENTITY.get(), pos, blockState);
 
 		this.airHandler = PneumaticRegistry.getInstance().getAirHandlerMachineFactory().createAirHandler(PressureTier.TIER_TWO, PneumaticValues.VOLUME_PNEUMATIC_DYNAMO);
 		this.airHandlerCap = LazyOptional.of(() -> airHandler);
@@ -63,7 +63,8 @@ public class PneumaticBoilerBlockEntity extends BoilerBlockEntityBase {
 
 	@Nullable
 	@Override
-	public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
-		return null;
+	public AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player) {
+		assert this.level != null;
+		return new PneumaticBoilerContainer(containerId, this.level, this.getBlockPos(), playerInv, player);
 	}
 }
