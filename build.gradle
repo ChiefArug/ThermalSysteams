@@ -7,7 +7,7 @@ plugins {
 
 version = systeams_version
 group = 'chiefarug.mods.thermal_systeams'// http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'systeams'
+archivesBaseName = 'systeams-' + minecraft_version
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
