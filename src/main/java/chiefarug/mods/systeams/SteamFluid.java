@@ -2,20 +2,12 @@ package chiefarug.mods.systeams;
 
 import cofh.lib.fluid.FluidCoFH;
 import cofh.lib.util.DeferredRegisterCoFH;
-import com.mojang.blaze3d.shaders.FogShape;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Vector3f;
-import net.minecraft.client.Camera;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockGetter;
@@ -29,22 +21,15 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.common.SoundActions;
-import net.minecraftforge.fluids.FluidType;
+import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import static chiefarug.mods.systeams.Systeams.LGGR;
 @SuppressWarnings("unused")// ignore unused code, its probably for the block form.
 public class SteamFluid /*extends FluidCoFH*/ { // We can't extend FluidCoFH because it forces you to use the base ForgeFlowingFluid, meaning I can't make it flow upwards.
 
-	public final RegistryObject<FluidType> type;
 	public final Vector3f particleColor = new Vector3f(0.1F, 0.1F, 0.1F);
 	public final RegistryObject<ForgeFlowingFluid> stillFluid;
 	public final RegistryObject<ForgeFlowingFluid> flowingFluid;
@@ -65,83 +50,22 @@ public class SteamFluid /*extends FluidCoFH*/ { // We can't extend FluidCoFH bec
 //	protected final RegistryObject<LiquidBlock> block;
 	protected final RegistryObject<Item> bucket;
 
-	public SteamFluid(DeferredRegisterCoFH<Fluid> fluidRegister, DeferredRegisterCoFH<FluidType> typeRegister, DeferredRegisterCoFH<Block> blockRegister, DeferredRegisterCoFH<Item> itemRegister, String id) {
+	public SteamFluid(DeferredRegisterCoFH<Fluid> fluidRegister, DeferredRegisterCoFH<Block> blockRegister, DeferredRegisterCoFH<Item> itemRegister, String id) {
 		stillFluid = fluidRegister.register(id, () -> new Source(fluidProperties()));
 		flowingFluid = fluidRegister.register(FluidCoFH.flowing(id), () -> new Flowing(fluidProperties()));
 
 //		block = blockRegister.register(id + "_fluid", () -> new SteamLiquidBlock(stillFluid, fluidBlockProperties));
 		bucket = itemRegister.register(id + "_bucket", () -> new BucketItem(stillFluid, bucketItemProperties));
 
-
-		type = typeRegister.register(id, () -> new FluidType(FluidType.Properties.create()
-						.canDrown(true)
-						.canExtinguish(true)
-						.canHydrate(true)
-						.density(-250)
-						.sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
-						.sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)) {
-					@Override
-					public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
-						consumer.accept(new IClientFluidTypeExtensions() {
-							private static final ResourceLocation STILL = new ResourceLocation("systeams:block/steam_still");
-							private static final ResourceLocation FLOW = new ResourceLocation("systeams:block/steam_flow");
-
-							@Override
-							public ResourceLocation getStillTexture() {
-								return STILL;
-							}
-
-							@Override
-							public ResourceLocation getFlowingTexture() {
-								return FLOW;
-							}
-
-							@Override
-							public ResourceLocation getOverlayTexture() {
-								return FluidCoFH.WATER_OVERLAY;
-							}
-
-							@Override
-							public ResourceLocation getRenderOverlayTexture(Minecraft mc) {
-								return FluidCoFH.UNDERWATER_LOCATION;
-							}
-
-							@Override
-							public @NotNull Vector3f modifyFogColor(Camera camera, float partialTick, ClientLevel level, int renderDistance, float darkenWorldAmount, Vector3f fluidFogColor) {
-								return particleColor;
-							}
-
-							@Override
-							public void modifyFogRender(Camera camera, FogRenderer.FogMode mode, float renderDistance, float partialTick, float nearDistance, float farDistance, FogShape shape) {
-								nearDistance = -16F;
-								farDistance = 16F;
-
-								if (farDistance > renderDistance) {
-									farDistance = renderDistance;
-									shape = FogShape.CYLINDER;
-								}
-
-								RenderSystem.setShaderFogStart(nearDistance);
-								RenderSystem.setShaderFogEnd(farDistance);
-								RenderSystem.setShaderFogShape(shape);
-							}
-						});
-					}
-				}
-		);
 	}
+
+	private static final ResourceLocation STILL = new ResourceLocation("systeams:block/steam_still");
+	private static final ResourceLocation FLOW = new ResourceLocation("systeams:block/steam_flow");
 
 	protected ForgeFlowingFluid.Properties fluidProperties() {
-		return new ForgeFlowingFluid.Properties(type(), stillFluid, flowingFluid)
-//				.block(block)
-				.bucket(bucket)
-				.tickRate(2)
-				.slopeFindDistance(1);
+		return new ForgeFlowingFluid.Properties(stillFluid, flowingFluid, FluidAttributes.builder(STILL, FLOW));
 	}
 
-	protected Supplier<FluidType> type() {
-		return type;
-	}
 
 	public abstract class SteamFlowingFluid extends ForgeFlowingFluid {
 		public SteamFlowingFluid(Properties properties) {
@@ -155,17 +79,6 @@ public class SteamFluid /*extends FluidCoFH*/ { // We can't extend FluidCoFH bec
 			} else {
 				return p_75962_.getFluidState().getType().isSame(this) || this.canHoldFluid(pLevel, p_75961_, p_75962_, pFluid);
 			}
-		}
-
-		@Override
-		public boolean move(FluidState state, LivingEntity entity, Vec3 movementVector, double gravity) {
-			entity.moveRelative(entity.isSprinting() ? 0.7F : 0.5F, movementVector);
-			entity.move(MoverType.SELF, entity.getDeltaMovement());
-			entity.setDeltaMovement(entity.getDeltaMovement().multiply(0, gravity * 10, 0));
-//			entity.setDeltaMovement(vec36.multiply(f4, 0.8F, f4));
-//			Vec3 vec32 = entity.getFluidFallingAdjustedMovement(gravity, true, entity.getDeltaMovement());
-//			entity.setDeltaMovement(vec32);
-			return true;
 		}
 
 		@Override

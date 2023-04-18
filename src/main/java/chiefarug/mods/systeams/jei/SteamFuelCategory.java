@@ -37,7 +37,7 @@ public class SteamFuelCategory extends ThermalFuelCategory<SteamFuel> {
 	private final IDrawableStatic tankBackground;
 
 	public SteamFuelCategory(IGuiHelper guiHelper, ItemStack icon, RecipeType<SteamFuel> type) {
-		super(guiHelper, icon, type);
+		super(guiHelper, icon, type.getUid());
 		background = guiHelper.drawableBuilder(DynamoCompressionScreen.TEXTURE, 26, 11, 70, 62)
                 .addPadding(0, 0, 16, 78)
                 .build();
@@ -75,6 +75,11 @@ public class SteamFuelCategory extends ThermalFuelCategory<SteamFuel> {
 	public void draw(SteamFuel recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		super.draw(recipe, recipeSlotsView, matrixStack, mouseX, mouseY);
 		tankBackground.draw(matrixStack, 33, 10);
+	}
+
+	@Override
+	public Class<? extends SteamFuel> getRecipeClass() {
+		return SteamFuel.class;
 	}
 
 	@Override

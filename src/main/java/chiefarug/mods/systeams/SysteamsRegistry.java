@@ -40,6 +40,7 @@ import cofh.thermal.lib.common.ThermalRecipeManagers;
 import cofh.thermal.lib.item.BlockItemAugmentable;
 import cofh.thermal.lib.util.recipes.DynamoFuelSerializer;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.inventory.MenuType;
@@ -56,10 +57,11 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.tags.ITag;
 import net.minecraftforge.registries.tags.ITagManager;
@@ -86,14 +88,12 @@ public class SysteamsRegistry {
 			.lightLevel(BlockHelper.lightValue(BlockStatePropertiesCoFH.ACTIVE, 14));
 
 	static final DeferredRegisterCoFH<Fluid> FLUID_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.FLUIDS, MODID);
-	static final DeferredRegisterCoFH<FluidType> FLUID_TYPE_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.FLUID_TYPES, MODID);
 	static final DeferredRegisterCoFH<BlockEntityType<?>> BLOCK_ENTITY_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES, MODID);
 	static final DeferredRegisterCoFH<Block> BLOCK_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.BLOCKS, MODID);
 	static final DeferredRegisterCoFH<Item> ITEM_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.ITEMS, MODID);
 	static final DeferredRegisterCoFH<SoundEvent> SOUND_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.SOUND_EVENTS, MODID);
-	static final DeferredRegisterCoFH<MenuType<?>> MENU_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.MENU_TYPES, MODID);
+	static final DeferredRegisterCoFH<MenuType<?>> MENU_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.Keys.CONTAINER_TYPES, MODID);
 	static final DeferredRegisterCoFH<RecipeSerializer<?>> RECIPE_SERIALIZER_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.RECIPE_SERIALIZERS, MODID);
-	public static final DeferredRegisterCoFH<RecipeType<?>> RECIPE_TYPE_REGISTRY = DeferredRegisterCoFH.create(ForgeRegistries.RECIPE_TYPES, MODID);
 
 	public static void init(IEventBus bus) {
 		// Make sure all the inner classes have actually been static inited
@@ -106,19 +106,18 @@ public class SysteamsRegistry {
 		Boilers.init();
 
 		FLUID_REGISTRY.register(bus);
-		FLUID_TYPE_REGISTRY.register(bus);
 		BLOCK_ENTITY_REGISTRY.register(bus);
 		BLOCK_REGISTRY.register(bus);
 		ITEM_REGISTRY.register(bus);
 		SOUND_REGISTRY.register(bus);
 		MENU_REGISTRY.register(bus);
 		RECIPE_SERIALIZER_REGISTRY.register(bus);
-		RECIPE_TYPE_REGISTRY.register(bus);
 
 		bus.addListener((FMLClientSetupEvent event) -> event.enqueueWork(Menus::registerFactories));
+		bus.addListener(Recipes::registerRecipeTypes);
 	}
 
-	public static final String STEAM_ID = "steam";
+	public static final ResourceLocation STEAM_ID = new ResourceLocation(MODID, "steam");
 	public static final String STEAM_DYNAMO_ID = "steam_dynamo";
 	public static final String STIRLING_BOILER_ID = "stirling_boiler";
 	public static final String MAGMATIC_BOILER_ID = "magmatic_boiler";
@@ -156,7 +155,7 @@ public class SysteamsRegistry {
 		static void init() {}
 		public static final ITag<Fluid> WATER_TAG = modTag(ForgeRegistries.FLUIDS, "water");
 		public static final ITag<Fluid> STEAM_TAG = forgeTag(ForgeRegistries.FLUIDS, "steam");
-		public static final SteamFluid STEAM = new SteamFluid(FLUID_REGISTRY, FLUID_TYPE_REGISTRY, BLOCK_REGISTRY, ITEM_REGISTRY, STEAM_ID);
+		public static final SteamFluid STEAM = new SteamFluid(FLUID_REGISTRY, BLOCK_REGISTRY, ITEM_REGISTRY, STEAM_ID.getPath());
 	}
 	public static class Menus {
 		static void init() {}
@@ -173,16 +172,22 @@ public class SysteamsRegistry {
 		public static final RegistryObject<MenuType<SteamDynamoContainer>> DYNAMO_STEAM = MENU_REGISTRY.register(STEAM_DYNAMO_ID, () -> IForgeMenuType.create(SteamDynamoContainer::new));
 	}
 	public static class Recipes {
+
+		public static void registerRecipeTypes(FMLCommonSetupEvent event) {
+			STEAM_TYPE = Registry.register(Registry.RECIPE_TYPE, STEAM_ID, new SerializableRecipeType<>(STEAM_ID));
+			UPGRADE_TYPE = Registry.register(Registry.RECIPE_TYPE, UPGRADE_RECIPE_ID, new RecipeType<UpgradeShapelessRecipe>() {
+				@Override
+				public String toString() {
+					return UPGRADE_RECIPE_ID.toString();
+				}
+			});
+		}
+
 		public static final RegistryObject<DynamoFuelSerializer<SteamFuel>> STEAM_SERIALIZER = RECIPE_SERIALIZER_REGISTRY.register(STEAM_ID, () -> new DynamoFuelSerializer<>(SteamFuel::new, SteamFuelManager.instance().getDefaultEnergy(), SteamFuelManager.MIN_ENERGY, SteamFuelManager.MAX_ENERGY));
-		public static final RegistryObject<SerializableRecipeType<SteamFuel>> STEAM_TYPE = RECIPE_TYPE_REGISTRY.register(STEAM_ID, () -> new SerializableRecipeType<>(MODID, STEAM_ID));
+		public static SerializableRecipeType<SteamFuel> STEAM_TYPE;
 
 		public static final RegistryObject<UpgradeShapelessRecipe.Serializer> UPGRADE_SERIALIZER = RECIPE_SERIALIZER_REGISTRY.register(UPGRADE_RECIPE_ID, UpgradeShapelessRecipe.Serializer::new);
-		public static final RegistryObject<RecipeType<UpgradeShapelessRecipe>> UPGRADE_TYPE = RECIPE_TYPE_REGISTRY.register(UPGRADE_RECIPE_ID, () -> new RecipeType<>() {
-			@Override
-			public String toString() {
-				return MODID + ':' + UPGRADE_RECIPE_ID;
-			}
-		});
+		public static RecipeType<UpgradeShapelessRecipe> UPGRADE_TYPE;
 
 		static void init() {
 			ThermalRecipeManagers.registerManager(SteamFuelManager.instance());
@@ -208,15 +213,15 @@ public class SysteamsRegistry {
 	}
 
 
-	static <T> ITag<T> modTag(IForgeRegistry<T> registry, String key) {
+	static <T extends IForgeRegistryEntry<T>> ITag<T> modTag(IForgeRegistry<T> registry, String key) {
 		return tag(registry, new ResourceLocation(MODID, key));
 	}
 
-	static <T> ITag<T> forgeTag(IForgeRegistry<T> registry, String key) {
+	static <T extends IForgeRegistryEntry<T>> ITag<T> forgeTag(IForgeRegistry<T> registry, String key) {
 		return tag(registry, new ResourceLocation("forge", key));
 	}
 
-	static <T> ITag<T> tag(IForgeRegistry<T> registry, ResourceLocation key) {
+	static <T extends IForgeRegistryEntry<T>> ITag<T> tag(IForgeRegistry<T> registry, ResourceLocation key) {
 		ITagManager<T> manager = registry.tags();
 		if (manager == null) throw new IllegalArgumentException("Registry " + registry.getRegistryKey() + " does not support tags");
 

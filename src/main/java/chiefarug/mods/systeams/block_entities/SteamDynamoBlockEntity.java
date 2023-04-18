@@ -17,7 +17,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -78,9 +79,9 @@ public class SteamDynamoBlockEntity extends DynamoBlockEntity {
 
 	@Nonnull
     @Override
-    public ModelData getModelData() {
-        return ModelData.builder()
-                .with(ModelUtils.FLUID, renderFluid)
+    public IModelData getModelData() {
+        return new ModelDataMap.Builder()
+                .withInitial(ModelUtils.FLUID, renderFluid)
                 .build();
     }
 }

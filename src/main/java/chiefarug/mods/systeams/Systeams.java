@@ -2,7 +2,6 @@ package chiefarug.mods.systeams;
 
 import chiefarug.mods.systeams.networking.RecipeCheckerChannel;
 import cofh.core.config.CoreClientConfig;
-import cofh.lib.util.Utils;
 import cofh.lib.util.constants.ModIds;
 import cofh.lib.util.helpers.StringHelper;
 import com.mojang.logging.LogUtils;
@@ -17,6 +16,7 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -70,7 +70,7 @@ public class Systeams {
         // copy this because the default check only does cofh namespaces
         ItemStack stack = event.getItemStack();
         List<Component> tooltip = event.getToolTip();
-        String modid = Utils.getModId(stack.getItem());
+        String modid = ForgeRegistries.ITEMS.getKey(stack.getItem()).getNamespace();
         if (!(modid.equals(MODID) || /*CoreClientEvents.NAMESPACES*/ modid.equals(ModIds.ID_THERMAL))) return;
 
 

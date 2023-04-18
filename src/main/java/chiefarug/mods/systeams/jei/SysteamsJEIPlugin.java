@@ -42,7 +42,7 @@ public class SysteamsJEIPlugin implements IModPlugin {
 	public void registerRecipes(IRecipeRegistration registration) {
 		RecipeManager recipeManager = getRecipeManager();
 
-		registration.addRecipes(STEAM_DYNAMO_RECIPE_TYPE, recipeManager.getAllRecipesFor(SysteamsRegistry.Recipes.STEAM_TYPE.get()));
+		registration.addRecipes(STEAM_DYNAMO_RECIPE_TYPE, recipeManager.getAllRecipesFor(SysteamsRegistry.Recipes.STEAM_TYPE));
 	}
 
 	@Override
@@ -50,26 +50,26 @@ public class SysteamsJEIPlugin implements IModPlugin {
 		final int flameX = 80;// + 12; // base pos + difference cause one uses center the other corner
 		final int flameY = 35;// + 12;
 		registration.addRecipeClickArea(SteamDynamoScreen.class, SteamFuelCategory.DURATION_X + 12, SteamFuelCategory.DURATION_Y + 12, 16, 16, STEAM_DYNAMO_RECIPE_TYPE);
-		registration.addRecipeClickArea(StirlingBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.STIRLING_FUEL_TYPE);
-		registration.addRecipeClickArea(MagmaticBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.MAGMATIC_FUEL_TYPE);
-		registration.addRecipeClickArea(CompressionBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.COMPRESSION_FUEL_TYPE);
-		registration.addRecipeClickArea(NumismaticBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.NUMISMATIC_FUEL_TYPE);
-		registration.addRecipeClickArea(LapidaryBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.LAPIDARY_FUEL_TYPE);
-		registration.addRecipeClickArea(DisenchantmentBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.DISENCHANTMENT_FUEL_TYPE);
-		registration.addRecipeClickArea(GourmandBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.GOURMAND_FUEL_TYPE);
+		registration.addRecipeClickArea(StirlingBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.STIRLING_FUEL);
+		registration.addRecipeClickArea(MagmaticBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.MAGMATIC_FUEL);
+		registration.addRecipeClickArea(CompressionBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.COMPRESSION_FUEL);
+		registration.addRecipeClickArea(NumismaticBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.NUMISMATIC_FUEL);
+		registration.addRecipeClickArea(LapidaryBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.LAPIDARY_FUEL);
+		registration.addRecipeClickArea(DisenchantmentBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.DISENCHANTMENT_FUEL);
+		registration.addRecipeClickArea(GourmandBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.GOURMAND_FUEL);
 
 	}
 
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
 		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Items.STEAM_DYNAMO.get()), STEAM_DYNAMO_RECIPE_TYPE);
-		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.STIRLING.item()), TExpJeiPlugin.STIRLING_FUEL_TYPE);
-		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.MAGMATIC.item()), TExpJeiPlugin.MAGMATIC_FUEL_TYPE);
-		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.COMPRESSION.item()), TExpJeiPlugin.COMPRESSION_FUEL_TYPE);
-		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.NUMISMATIC.item()), TExpJeiPlugin.NUMISMATIC_FUEL_TYPE);
-		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.LAPIDARY.item()), TExpJeiPlugin.LAPIDARY_FUEL_TYPE);
-		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.DISENCHANTMENT.item()), TExpJeiPlugin.DISENCHANTMENT_FUEL_TYPE);
-		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.GOURMAND.item()), TExpJeiPlugin.GOURMAND_FUEL_TYPE);
+		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.STIRLING.item()), TExpJeiPlugin.STIRLING_FUEL);
+		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.MAGMATIC.item()), TExpJeiPlugin.MAGMATIC_FUEL);
+		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.COMPRESSION.item()), TExpJeiPlugin.COMPRESSION_FUEL);
+		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.NUMISMATIC.item()), TExpJeiPlugin.NUMISMATIC_FUEL);
+		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.LAPIDARY.item()), TExpJeiPlugin.LAPIDARY_FUEL);
+		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.DISENCHANTMENT.item()), TExpJeiPlugin.DISENCHANTMENT_FUEL);
+		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.GOURMAND.item()), TExpJeiPlugin.GOURMAND_FUEL);
 
 	}
 

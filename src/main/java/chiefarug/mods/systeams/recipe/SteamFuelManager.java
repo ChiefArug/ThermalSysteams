@@ -3,6 +3,7 @@ package chiefarug.mods.systeams.recipe;
 import chiefarug.mods.systeams.SysteamsRegistry;
 import cofh.core.util.helpers.FluidHelper;
 import cofh.thermal.lib.util.managers.SingleFluidFuelManager;
+import cofh.thermal.lib.util.recipes.ThermalFuel;
 import cofh.thermal.lib.util.recipes.internal.BaseDynamoFuel;
 import cofh.thermal.lib.util.recipes.internal.IDynamoFuel;
 import net.minecraft.world.item.ItemStack;
@@ -39,9 +40,9 @@ public class SteamFuelManager extends SingleFluidFuelManager {
     public void refresh(RecipeManager recipeManager) {
 
         clear();
-        var recipes = recipeManager.byType(SysteamsRegistry.Recipes.STEAM_TYPE.get());
+        var recipes = recipeManager.byType(SysteamsRegistry.Recipes.STEAM_TYPE);
         for (var entry : recipes.entrySet()) {
-            addFuel(entry.getValue());
+            addFuel((ThermalFuel) entry.getValue());
         }
     }
     // endregion

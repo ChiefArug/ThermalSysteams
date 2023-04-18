@@ -11,6 +11,7 @@ import com.google.common.collect.ImmutableBiMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -143,6 +144,6 @@ public class ConversionKitItem extends Item {
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag isAdvanced) {
 		super.appendHoverText(stack, level, components, isAdvanced);
-		components.add(Component.translatable(getDescriptionId(stack) + ".desc").withStyle(ChatFormatting.GOLD));
+		components.add(new TranslatableComponent(getDescriptionId(stack) + ".desc").withStyle(ChatFormatting.GOLD));
 	}
 }

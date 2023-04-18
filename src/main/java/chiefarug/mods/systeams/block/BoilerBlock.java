@@ -102,10 +102,10 @@ public class BoilerBlock extends TileBlockActive6Way {
 
 	@SubscribeEvent // Block#use does not trigger when crouching, so use the event
 	public static void use(PlayerInteractEvent.RightClickBlock event) {
-		Level level = event.getLevel();
+		Level level = event.getWorld();
 		BlockPos pos = event.getHitVec().getBlockPos();
 		BlockState oldState = level.getBlockState(pos);
-		Player player = event.getEntity();
+		Player player = event.getPlayer();
 		InteractionHand hand = event.getHand();
 
 		ItemStack item = player.getItemInHand(hand);

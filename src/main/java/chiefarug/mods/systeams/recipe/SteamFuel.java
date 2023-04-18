@@ -23,6 +23,6 @@ public class SteamFuel extends ThermalFuel {
 
 	@Override
 	public RecipeType<?> getType() {
-		return SysteamsRegistry.Recipes.STEAM_TYPE.get();
+		return SysteamsRegistry.Recipes.STEAM_TYPE;
 	}
 }

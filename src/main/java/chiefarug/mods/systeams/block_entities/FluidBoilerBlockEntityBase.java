@@ -14,7 +14,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
@@ -79,9 +80,9 @@ public abstract class FluidBoilerBlockEntityBase extends BoilerBlockEntityBase{
 
 	@Nonnull
     @Override
-    public ModelData getModelData() {
-        return ModelData.builder()
-                .with(ModelUtils.FLUID, renderFluid)
+    public IModelData getModelData() {
+        return new ModelDataMap.Builder()
+                .withInitial(ModelUtils.FLUID, renderFluid)
                 .build();
     }
 }
