@@ -2,6 +2,7 @@ package chiefarug.mods.systeams.block;
 
 import chiefarug.mods.systeams.ConversionKitItem;
 import chiefarug.mods.systeams.Systeams;
+import chiefarug.mods.systeams.SysteamsConfig;
 import cofh.core.block.TileBlockActive6Way;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,6 +23,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -118,6 +120,8 @@ public class BoilerBlock extends TileBlockActive6Way {
 
 		ItemStack item = player.getItemInHand(hand);
 		if (item.getItem() != boiler.getOtherConversionItem().getItem() || !player.isCrouching()) return;
+		// dirty way of enforcing the config option. i cant be bothered doing it properly
+		if (ModList.get().isLoaded("pneumaticcraft") && (!SysteamsConfig.PNEUMATIC_BOILER_IN_WORLD_CONVERSION.get()) && boiler.getOtherConversionItem().getItem() != RF_COIL.asItem()) return;
 
 		Block dynamo = ConversionKitItem.getDynamoBoilerMap().inverse().get(boiler);
 		if (dynamo == null)

@@ -1,6 +1,7 @@
 package chiefarug.mods.systeams.compat;
 
 import chiefarug.mods.systeams.ConversionKitItem;
+import chiefarug.mods.systeams.SysteamsConfig;
 import chiefarug.mods.systeams.SysteamsRegistry;
 import chiefarug.mods.systeams.block.BoilerBlock;
 import cofh.core.config.CoreClientConfig;
@@ -104,7 +105,7 @@ public class SysteamsPNCRCompat {
                 }
             }
         }
-		if (CoreClientConfig.enableItemDescriptions.get()) {
+		if (CoreClientConfig.enableItemDescriptions.get() && SysteamsConfig.PNEUMATIC_BOILER_IN_WORLD_CONVERSION.get()) {
 			if (stack.getItem().equals(ModBlocks.ADVANCED_PRESSURE_TUBE.get().asItem())) {
 				tooltip.add(Component.translatable(stack.getDescriptionId() + ".desc").withStyle(ChatFormatting.GOLD));
 			}

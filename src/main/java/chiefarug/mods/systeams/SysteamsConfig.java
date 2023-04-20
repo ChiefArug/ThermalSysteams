@@ -27,6 +27,8 @@ public class SysteamsConfig {
 		SPEED_PNEUMATIC
 		;
 
+	public static final ForgeConfigSpec.ConfigValue<Boolean> PNEUMATIC_BOILER_IN_WORLD_CONVERSION;
+
 
 	public static final ForgeConfigSpec.ConfigValue<Double> WATER_TO_STEAM_RATIO;
 	public static final ForgeConfigSpec.ConfigValue<Double> STEAM_DYNAMO_MULTIPLIER;
@@ -67,6 +69,13 @@ public class SysteamsConfig {
 			SPEED_DISENCHANTMENT = speed(builder, "disenchantment");
 			SPEED_GOURMAND = speed(builder, "gourmand");
 			SPEED_PNEUMATIC = speed(builder, "pneumatic");
+		builder.pop();
+
+		builder.push("Integration settings");
+			PNEUMATIC_BOILER_IN_WORLD_CONVERSION = builder.comment(
+					"If you can shift right click a Pneumatic Boiler with an Advanced Pneumatic Tube to convert it to a Pneumatic Dynamo",
+					"This can get annoying when trying to place Advanced Pneumatic Tubes next to boilers")
+				.define("pneumatic_boiler_conversion_to_dynamo", true);
 
 		spec = builder.build();
 	}
