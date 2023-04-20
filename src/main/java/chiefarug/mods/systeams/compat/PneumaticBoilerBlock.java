@@ -14,7 +14,7 @@ public class PneumaticBoilerBlock extends BoilerBlock {
 	}
 
 	@Override
-	public ItemStack getConverstionReturn() {
+	public ItemStack getOtherConversionItem() {
 		return new ItemStack(ModBlocks.ADVANCED_PRESSURE_TUBE.get());
 	}
 }

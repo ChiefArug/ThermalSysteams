@@ -84,7 +84,11 @@ public class BoilerBlock extends TileBlockActive6Way {
 		builder.add(WATERLOGGED);
 	}
 
-	public ItemStack getConverstionReturn() {
+	/**
+	 * The item used to convert this boiler back into a dynamo, and the item returned when a dynamo converts into this boiler
+	 * @return
+	 */
+	public ItemStack getOtherConversionItem() {
 		return new ItemStack(RF_COIL);
 	}
 
@@ -107,14 +111,14 @@ public class BoilerBlock extends TileBlockActive6Way {
 		Level level = event.getLevel();
 		BlockPos pos = event.getHitVec().getBlockPos();
 		BlockState oldState = level.getBlockState(pos);
+		Block block = oldState.getBlock();
+		if (!(block instanceof BoilerBlock boiler)) return;
 		Player player = event.getEntity();
 		InteractionHand hand = event.getHand();
 
 		ItemStack item = player.getItemInHand(hand);
-		if (item.getItem() != RF_COIL.asItem() || !player.isCrouching()) return;
+		if (item.getItem() != boiler.getOtherConversionItem().getItem() || !player.isCrouching()) return;
 
-		Block boiler = oldState.getBlock();
-		@SuppressWarnings("SuspiciousMethodCalls") // I believe this is because its getting passed the wrong class type. it works tho
 		Block dynamo = ConversionKitItem.getDynamoBoilerMap().inverse().get(boiler);
 		if (dynamo == null)
 			return;

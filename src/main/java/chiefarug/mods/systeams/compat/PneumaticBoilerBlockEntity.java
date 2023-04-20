@@ -1,5 +1,6 @@
 package chiefarug.mods.systeams.compat;
 
+import chiefarug.mods.systeams.Systeams;
 import chiefarug.mods.systeams.block_entities.BoilerBlockEntityBase;
 import cofh.core.util.helpers.AugmentableHelper;
 import cofh.lib.api.block.entity.ITickableTile;
@@ -132,7 +133,7 @@ public class PneumaticBoilerBlockEntity extends BoilerBlockEntityBase implements
 		float holdingMod = getHoldingMod(enchantmentMap);
         float baseMod = AugmentableHelper.getAttributeModWithDefault(augmentNBT, NBTTags.TAG_AUGMENT_BASE_MOD, 1.0F);
 
-		airHandler.setVolumeUpgrades((int) (holdingMod + baseMod));
+		airHandler.setVolumeUpgrades((int) ((holdingMod + baseMod) - 2)); // subtract two because that is the default
 	}
 
 	private int calcAirPerTick() {
@@ -149,7 +150,7 @@ public class PneumaticBoilerBlockEntity extends BoilerBlockEntityBase implements
 	@NotNull
 	@Override
 	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-		if (cap == SysteamsPNCRCompat.AIR_HANDLER) {
+		if (cap == Systeams.AIR_HANDLER_CAPABILITY) {
 			if (side == null || side != getFacing()) {
 				return airHandlerCap.cast();
 			} else {

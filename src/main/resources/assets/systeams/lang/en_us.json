@@ -4,7 +4,7 @@
   "item.systeams.boiler_pipe": "Steam Pipe",
   "item.systeams.boiler_pipe.keyword": "steam dynamo boiler",
   "item.thermal.rf_coil.keyword": "steam dynamo boiler",
-  "item.systeams.boiler_pipe.desc": "Shift-use on a Dynamo to convert to a Boiler. Returns the Flux Coil",
+  "item.systeams.boiler_pipe.desc": "Shift-use on a Dynamo to convert to a Boiler. Returns the other head piece",
   "item.thermal.rf_coil.desc": "Shift-use on a Boiler to convert to a Dynamo. Returns the Steam Pipe",
   "itemGroup.systeams": "Systeams",
 
@@ -20,6 +20,8 @@
   "info.systeams.air_volume_unit": "mL",
   "info.systeams.air_per_tick": "Max Air Usage",
   "info.systeams.air_per_tick_unit": "mL/t",
+
+  "block.pneumaticcraft.advanced_pressure_tube.desc": "Shift-use on a Dynamo to convert to a Boiler. Returns the Steam Pipe",
 
   "block.systeams.steam_dynamo": "Steam Dynamo",
   "info.systeams.steam_dynamo.0": "Turns steam into power.",

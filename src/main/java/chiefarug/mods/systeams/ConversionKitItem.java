@@ -1,13 +1,11 @@
 package chiefarug.mods.systeams;
 
 import chiefarug.mods.systeams.block.BoilerBlock;
-import cofh.lib.fluid.SimpleTankInv;
-import cofh.lib.inventory.SimpleItemInv;
 import cofh.thermal.core.ThermalCore;
 import cofh.thermal.lib.block.DynamoBlock;
-import cofh.thermal.lib.block.entity.AugmentableBlockEntity;
 import com.google.common.collect.BiMap;
-import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.HashBiMap;
+import me.desht.pneumaticcraft.api.tileentity.IAirHandlerMachine;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -21,9 +19,13 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LevelEvent;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,15 +49,17 @@ public class ConversionKitItem extends Item {
 
 	// this isn't static, so that the block registry is filled before we get all these block objects
 	// relies on item reg (therefore Item instance initialization) happening AFTER block init.
-	public BiMap<Block, BoilerBlock> dynamoBoilerMap = ImmutableBiMap.of(
-			getDynamo("stirling"), STIRLING.block(),
-			getDynamo("compression"), COMPRESSION.block(),
-			getDynamo("magmatic"), MAGMATIC.block(),
-			getDynamo("numismatic"), NUMISMATIC.block(),
-			getDynamo("lapidary"), LAPIDARY.block(),
-			getDynamo("disenchantment"), DISENCHANTMENT.block(),
-			getDynamo("gourmand"), GOURMAND.block()
-	);
+	public static final BiMap<Block, BoilerBlock> dynamoBoilerMap = HashBiMap.create(7);
+
+	public static void fillDynamoMap() {
+		dynamoBoilerMap.put(getDynamo("stirling"), STIRLING.block());
+		dynamoBoilerMap.put(getDynamo("compression"), COMPRESSION.block());
+		dynamoBoilerMap.put(getDynamo("magmatic"), MAGMATIC.block());
+		dynamoBoilerMap.put(getDynamo("numismatic"), NUMISMATIC.block());
+		dynamoBoilerMap.put(getDynamo("lapidary"), LAPIDARY.block());
+		dynamoBoilerMap.put(getDynamo("disenchantment"), DISENCHANTMENT.block());
+		dynamoBoilerMap.put(getDynamo("gourmand"), GOURMAND.block());
+	}
 
 	public static BiMap<Block, BoilerBlock> getDynamoBoilerMap() {
 		return SysteamsRegistry.Items.BOILER_PIPE.get().dynamoBoilerMap;
@@ -87,7 +91,7 @@ public class ConversionKitItem extends Item {
 		// if we have a player, replace with a coil. otherwise just shrink the itemstack
 		if (player != null) {
 			if (!player.getAbilities().instabuild) {
-				ItemStack converstionReturn = ((BoilerBlock) boiler).getConverstionReturn();
+				ItemStack converstionReturn = ((BoilerBlock) boiler).getOtherConversionItem();
 				stack.shrink(1);
 				if (stack.isEmpty())
 					player.setItemInHand(hand, converstionReturn);
@@ -101,19 +105,40 @@ public class ConversionKitItem extends Item {
 		return InteractionResult.sidedSuccess(context.getLevel().isClientSide());
 	}
 
+	static class AirTransferData {
+		protected int amount;
+		protected int volume;
+		protected float pressure;
+		protected boolean exists;
+	}
+
 	public static void transformDynamoBoiler(BlockPos pos, Level level, BlockState oldState, BlockState newState, @Nullable Player player) {
 		List<ItemStack> oldItems = new ArrayList<>();
 		List<FluidStack> oldFluids = new ArrayList<>();
+		final AirTransferData oldAir = new AirTransferData();
+
 		if (!level.isClientSide()) {
-			AugmentableBlockEntity oldBE = (AugmentableBlockEntity) level.getBlockEntity(pos);
+			BlockEntity oldBE = level.getBlockEntity(pos);
 			assert oldBE != null;
 
-			SimpleItemInv oldInv = oldBE.getItemInv();
-			for (int i = 0; i < oldInv.getSlots(); i++)
-				oldItems.add(oldInv.getSlot(i).extractItem(i, 64, false));
-			SimpleTankInv oldTanks = oldBE.getTankInv();
-			for (int i = 0;i < oldTanks.getTanks();i++)
-				oldFluids.add(oldTanks.getTank(i).drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE));
+			LazyOptional<IItemHandler> oldInvLO = oldBE.getCapability(ForgeCapabilities.ITEM_HANDLER);
+			oldInvLO.ifPresent(oldInvCap -> {
+				for (int i = 0; i < oldInvCap.getSlots(); i++)
+					oldItems.add(oldInvCap.extractItem(i, 64, false));
+			});
+			LazyOptional<IFluidHandler> oldTankLO = oldBE.getCapability(ForgeCapabilities.FLUID_HANDLER);
+			oldTankLO.ifPresent(oldTankCap -> {
+				for (int i = 0; i < oldTankCap.getTanks(); i++)
+					oldFluids.add(oldTankCap.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE));
+			});
+			LazyOptional<IAirHandlerMachine> oldAirLO = oldBE.getCapability(Systeams.AIR_HANDLER_CAPABILITY);
+			oldAirLO.ifPresent(oldAirCap -> {
+				oldAir.amount = oldAirCap.getAir();
+				oldAir.pressure = oldAirCap.getPressure();
+				oldAir.volume = oldAirCap.getVolume();
+				oldAir.exists = true;
+				oldAirCap.addAir(-oldAir.amount);
+			});
 		}
 
 		level.setBlock(pos, newState, 3);
@@ -122,26 +147,41 @@ public class ConversionKitItem extends Item {
 		}
 
 		if (!level.isClientSide()) {
-			AugmentableBlockEntity newBE = (AugmentableBlockEntity) level.getBlockEntity(pos);
+			BlockEntity newBE = level.getBlockEntity(pos);
 			assert newBE != null;
 
-			SimpleItemInv newInv = newBE.getItemInv();
-			for (ItemStack item : oldItems) {
-				for (int i = 0; i < newInv.getSlots(); i++) {
-					if (item.isEmpty()) break;
-					item = newBE.getItemInv().insertItem(i, item, false);
+			LazyOptional<IItemHandler> newInvLO = newBE.getCapability(ForgeCapabilities.ITEM_HANDLER);
+			newInvLO.ifPresent(newInvCap -> {
+				for (ItemStack item : oldItems) {
+					for (int i = 0; i < newInvCap.getSlots(); i++) {
+						if (item.isEmpty()) break;
+						item = newInvCap.insertItem(i, item, false);
+					}
 				}
-			}
-			SimpleTankInv newTanks = newBE.getTankInv();
-			for (FluidStack fluid : oldFluids) {
-				for (int i = 0; i < newTanks.getTanks(); i++) {
-					if (fluid.isEmpty()) break;
-					int remaining = newTanks.fill(fluid, IFluidHandler.FluidAction.EXECUTE);
-					fluid.shrink(remaining);
+			});
+			LazyOptional<IFluidHandler> newTankLO = newBE.getCapability(ForgeCapabilities.FLUID_HANDLER);
+			newTankLO.ifPresent(newTankCap -> {
+				for (FluidStack fluid : oldFluids) {
+					for (int i = 0; i < newTankCap.getTanks(); i++) {
+						if (fluid.isEmpty()) break;
+						int remaining = newTankCap.fill(fluid, IFluidHandler.FluidAction.EXECUTE);
+						fluid.shrink(remaining);
+					}
 				}
+			});
+			LazyOptional<IAirHandlerMachine> newAirLO = newBE.getCapability(Systeams.AIR_HANDLER_CAPABILITY);
+			if (oldAir.exists) {
+				newAirLO.ifPresent(newAirCap -> {
+					if (newAirCap.getVolume() >= oldAir.volume) {
+						newAirCap.addAir(oldAir.amount);
+					} else {
+						newAirCap.setPressure(oldAir.pressure);
+					}
+				});
 			}
 		}
 	}
+
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag isAdvanced) {
