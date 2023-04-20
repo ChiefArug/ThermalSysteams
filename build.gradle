@@ -130,8 +130,8 @@ dependencies {
     implementation fg.deobf("com.teamcofh:thermal_foundation:${minecraft_version}-${thermal_foundation_version}")
     implementation fg.deobf("com.teamcofh:thermal_expansion:${minecraft_version}-${thermal_expansion_version}")
 
-//    implementation fg.deobf("me.desht.pneumaticcraft:pneumaticcraft-repressurized:${minecraft_version}-${pncr_version}")
-    implementation fg.deobf("local:pneumaticcraft-repressurized:1.19.2-4.3.4-CUSTOM")
+    implementation fg.deobf("me.desht.pneumaticcraft:pneumaticcraft-repressurized:${minecraft_version}-${pncr_version}")
+//    implementation fg.deobf("local:pneumaticcraft-repressurized:1.19.2-4.3.4-CUSTOM")
 
     // run game with a few extra mods for testing
     runtimeOnly fg.deobf("com.teamcofh:thermal_dynamics:${minecraft_version}-${thermal_dynamics_version}")
