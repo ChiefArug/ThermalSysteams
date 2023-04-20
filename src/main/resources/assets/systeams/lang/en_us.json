@@ -12,6 +12,15 @@
   "info.systeams.steam_prod": "Steam prod",
   "info.systeams.water_cons": "Water cons",
 
+  "info.systeams.air": "Air",
+  "info.systeams.air_pressure": "Pressure",
+  "info.systeams.air_volume": "Air",
+  "info.systeams.air_base_volume": "Base Volume",
+  "info.systeams.air_max_usage": "Max Usage",
+  "info.systeams.air_volume_unit": "mL",
+  "info.systeams.air_per_tick": "Max Air Usage",
+  "info.systeams.air_per_tick_unit": "mL/t",
+
   "block.systeams.steam_dynamo": "Steam Dynamo",
   "info.systeams.steam_dynamo.0": "Turns steam into power.",
   "info.systeams.steam_dynamo.1": "It's getting steamy in here",

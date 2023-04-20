@@ -155,6 +155,10 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	 */
 	protected abstract int consumeFuel();
 
+	/**
+	 *
+	 * @return Returns how much energy would be generated
+	 */
 	protected int getFuelEnergy() {
 		IDynamoFuel fuel = getFuelManager().getFuel(this);
 		return fuel == null ? 0 : fuel.getEnergy();
