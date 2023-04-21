@@ -105,6 +105,14 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+    maven {
+        url 'https://maven.tterrag.com/'
+        content {
+            includeGroup 'com.simibubi.create'
+            includeGroup 'com.jozufozu.flywheel'
+            includeGroup 'com.tterrag.registrate'
+        }
+    }
     flatDir {
         dirs 'run/external-mods'
         content {
@@ -132,6 +140,12 @@ dependencies {
 
     implementation fg.deobf("me.desht.pneumaticcraft:pneumaticcraft-repressurized:${minecraft_version}-${pncr_version}")
 //    implementation fg.deobf("local:pneumaticcraft-repressurized:1.19.2-4.3.4-CUSTOM")
+
+    // Create and deps
+    implementation fg.deobf("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false }
+    implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}")
+    implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
+
 
     // run game with a few extra mods for testing
     runtimeOnly fg.deobf("com.teamcofh:thermal_dynamics:${minecraft_version}-${thermal_dynamics_version}")
