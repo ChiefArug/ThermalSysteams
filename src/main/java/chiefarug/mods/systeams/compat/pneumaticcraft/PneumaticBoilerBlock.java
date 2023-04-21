@@ -1,4 +1,4 @@
-package chiefarug.mods.systeams.compat;
+package chiefarug.mods.systeams.compat.pneumaticcraft;
 
 import chiefarug.mods.systeams.block.BoilerBlock;
 import me.desht.pneumaticcraft.common.core.ModBlocks;

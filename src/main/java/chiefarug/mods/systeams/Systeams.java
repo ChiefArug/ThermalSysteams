@@ -1,6 +1,6 @@
 package chiefarug.mods.systeams;
 
-import chiefarug.mods.systeams.compat.SysteamsPNCRCompat;
+import chiefarug.mods.systeams.compat.SysteamsCompat;
 import chiefarug.mods.systeams.networking.RecipeCheckerChannel;
 import cofh.core.config.CoreClientConfig;
 import cofh.lib.util.Utils;
@@ -18,7 +18,6 @@ import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -46,10 +45,8 @@ public class Systeams {
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, SysteamsConfig.spec, "systeams-server.toml");
         RecipeCheckerChannel.init();
         bus.addListener((FMLCommonSetupEvent event) -> event.enqueueWork(ConversionKitItem::fillDynamoMap));
-        
-        if (ModList.get().isLoaded("pneumaticcraft")) {
-            SysteamsPNCRCompat.unfoldPressurizedManifold(bus);
-        }
+
+        SysteamsCompat.loadCompats(bus);
     }
 
     /**

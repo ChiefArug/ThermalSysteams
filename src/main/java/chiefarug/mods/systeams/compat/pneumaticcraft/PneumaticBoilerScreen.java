@@ -1,4 +1,4 @@
-package chiefarug.mods.systeams.compat;
+package chiefarug.mods.systeams.compat.pneumaticcraft;
 
 import chiefarug.mods.systeams.Systeams;
 import chiefarug.mods.systeams.client.screens.BoilerScreenBase;

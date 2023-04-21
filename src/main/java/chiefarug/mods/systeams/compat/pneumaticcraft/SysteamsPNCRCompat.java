@@ -1,4 +1,4 @@
-package chiefarug.mods.systeams.compat;
+package chiefarug.mods.systeams.compat.pneumaticcraft;
 
 import chiefarug.mods.systeams.ConversionKitItem;
 import chiefarug.mods.systeams.SysteamsConfig;
