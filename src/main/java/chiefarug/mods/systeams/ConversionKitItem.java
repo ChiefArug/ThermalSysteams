@@ -1,8 +1,11 @@
 package chiefarug.mods.systeams;
 
 import chiefarug.mods.systeams.block.BoilerBlock;
+import cofh.lib.fluid.SimpleTankInv;
+import cofh.lib.inventory.SimpleItemInv;
 import cofh.thermal.core.ThermalCore;
 import cofh.thermal.lib.block.DynamoBlock;
+import cofh.thermal.lib.block.entity.AugmentableBlockEntity;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import me.desht.pneumaticcraft.api.tileentity.IAirHandlerMachine;
@@ -41,6 +44,7 @@ import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.NUMISMATIC;
 import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.STIRLING;
 import static cofh.lib.util.constants.BlockStatePropertiesCoFH.FACING_ALL;
 import static cofh.thermal.lib.block.DynamoBlock.WATERLOGGED;
+import static net.minecraft.world.level.block.Block.popResource;
 
 public class ConversionKitItem extends Item {
 	public ConversionKitItem(Properties pProperties) {
@@ -119,26 +123,7 @@ public class ConversionKitItem extends Item {
 
 		if (!level.isClientSide()) {
 			BlockEntity oldBE = level.getBlockEntity(pos);
-			assert oldBE != null;
-
-			LazyOptional<IItemHandler> oldInvLO = oldBE.getCapability(ForgeCapabilities.ITEM_HANDLER);
-			oldInvLO.ifPresent(oldInvCap -> {
-				for (int i = 0; i < oldInvCap.getSlots(); i++)
-					oldItems.add(oldInvCap.extractItem(i, 64, false));
-			});
-			LazyOptional<IFluidHandler> oldTankLO = oldBE.getCapability(ForgeCapabilities.FLUID_HANDLER);
-			oldTankLO.ifPresent(oldTankCap -> {
-				for (int i = 0; i < oldTankCap.getTanks(); i++)
-					oldFluids.add(oldTankCap.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE));
-			});
-			LazyOptional<IAirHandlerMachine> oldAirLO = oldBE.getCapability(Systeams.AIR_HANDLER_CAPABILITY);
-			oldAirLO.ifPresent(oldAirCap -> {
-				oldAir.amount = oldAirCap.getAir();
-				oldAir.pressure = oldAirCap.getPressure();
-				oldAir.volume = oldAirCap.getVolume();
-				oldAir.exists = true;
-				oldAirCap.addAir(-oldAir.amount);
-			});
+			takeContents(oldBE, oldItems, oldFluids, oldAir);
 		}
 
 		level.setBlock(pos, newState, 3);
@@ -148,40 +133,103 @@ public class ConversionKitItem extends Item {
 
 		if (!level.isClientSide()) {
 			BlockEntity newBE = level.getBlockEntity(pos);
-			assert newBE != null;
+			putContents(newBE, oldItems, oldFluids, oldAir);
 
-			LazyOptional<IItemHandler> newInvLO = newBE.getCapability(ForgeCapabilities.ITEM_HANDLER);
-			newInvLO.ifPresent(newInvCap -> {
-				for (ItemStack item : oldItems) {
-					for (int i = 0; i < newInvCap.getSlots(); i++) {
-						if (item.isEmpty()) break;
-						item = newInvCap.insertItem(i, item, false);
-					}
-				}
-			});
-			LazyOptional<IFluidHandler> newTankLO = newBE.getCapability(ForgeCapabilities.FLUID_HANDLER);
-			newTankLO.ifPresent(newTankCap -> {
-				for (FluidStack fluid : oldFluids) {
-					for (int i = 0; i < newTankCap.getTanks(); i++) {
-						if (fluid.isEmpty()) break;
-						int remaining = newTankCap.fill(fluid, IFluidHandler.FluidAction.EXECUTE);
-						fluid.shrink(remaining);
-					}
-				}
-			});
-			LazyOptional<IAirHandlerMachine> newAirLO = newBE.getCapability(Systeams.AIR_HANDLER_CAPABILITY);
-			if (oldAir.exists) {
-				newAirLO.ifPresent(newAirCap -> {
-					if (newAirCap.getVolume() >= oldAir.volume) {
-						newAirCap.addAir(oldAir.amount);
-					} else {
-						newAirCap.setPressure(oldAir.pressure);
-					}
-				});
-			}
+			// chuck anything not transfered on the ground.
+			oldItems.forEach(item -> popResource(level, pos, item));
 		}
 	}
 
+	private static void takeContents(BlockEntity blockEntity, List<ItemStack> items, List<FluidStack> fluids, AirTransferData air) {
+
+		// If it is a thermal BE then we can use different methods to access the augment slots.
+		if (blockEntity instanceof AugmentableBlockEntity augmentableBlockEntity) {
+			SimpleItemInv oldInv = augmentableBlockEntity.getItemInv();
+			for (int i = 0; i < oldInv.getSlots(); i++)
+				items.add(oldInv.getSlot(i).extractItem(i, 64, false));
+			SimpleTankInv oldTanks = augmentableBlockEntity.getTankInv();
+			for (int i = 0; i < oldTanks.getTanks(); i++)
+				fluids.add(oldTanks.getTank(i).drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE));
+		} else {
+
+			LazyOptional<IItemHandler> oldInvLO = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER);
+			oldInvLO.ifPresent(oldInvCap -> {
+				for (int i = 0; i < oldInvCap.getSlots(); i++)
+					items.add(oldInvCap.extractItem(i, 64, false));
+			});
+			LazyOptional<IFluidHandler> oldTankLO = blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER);
+			oldTankLO.ifPresent(oldTankCap -> {
+				for (int i = 0; i < oldTankCap.getTanks(); i++)
+					fluids.add(oldTankCap.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE));
+			});
+		}
+
+		LazyOptional<IAirHandlerMachine> oldAirLO = blockEntity.getCapability(Systeams.AIR_HANDLER_CAPABILITY);
+			oldAirLO.ifPresent(oldAirCap -> {
+				air.amount = oldAirCap.getAir();
+				air.pressure = oldAirCap.getPressure();
+				air.volume = oldAirCap.getVolume();
+				air.exists = true;
+				oldAirCap.addAir(-air.amount);
+			});
+	}
+
+	private static void putContents(BlockEntity blockEntity, List<ItemStack> items, List<FluidStack> fluids, AirTransferData air) {
+
+		// If it is a thermal BE then we can use different methods to access the augment slots.
+		if (blockEntity instanceof AugmentableBlockEntity augmentableBlockEntity) {
+			SimpleItemInv newInv = augmentableBlockEntity.getItemInv();
+			items.removeIf(item -> {
+				for (int i = 0; i < newInv.getSlots(); i++) {
+					if (item.isEmpty()) return true;
+					item = augmentableBlockEntity.getItemInv().insertItem(i, item, false);
+				}
+				return item.isEmpty();
+			});
+			SimpleTankInv newTanks = augmentableBlockEntity.getTankInv();
+			fluids.removeIf(fluid -> {
+				for (int i = 0; i < newTanks.getTanks(); i++) {
+					if (fluid.isEmpty()) return true;
+					int remaining = newTanks.fill(fluid, IFluidHandler.FluidAction.EXECUTE);
+					fluid.shrink(remaining);
+				}
+				return fluid.isEmpty();
+			});
+		} else {
+			LazyOptional<IItemHandler> newInvLO = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER);
+			newInvLO.ifPresent(newInvCap -> {
+				items.removeIf(item -> {
+					for (int i = 0; i < newInvCap.getSlots(); i++) {
+						if (item.isEmpty()) return true;
+						item = newInvCap.insertItem(i, item, false);
+					}
+					return item.isEmpty();
+				});
+			});
+			LazyOptional<IFluidHandler> newTankLO = blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER);
+			newTankLO.ifPresent(newTankCap -> {
+				fluids.removeIf(fluid -> {
+					for (int i = 0; i < newTankCap.getTanks(); i++) {
+						if (fluid.isEmpty()) return true;
+						int remaining = newTankCap.fill(fluid, IFluidHandler.FluidAction.EXECUTE);
+						fluid.shrink(remaining);
+					}
+					return fluid.isEmpty();
+				});
+			});
+		}
+
+		LazyOptional<IAirHandlerMachine> newAirLO = blockEntity.getCapability(Systeams.AIR_HANDLER_CAPABILITY);
+			if (air.exists) {
+				newAirLO.ifPresent(newAirCap -> {
+					if (newAirCap.getVolume() >= air.volume) {
+						newAirCap.addAir(air.amount);
+					} else {
+						newAirCap.setPressure(air.pressure);
+					}
+				});
+			}
+	}
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag isAdvanced) {
