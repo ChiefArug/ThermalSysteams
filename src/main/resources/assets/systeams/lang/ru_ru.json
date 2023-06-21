@@ -1,0 +1,74 @@
+{
+  "item.systeams.steam_bucket": "Ведро пара",
+  "fluid_type.systeams.steam": "Пар",
+  "item.systeams.boiler_pipe": "Паропровод",
+  "item.systeams.boiler_pipe.keyword": "пар генератор бойлер котёл",
+  "item.thermal.rf_coil.keyword": "пар генератор бойлер котёл",
+  "item.systeams.boiler_pipe.desc": "Используйте крадясь на генераторе, для преобразования в котёл. Возвращает катушку.",
+  "item.thermal.rf_coil.desc": "Используйте крадясь на котле, для преобразования в генератор. Возвращает паропровод.",
+
+  "info.systeams.steam": "Пар",
+  "info.systeams.steam_prod": "Произв. пара",
+  "info.systeams.water_cons": "Водные монеты",
+
+  "info.systeams.air": "Воздух",
+  "info.systeams.air_pressure": "Давление",
+  "info.systeams.air_volume": "Воздух",
+  "info.systeams.air_base_volume": "Базовый объём",
+  "info.systeams.air_max_usage": "Макс. исп.",
+  "info.systeams.air_volume_unit": "мВ",
+  "info.systeams.air_per_tick": "Макс. исп. возд.",
+  "info.systeams.air_per_tick_unit": "мВ/т.",
+
+  "block.pneumaticcraft.advanced_pressure_tube.desc": "Используйте крадясь на генераторе, для преобразования в котёл. Возвращает паропровод.",
+
+  "block.systeams.steam_dynamo": "Паровой генератор",
+  "info.systeams.steam_dynamo.0": "Превращает пар в энергию.",
+  "info.systeams.steam_dynamo.1": "Здесь становится душно",
+  "block.systeams.steam_dynamo.keyword": "генератор двигатель мощность котёл пар",
+
+  "info.systeams.boiler.throttle": "Не расходует буферное топливо, когда выход заполнен.",
+
+  "block.systeams.stirling_boiler": "Стирлинг котёл",
+  "info.systeams.stirling_boiler.0": "Генерирует пар, используя твёрдое топливо.",
+  "info.systeams.stirling_boiler.1": "Большинство вещей, которые горят в печи, горят и здесь.",
+  "block.systeams.stirling_boiler.keyword": "древесный уголь кокс генератор двигатель пар",
+
+  "block.systeams.magmatic_boiler": "Магмовый котёл",
+  "info.systeams.magmatic_boiler.0": "Генерирует пар, используя очень горячие жидкости.",
+  "info.systeams.magmatic_boiler.1": "В результате этого процесса жидкости растворяются в ничто.",
+  "block.systeams.magmatic_boiler.keyword": "двигатель генератор лава пар",
+
+  "block.systeams.compression_boiler": "Компрессионный котёл",
+  "info.systeams.compression_boiler.0": "Генерирует пар, используя жидкое топливо.",
+  "block.systeams.compression_boiler.keyword": "генератор топливо двигатель пар",
+
+  "block.systeams.disenchantment_boiler": "Чародейский котёл",
+  "info.systeams.disenchantment_boiler.0": "Генерирует пар, используя зачарованные предметы.",
+  "info.systeams.disenchantment_boiler.1": "Предмет уничтожается вместе с чарами. Вот почему это работает.",
+  "block.systeams.disenchantment_boiler.keyword": "книга генератор двигатель пар",
+
+  "block.systeams.gourmand_boiler": "Кулинарный котёл",
+  "info.systeams.gourmand_boiler.0": "Генерирует пар, используя пищу!",
+  "info.systeams.gourmand_boiler.1": "Кто знает, какого зверя ты можешь кормить.",
+  "info.systeams.gourmand_boiler.2": "Это калорийно!",
+  "block.systeams.gourmand_boiler.keyword": "генератор еда двигатель пар",
+
+  "block.systeams.lapidary_boiler": "Липидарный котёл",
+  "info.systeams.lapidary_boiler.0": "Генерирует пар, используя драгоценные камни!",
+  "info.systeams.lapidary_boiler.1": "Вероятно, портал в альтернативное измерение одержимых искрами гоблинов.",
+  "info.systeams.lapidary_boiler.2": "В любом случае драгоценные камни - это просто красивые камни.",
+  "block.systeams.lapidary_boiler.keyword": "генератор драгоценности двигатель пар",
+
+  "block.systeams.numismatic_boiler": "Нумизматический котёл",
+  "info.systeams.numismatic_boiler.0": "Генерирует пар с использованием экономического арбитража.",
+  "info.systeams.numismatic_boiler.1": "Может быть порталом в другое измерение чистой алчности.",
+  "info.systeams.numismatic_boiler.2": "Не задумывайтесь, просто вставьте монеты.",
+  "block.systeams.numismatic_boiler.keyword": "монета генератор generator steam",
+
+  "block.systeams.pneumatic_boiler": "Пневматический котёл",
+  "info.systeams.pneumatic_boiler.0": "Генерирует пар, используя сжатый воздух.",
+  "info.systeams.pneumatic_boiler.1": "Некоторые говорят, что это пустая болтовня",
+  "info.systeams.pneumatic_boiler.2": "Не волнуйтесь, здесь нагревается только вода!",
+  "block.systeams.pneumatic_boiler.keyword": "воздушное давление двигатель генератор пара"
+}
