@@ -2,7 +2,7 @@
   "item.systeams.steam_bucket": "Steam Bucket",
   "fluid_type.systeams.steam": "Steam",
   "item.systeams.boiler_pipe": "Steam Pipe",
-  "item.systeams.boiler_pipe.keyword": "steam dynamo boiler",
+  "item.systeams.boiler_pipe.keyword": "steam dynamo boiler coil",
   "item.thermal.rf_coil.keyword": "steam dynamo boiler",
   "item.systeams.boiler_pipe.desc": "Shift-use on a Dynamo to convert to a Boiler. Returns the other head piece",
   "item.thermal.rf_coil.desc": "Shift-use on a Boiler to convert to a Dynamo. Returns the Steam Pipe",
