@@ -12,7 +12,10 @@ import cofh.lib.fluid.FluidStorageCoFH;
 import cofh.lib.util.Constants;
 import cofh.thermal.core.config.ThermalCoreConfig;
 import cofh.thermal.lib.block.entity.DynamoBlockEntity;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -26,6 +29,7 @@ import java.util.function.Predicate;
 
 import static cofh.lib.util.Constants.BUCKET_VOLUME;
 import static cofh.thermal.lib.util.managers.SingleFluidFuelManager.FLUID_FUEL_AMOUNT;
+import static net.minecraft.Util.NIL_UUID;
 
 
 public class SteamDynamoBlockEntity extends DynamoBlockEntity {
@@ -44,6 +48,7 @@ public class SteamDynamoBlockEntity extends DynamoBlockEntity {
         initHandlers();
 	}
 
+
 	@Override
 	protected int getBaseProcessTick() {
 		return (int) Math.round(SteamFuelManager.instance().getBasePower() * SysteamsConfig.STEAM_DYNAMO_MULTIPLIER.get());
@@ -54,16 +59,42 @@ public class SteamDynamoBlockEntity extends DynamoBlockEntity {
 		return SteamFuelManager.instance().getEnergy(steamTank.getFluidStack()) > 0 && steamTank.getAmount() >= FLUID_FUEL_AMOUNT;
 	}
 
+
 	@Override
     protected void processStart() {
         if (cacheRenderFluid()) {
             TileStatePacket.sendToClient(this);
         }
-        fuel += fuelMax = Math.round(SteamFuelManager.instance().getEnergy(steamTank.getFluidStack()) * energyMod);
-        steamTank.modify(-FLUID_FUEL_AMOUNT);
+        fuelUp();
     }
 
-    @Override
+	/**
+	 * This keeps track of how much fuel per cycle we are burning, and is cached so the flame inside the gui is consistent *ish*
+	 */
+	private int fuelPerCycle = 1;
+
+	private void fuelUp() {
+		int energy = Math.round(SteamFuelManager.instance().getEnergy(steamTank.getFluidStack()) * energyMod);
+		for (int i = fuelPerCycle;i > 0;i--) {
+			fuel += energy;
+			steamTank.modify(-FLUID_FUEL_AMOUNT);
+		}
+		while (fuel <= 0) {
+			fuelPerCycle++;
+			fuel += energy;
+			steamTank.modify(-FLUID_FUEL_AMOUNT);
+		}
+		fuelMax = energy * fuelPerCycle;
+	}
+
+	@Override
+	protected void resetAttributes() {
+		super.resetAttributes();
+		// reset the fuel per cycle incase the speed changed due to augs being added/removed
+		fuelPerCycle = 1;
+	}
+
+	@Override
     protected boolean cacheRenderFluid() {
         FluidStack prevFluid = renderFluid;
         renderFluid = new FluidStack(steamTank.getFluidStack(), BUCKET_VOLUME);

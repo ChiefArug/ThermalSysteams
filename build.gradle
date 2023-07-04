@@ -137,6 +137,7 @@ dependencies {
     runtimeOnly fg.deobf("com.teamcofh:thermal_dynamics:${minecraft_version}-${thermal_dynamics_version}")
     runtimeOnly fg.deobf("mekanism:Mekanism:${minecraft_version}-${mekanism_version}")
     runtimeOnly fg.deobf("curse.maven:pipez-443900:${pipez_fid}")
+    runtimeOnly fg.deobf("curse.maven:flux-networks-248020:4095061")
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
