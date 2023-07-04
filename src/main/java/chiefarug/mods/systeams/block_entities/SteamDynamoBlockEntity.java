@@ -12,10 +12,7 @@ import cofh.lib.fluid.FluidStorageCoFH;
 import cofh.lib.util.Constants;
 import cofh.thermal.core.config.ThermalCoreConfig;
 import cofh.thermal.lib.block.entity.DynamoBlockEntity;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -29,7 +26,6 @@ import java.util.function.Predicate;
 
 import static cofh.lib.util.Constants.BUCKET_VOLUME;
 import static cofh.thermal.lib.util.managers.SingleFluidFuelManager.FLUID_FUEL_AMOUNT;
-import static net.minecraft.Util.NIL_UUID;
 
 
 public class SteamDynamoBlockEntity extends DynamoBlockEntity {
