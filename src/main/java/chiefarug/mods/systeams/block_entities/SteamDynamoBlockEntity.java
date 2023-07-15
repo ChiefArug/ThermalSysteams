@@ -22,6 +22,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 import static cofh.lib.util.Constants.BUCKET_VOLUME;
@@ -71,11 +72,11 @@ public class SteamDynamoBlockEntity extends DynamoBlockEntity {
 
 	private void fuelUp() {
 		int energy = Math.round(SteamFuelManager.instance().getEnergy(steamTank.getFluidStack()) * energyMod);
-		for (int i = fuelPerCycle;i > 0;i--) {
+		for (int i = fuelPerCycle;i > 0 && !steamTank.isEmpty();i--) {
 			fuel += energy;
 			steamTank.modify(-FLUID_FUEL_AMOUNT);
 		}
-		while (fuel <= 0) {
+		while (fuel <= 0 && !steamTank.isEmpty()) {
 			fuelPerCycle++;
 			fuel += energy;
 			steamTank.modify(-FLUID_FUEL_AMOUNT);
@@ -100,7 +101,7 @@ public class SteamDynamoBlockEntity extends DynamoBlockEntity {
 	@Nullable
 	@Override
 	public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-		return new SteamDynamoContainer(i, this.level, worldPosition, inventory, player);
+		return new SteamDynamoContainer(i, Objects.requireNonNull(this.level, "Tried to construct a Steam Dynamo menu too ealy!"), worldPosition, inventory, player);
 	}
 
 	@Nonnull
