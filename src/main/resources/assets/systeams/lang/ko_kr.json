@@ -1,0 +1,75 @@
+{
+  "item.systeams.steam_bucket": "증기 양동이",
+  "fluid_type.systeams.steam": "증기",
+  "item.systeams.boiler_pipe": "증기 파이프",
+  "item.systeams.boiler_pipe.keyword": "증기 발전기 보일러 코일",
+  "item.thermal.rf_coil.keyword": "증기 발전기 보일러",
+  "item.systeams.boiler_pipe.desc": "Shift-사용으로 발전기를 보일러로 변환합니다. 주요 부품을 회수합니다",
+  "item.thermal.rf_coil.desc": "Shift-사용으로 보일러를 발전기로 변환합니다. 증기 파이프를 회수합니다",
+  "itemGroup.systeams": "Systeams",
+
+  "info.systeams.steam": "증기",
+  "info.systeams.steam_prod": "증기 생산",
+  "info.systeams.water_cons": "물 소모",
+
+  "info.systeams.air": "공기",
+  "info.systeams.air_pressure": "압력",
+  "info.systeams.air_volume": "공기",
+  "info.systeams.air_base_volume": "기본 용량",
+  "info.systeams.air_max_usage": "최대 사용량",
+  "info.systeams.air_volume_unit": "mL",
+  "info.systeams.air_per_tick": "최대 공기 사용량",
+  "info.systeams.air_per_tick_unit": "mL/틱",
+
+  "block.pneumaticcraft.advanced_pressure_tube.desc": "Shift-사용으로 발전기를 보일러로 변환합니다. 증기 파이프를 회수합니다",
+
+  "block.systeams.steam_dynamo": "증기 발전기",
+  "info.systeams.steam_dynamo.0": "증기를 동력으로 전환합니다.",
+  "info.systeams.steam_dynamo.1": "여기 점점 찜찜해지는데?",
+  "block.systeams.steam_dynamo.keyword": "엔진 생산기 보일러 동력",
+
+  "info.systeams.boiler.throttle": "출력이 가득찰때 연료를 낭비하지 않습니다.",
+
+  "block.systeams.stirling_boiler": "열 보일러",
+  "info.systeams.stirling_boiler.0": "고체 연료에서 증기를 생산합니다.",
+  "info.systeams.stirling_boiler.1": "화로에서 사용하는 대부분의 연료를 여기서도 사용할 수 있습니다.",
+  "block.systeams.stirling_boiler.keyword": "숯 코크스 엔진 생산기 증기",
+
+  "block.systeams.magmatic_boiler": "용암 보일러",
+  "info.systeams.magmatic_boiler.0": "고온의 유체를 사용하여 증기를 생산합니다.",
+  "info.systeams.magmatic_boiler.1": "이 과정에서 사용된 액체는 사라져버립니다.",
+  "block.systeams.magmatic_boiler.keyword": "엔진 생산기 용암 증기",
+
+  "block.systeams.compression_boiler": "압축 보일러",
+  "info.systeams.compression_boiler.0": "액체 연료를 사용하여 증기를 생산합니다.",
+  "block.systeams.compression_boiler.keyword": "엔진 연료 생산기 증기",
+
+  "block.systeams.disenchantment_boiler": "마법 해제 보일러",
+  "info.systeams.disenchantment_boiler.0": "마법이 부여된 아이템을 사용하여 증기를 생산합니다.",
+  "info.systeams.disenchantment_boiler.1": "아이템은 마법 부여와 함께 파괴됩니다. 이것이 잘 작동되는 이유는 바로 이것입니다.",
+  "block.systeams.disenchantment_boiler.keyword": "책 엔진 생산기 증기",
+
+  "block.systeams.gourmand_boiler": "미식가 보일러",
+  "info.systeams.gourmand_boiler.0": "음식을 사용하여 증기를 생산합니다!",
+  "info.systeams.gourmand_boiler.1": "당신이 어떤 종류의 짐승에게 먹이를 주는지 누가 알겠습니까?",
+  "info.systeams.gourmand_boiler.2": "아주 열륭합니다!",
+  "block.systeams.gourmand_boiler.keyword": "엔진 음식 생산기 증기",
+
+  "block.systeams.lapidary_boiler": "보석 보일러",
+  "info.systeams.lapidary_boiler.0": "보석에서 증기를 생산합니다!",
+  "info.systeams.lapidary_boiler.1": "아마도 이세계의 보석을 좋아하는 고블린이 사는 차원과 연결되어있는듯 합니다.",
+  "info.systeams.lapidary_boiler.2": "보석은 단지 예쁜 돌일 뿐인데 말이죠.",
+  "block.systeams.lapidary_boiler.keyword": "엔진 보석 생산기 증기",
+
+  "block.systeams.numismatic_boiler": "화폐 보일러",
+  "info.systeams.numismatic_boiler.0": "경제적인 가치를 증기로 변환합니다.",
+  "info.systeams.numismatic_boiler.1": "순수한 욕망이 소용돌이 치는 다른 차원의 입구일지도 모릅니다.",
+  "info.systeams.numismatic_boiler.2": "너무 깊게 생각하지 말고 그냥 동전이나 집어넣죠.",
+  "block.systeams.numismatic_boiler.keyword": "동전 엔진 생산기 증기",
+
+  "block.systeams.pneumatic_boiler": "공압 보일러",
+  "info.systeams.pneumatic_boiler.0": "공압을 증기로 변환합니다.",
+  "info.systeams.pneumatic_boiler.1": "어떤사람들은 뜨거운 공기로 동작한다고 말하지만",
+  "info.systeams.pneumatic_boiler.2": "걱정마세요, 여기선 물을 끓이기만 합니다!",
+  "block.systeams.pneumatic_boiler.keyword": "공기 압력 엔진 생산기 증기"
+}
