@@ -80,7 +80,7 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
     maven { // JEI
-        url 'https://dvs1.progwml6.com/files/maven/'
+        url 'https://modmaven.dev'
         content {
             includeGroup 'mezz.jei'
         }
@@ -127,7 +127,8 @@ dependencies {
 
     implementation fg.deobf("com.teamcofh:cofh_core:${minecraft_version}-${cofh_core_version}")
     implementation fg.deobf("com.teamcofh:thermal_core:${minecraft_version}-${thermal_core_version}")
-    implementation fg.deobf("com.teamcofh:thermal_foundation:${minecraft_version}-${thermal_foundation_version}")
+//    implementation fg.deobf("com.teamcofh:thermal_foundation:${minecraft_version}-${thermal_foundation_version}")
+    implementation fg.deobf("local:thermal_foundation:${minecraft_version}-${thermal_foundation_version}")
     implementation fg.deobf("com.teamcofh:thermal_expansion:${minecraft_version}-${thermal_expansion_version}")
 
     implementation fg.deobf("me.desht.pneumaticcraft:pneumaticcraft-repressurized:${minecraft_version}-${pncr_version}")

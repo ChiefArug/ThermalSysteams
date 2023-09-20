@@ -6,11 +6,11 @@ import cofh.core.client.gui.CoreTextures;
 import cofh.core.client.gui.element.panel.ResourcePanel;
 import cofh.core.util.helpers.GuiHelper;
 import cofh.thermal.core.client.gui.ThermalGuiHelper;
-import cofh.thermal.lib.client.gui.AugmentableScreen;
+import cofh.thermal.lib.client.gui.AugmentableTileScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class BoilerScreenBase<T extends BoilerContainerBase<?>> extends AugmentableScreen<T> {
+public class BoilerScreenBase<T extends BoilerContainerBase<?>> extends AugmentableTileScreen<T> {
 
 	protected BoilerBlockEntityBase blockEntity;
 

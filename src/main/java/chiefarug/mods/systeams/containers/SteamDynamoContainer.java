@@ -1,7 +1,7 @@
 package chiefarug.mods.systeams.containers;
 
 import chiefarug.mods.systeams.SysteamsRegistry;
-import cofh.core.inventory.container.TileContainer;
+import cofh.core.inventory.container.TileCoFHContainer;
 import cofh.core.util.ProxyUtils;
 import cofh.lib.inventory.wrapper.InvWrapperCoFH;
 import cofh.thermal.lib.block.entity.DynamoBlockEntity;
@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
-public class SteamDynamoContainer extends TileContainer {
+public class SteamDynamoContainer extends TileCoFHContainer {
 
 	public final DynamoBlockEntity blockEntity;
 

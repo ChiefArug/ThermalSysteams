@@ -178,11 +178,6 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 		return (int) (scale * (double) fuelRemaining / fuelMax);
 	}
 
-	@Override
-	protected int getBaseEnergyStorage() {
-		return 0; // we don't store no energy here in boiler town
-	}
-
 	// region AUGMENTS
 	protected float generationModifier = 1.0F;
 	protected float efficiencyModifier = 1.0f;
