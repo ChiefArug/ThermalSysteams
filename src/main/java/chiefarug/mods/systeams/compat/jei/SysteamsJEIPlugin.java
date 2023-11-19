@@ -1,4 +1,4 @@
-package chiefarug.mods.systeams.jei;
+package chiefarug.mods.systeams.compat.jei;
 
 import chiefarug.mods.systeams.SysteamsRegistry;
 import chiefarug.mods.systeams.client.screens.CompressionBoilerScreen;

@@ -1,4 +1,4 @@
-package chiefarug.mods.systeams.compat;
+package chiefarug.mods.systeams.compat.pneumaticcraft;
 
 import chiefarug.mods.systeams.Systeams;
 import chiefarug.mods.systeams.client.screens.BoilerScreenBase;
@@ -41,7 +41,7 @@ public class PneumaticBoilerScreen extends BoilerScreenBase<PneumaticBoilerConta
 				.setMax(blockEntity::getVolume, "info.systeams.air_base_volume", "info.systeams.air_volume_unit");
 	}
 
-	protected class AirResourcePanel extends ResourcePanel {
+	protected static class AirResourcePanel extends ResourcePanel {
 
 		public IntSupplier doubleSupplier;
 

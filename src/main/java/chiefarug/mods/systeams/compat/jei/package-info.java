@@ -1,4 +1,4 @@
 @ParametersAreNonnullByDefault
-package chiefarug.mods.systeams.jei;
+package chiefarug.mods.systeams.compat.jei;
 
 import javax.annotation.ParametersAreNonnullByDefault;

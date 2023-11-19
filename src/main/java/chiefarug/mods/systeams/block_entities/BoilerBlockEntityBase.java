@@ -360,6 +360,10 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 		return super.getFluidHandlerCapability(side);
 	}
 
+	protected <T> LazyOptional<T> getGasHandlerCapability(@Nullable Direction side) {
+
+	}
+
 	// Copied from CoFH's FluidHelper class because theirs doesn't support simulating the insert
 	private boolean simulateInsertToAdjacent(BlockEntity tile, FluidStorageCoFH tank, @SuppressWarnings("SameParameterValue") int amount, Direction side) {
 		IFluidHandler.FluidAction action = SIMULATE;

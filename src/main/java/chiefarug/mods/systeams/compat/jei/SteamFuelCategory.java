@@ -1,4 +1,4 @@
-package chiefarug.mods.systeams.jei;
+package chiefarug.mods.systeams.compat.jei;
 
 import chiefarug.mods.systeams.SysteamsRegistry;
 import chiefarug.mods.systeams.recipe.SteamFuel;
@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static chiefarug.mods.systeams.jei.SysteamsJEIPlugin.STEAM_DYNAMO_RECIPE_TYPE;
+import static chiefarug.mods.systeams.compat.jei.SysteamsJEIPlugin.STEAM_DYNAMO_RECIPE_TYPE;
 
 public class SteamFuelCategory extends ThermalFuelCategory<SteamFuel> {
 

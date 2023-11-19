@@ -1,6 +1,6 @@
 package chiefarug.mods.systeams;
 
-import chiefarug.mods.systeams.compat.SysteamsPNCRCompat;
+import chiefarug.mods.systeams.compat.pneumaticcraft.SysteamsPNCRCompat;
 import chiefarug.mods.systeams.networking.RecipeCheckerChannel;
 import cofh.core.config.CoreClientConfig;
 import cofh.lib.util.Utils;
