@@ -1,6 +1,8 @@
 package chiefarug.mods.systeams.block_entities;
 
+import chiefarug.mods.systeams.Systeams;
 import chiefarug.mods.systeams.SysteamsRegistry;
+import chiefarug.mods.systeams.compat.mekanism.SysteamsMekanismCompat;
 import cofh.core.util.helpers.AugmentDataHelper;
 import cofh.core.util.helpers.AugmentableHelper;
 import cofh.core.util.helpers.FluidHelper;
@@ -28,10 +30,12 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.EmptyFluidHandler;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -341,6 +345,16 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 
 
 	// Capabilities
+
+
+	@NotNull
+	@Override
+	@SuppressWarnings("EqualsBetweenInconvertibleTypes")
+	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+		if (cap == Systeams.GAS_HANDLER_CAPABILITY) return getGasHandlerCapability(side);
+		return super.getCapability(cap, side);
+	}
+
 	@Override
 	protected <T> LazyOptional<T> getItemHandlerCapability(@Nullable Direction side) {
 		if (side != null && side.equals(getFacing())) {
@@ -361,7 +375,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	}
 
 	protected <T> LazyOptional<T> getGasHandlerCapability(@Nullable Direction side) {
-
+		return SysteamsMekanismCompat.wrapLiquidCapability(this.getFluidHandlerCapability(side)).cast();
 	}
 
 	// Copied from CoFH's FluidHelper class because theirs doesn't support simulating the insert

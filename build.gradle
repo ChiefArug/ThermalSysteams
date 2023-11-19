@@ -125,6 +125,12 @@ dependencies {
     // at runtime, use the full JEI jar for Forge
     runtimeOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}"))
 
+//    // compile against mek api
+//    compileOnly "mekanism:Mekanism:${minecraft_version}-${mekanism_version}-api"
+//    // use full mek at runtime
+    // stuff it and use full mek in both places. the api wasnt wanting to work.
+    implementation fg.deobf("mekanism:Mekanism:${minecraft_version}-${mekanism_version}")
+
     implementation fg.deobf("com.teamcofh:cofh_core:${minecraft_version}-${cofh_core_version}")
     implementation fg.deobf("com.teamcofh:thermal_core:${minecraft_version}-${thermal_core_version}")
 //    implementation fg.deobf("com.teamcofh:thermal_foundation:${minecraft_version}-${thermal_foundation_version}")
@@ -136,7 +142,6 @@ dependencies {
 
     // run game with a few extra mods for testing
     runtimeOnly fg.deobf("com.teamcofh:thermal_dynamics:${minecraft_version}-${thermal_dynamics_version}")
-    runtimeOnly fg.deobf("mekanism:Mekanism:${minecraft_version}-${mekanism_version}")
     runtimeOnly fg.deobf("curse.maven:pipez-443900:${pipez_fid}")
 }
 

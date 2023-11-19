@@ -1,5 +1,6 @@
 package chiefarug.mods.systeams;
 
+import chiefarug.mods.systeams.compat.mekanism.SysteamsMekanismCompat;
 import chiefarug.mods.systeams.compat.pneumaticcraft.SysteamsPNCRCompat;
 import chiefarug.mods.systeams.networking.RecipeCheckerChannel;
 import cofh.core.config.CoreClientConfig;
@@ -8,6 +9,7 @@ import cofh.lib.util.constants.ModIds;
 import cofh.lib.util.helpers.StringHelper;
 import com.mojang.logging.LogUtils;
 import me.desht.pneumaticcraft.api.tileentity.IAirHandlerMachine;
+import mekanism.api.chemical.gas.IGasHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -38,7 +40,9 @@ public class Systeams {
     @SuppressWarnings("unused")
     public static final Logger LGGR = LogUtils.getLogger();
     public static final String MODID = "systeams";
+
     public static final Capability<IAirHandlerMachine> AIR_HANDLER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
+    public static final Capability<IGasHandler> GAS_HANDLER_CAPABILITY = CapabilityManager.get(new CapabilityToken<IGasHandler>() {});
 
     public Systeams() {
         var bus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -49,6 +53,9 @@ public class Systeams {
         
         if (ModList.get().isLoaded("pneumaticcraft")) {
             SysteamsPNCRCompat.unfoldPressurizedManifold(bus);
+        }
+        if (ModList.get().isLoaded("mekanism")) {
+            SysteamsMekanismCompat.activateMechanisedManifold(bus);
         }
     }
 
