@@ -1,9 +1,10 @@
 package chiefarug.mods.systeams.compat.mekanism;
 
 import chiefarug.mods.systeams.SysteamsRegistry;
+import cofh.lib.fluid.FluidStorageCoFH;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import com.sun.jna.platform.win32.WinUser;
+import com.mojang.datafixers.util.Pair;
 import mekanism.api.Action;
 import mekanism.api.MekanismAPI;
 import mekanism.api.chemical.gas.Gas;
@@ -14,13 +15,11 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import mekanism.api.chemical.gas.IGasHandler;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
 import static chiefarug.mods.systeams.Systeams.LGGR;
 import static chiefarug.mods.systeams.compat.mekanism.SysteamsMekanismCompat.LiquidToGasHandler.fluidConversions;
@@ -54,8 +53,18 @@ public class SysteamsMekanismCompat {
 			if (gas.isEmpty()) return FluidStack.EMPTY;
 			Fluid fluid = fluidConversions.inverse().get(gas.getType());
 			if (fluid == null) return FluidStack.EMPTY;
-			if (gas.getAmount() > Integer.MAX_VALUE) LGGR.error("Systeams converted a massive amount of gas {} to fluid {}. {}mb has been voided!", gas.getTypeRegistryName(), ForgeRegistries.FLUIDS.getKey(fluid),gas.getAmount() - Integer.MAX_VALUE);
+			if (gas.getAmount() > Integer.MAX_VALUE)
+				LGGR.error("Systeams converted a massive amount of gas {} to fluid {}. {}mb has been voided!", gas.getTypeRegistryName(), ForgeRegistries.FLUIDS.getKey(fluid), gas.getAmount() - Integer.MAX_VALUE);
 			return new FluidStack(fluid, (int) gas.getAmount());
+		}
+
+		public static Pair<FluidStack, Long> gasToFluidWithOverflow(GasStack gas) {
+			if (gas.isEmpty()) return Pair.of(FluidStack.EMPTY, 0L);
+			Fluid fluid = fluidConversions.inverse().get(gas.getType());
+			if (fluid == null) return Pair.of(FluidStack.EMPTY, gas.getAmount());
+			if (gas.getAmount() > Integer.MAX_VALUE)
+				return Pair.of(new FluidStack(fluid, (int) gas.getAmount()), gas.getAmount() - Integer.MAX_VALUE);
+			return Pair.of(new FluidStack(fluid, (int) gas.getAmount()), 0L);
 		}
 
 		public static GasStack fluidToGas(FluidStack fluid) {
@@ -76,20 +85,21 @@ public class SysteamsMekanismCompat {
 		}
 
 		/**
-		 * Returns the {@link STACK} in a given tank.
+		 * Returns the {@link GasStack} in a given tank.
 		 *
 		 * <p>
-		 * <strong>IMPORTANT:</strong> This {@link STACK} <em>MUST NOT</em> be modified. This method is not for altering internal contents. Any implementers who are
+		 * <strong>IMPORTANT:</strong> This {@link GasStack} <em>MUST NOT</em> be modified. This method is not for altering internal contents. Any implementers who are
 		 * able to detect modification via this method should throw an exception. It is ENTIRELY reasonable and likely that the stack returned here will be a copy.
 		 * </p>
 		 *
 		 * <p>
-		 * <strong><em>SERIOUSLY: DO NOT MODIFY THE RETURNED CHEMICAL STACK</em></strong>
+		 * <strong><em>SERIOUSLY: DO NOT MODIFY THE RETURNED CHEMICAL GasStack</em></strong>
 		 * </p>
 		 *
 		 * @param tank Tank to query.
-		 * @return {@link STACK} in a given tank. {@link #getEmptyStack()} if the tank is empty.
+		 * @return {@link GasStack} in a given tank. {@link #getEmptyStack()} if the tank is empty.
 		 */
+		@NotNull
 		@Override
 		public GasStack getChemicalInTank(int tank) {
 			return fluidToGas(fluidHandler.getFluidInTank(tank));
@@ -98,16 +108,18 @@ public class SysteamsMekanismCompat {
 		/**
 		 * Overrides the stack in the given tank. This method may throw an error if it is called unexpectedly.
 		 *
-		 * @param tank  Tank to modify
-		 * @param gasStack {@link STACK} to set tank to (may be empty).
+		 * @param tank Tank to modify
+		 * @param gas  {@link GasStack} to set tank to (may be empty).
 		 * @throws RuntimeException if the handler is called in a way that the handler was not expecting.
 		 **/
 		@Override
-		public void setChemicalInTank(int tank, GasStack gasStack) {
-			FluidStack fluidStack = gasToFluid(gasStack);
-			if (!gasStack.isEmpty() && fluidStack.isEmpty()) throw new RuntimeException("Invalid gas stack, cannot be converted to fluid. Make sure to use isValid before setting!");
-			fluidHandler.drain() //empty the tank completely before filling
-			fluidHandler.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
+		public void setChemicalInTank(int tank, @NotNull GasStack gas) {
+			if (fluidHandler instanceof FluidStorageCoFH storage) {
+				storage.setFluidStack(gasToFluid(gas));
+			} else {
+				fluidHandler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE);
+				fluidHandler.fill(gasToFluid(gas), IFluidHandler.FluidAction.EXECUTE);
+			}
 		}
 
 		/**
@@ -134,35 +146,40 @@ public class SysteamsMekanismCompat {
 		 *
 		 * @param tank  Tank to query.
 		 * @param stack Stack to test with for validity
-		 * @return true if the tank can accept the {@link STACK}, not considering the current state of the tank. false if the tank can never support the given {@link STACK}
+		 * @return true if the tank can accept the {@link GasStack}, not considering the current state of the tank. false if the tank can never support the given {@link GasStack}
 		 * in any situation.
 		 */
 		@Override
-		public boolean isValid(int tank, GasStack stack) {
-			return false;
+		public boolean isValid(int tank, @NotNull GasStack stack) {
+			return fluidHandler.isFluidValid(tank, gasToFluid(stack));
 		}
 
 		/**
 		 * <p>
-		 * Inserts a {@link STACK} into a given tank and return the remainder. The {@link STACK} <em>should not</em> be modified in this function!
+		 * Inserts a {@link GasStack} into a given tank and return the remainder. The {@link GasStack} <em>should not</em> be modified in this function!
 		 * </p>
 		 * Note: This behaviour is subtly different from
 		 * {@link IFluidHandler#fill(FluidStack,
 		 * IFluidHandler.FluidAction)}
 		 *
 		 * @param tank   Tank to insert to.
-		 * @param stack  {@link STACK} to insert. This must not be modified by the tank.
+		 * @param stack  {@link GasStack} to insert. This must not be modified by the tank.
 		 * @param action The action to perform, either {@link Action#EXECUTE} or {@link Action#SIMULATE}
-		 * @return The remaining {@link STACK} that was not inserted (if the entire stack is accepted, then return an empty {@link STACK}). May be the same as the input
-		 * {@link STACK} if unchanged, otherwise a new {@link STACK}. The returned {@link STACK} can be safely modified after
+		 * @return The remaining {@link GasStack} that was not inserted (if the entire stack is accepted, then return an empty {@link GasStack}). May be the same as the input
+		 * {@link GasStack} if unchanged, otherwise a new {@link GasStack}. The returned {@link GasStack} can be safely modified after
 		 */
+		@NotNull
 		@Override
-		public GasStack insertChemical(int tank, GasStack stack, Action action) {
-			return null;
+		public GasStack insertChemical(int tank, @NotNull GasStack stack, Action action) {
+			Pair<FluidStack, Long> fluid = gasToFluidWithOverflow(stack);
+			int leftover = fluidHandler.fill(fluid.getFirst(), action.toFluidAction());
+			if (fluid.getSecond() == 0 && leftover == 0) return GasStack.EMPTY;
+			stack.setAmount(fluid.getSecond() + leftover);
+			return stack;
 		}
 
 		/**
-		 * Extracts a {@link STACK} from a specific tank in this handler.
+		 * Extracts a {@link GasStack} from a specific tank in this handler.
 		 * <p>
 		 * The returned value must be empty if nothing is extracted, otherwise its stack size must be less than or equal to {@code amount}.
 		 * </p>
@@ -170,12 +187,13 @@ public class SysteamsMekanismCompat {
 		 * @param tank   Tank to extract from.
 		 * @param amount Amount to extract (may be greater than the current stack's amount or the tank's capacity)
 		 * @param action The action to perform, either {@link Action#EXECUTE} or {@link Action#SIMULATE}
-		 * @return {@link STACK} extracted from the tank, must be empty if nothing can be extracted. The returned {@link STACK} can be safely modified after, so the tank
+		 * @return {@link GasStack} extracted from the tank, must be empty if nothing can be extracted. The returned {@link GasStack} can be safely modified after, so the tank
 		 * should return a new or copied stack.
 		 */
+		@NotNull
 		@Override
 		public GasStack extractChemical(int tank, long amount, Action action) {
-			return null;
+			return fluidToGas(fluidHandler.drain((int) amount, action.toFluidAction()));
 		}
 	}
 }

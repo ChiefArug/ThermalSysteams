@@ -317,7 +317,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 
 	// Steam helpers
 
-	protected void transferSteamOut() {
+	protected void transferSteamOut() { //TODO: alternative steam outputs? namely mek gas
 		FluidHelper.insertIntoAdjacent(this, steamTank, TRANSFER_PER_TICK, getFacing());
 	}
 
@@ -349,7 +349,6 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 
 	@NotNull
 	@Override
-	@SuppressWarnings("EqualsBetweenInconvertibleTypes")
 	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
 		if (cap == Systeams.GAS_HANDLER_CAPABILITY) return getGasHandlerCapability(side);
 		return super.getCapability(cap, side);
@@ -375,7 +374,9 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	}
 
 	protected <T> LazyOptional<T> getGasHandlerCapability(@Nullable Direction side) {
-		return SysteamsMekanismCompat.wrapLiquidCapability(this.getFluidHandlerCapability(side)).cast();
+		if (side!= null && side.equals(getFacing()))
+			return SysteamsMekanismCompat.wrapLiquidCapability(this.getFluidHandlerCapability(side)).cast();
+		return LazyOptional.empty();
 	}
 
 	// Copied from CoFH's FluidHelper class because theirs doesn't support simulating the insert
