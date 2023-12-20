@@ -1,7 +1,7 @@
 plugins {
     id 'eclipse'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'net.neoforged.gradle' version '[6.0.18,6.2)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
     id 'org.spongepowered.mixin' version '0.7.+'
 }
@@ -14,7 +14,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 minecraft {
-    mappings channel: 'parchment', version: '2022.09.18-1.19.2'
+    mappings channel: 'parchment', version: "${parchment_version}-${minecraft_version}"
     accessTransformer = file 'src/main/resources/META-INF/accesstransformer.cfg'
     runs {
         client {
@@ -117,7 +117,7 @@ dependencies {
     // Specify the version of Minecraft to use. If this is any group other than 'net.minecraft', it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    minecraft "net.neoforged:forge:${minecraft_version}-${neoforge_version}"
 
     // compile against the JEI API but do not include it at runtime
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"))
@@ -133,15 +133,14 @@ dependencies {
 
     implementation fg.deobf("com.teamcofh:cofh_core:${minecraft_version}-${cofh_core_version}")
     implementation fg.deobf("com.teamcofh:thermal_core:${minecraft_version}-${thermal_core_version}")
-//    implementation fg.deobf("com.teamcofh:thermal_foundation:${minecraft_version}-${thermal_foundation_version}")
-    implementation fg.deobf("local:thermal_foundation:${minecraft_version}-${thermal_foundation_version}")
+    implementation fg.deobf("com.teamcofh:thermal_foundation:${minecraft_version}-${thermal_foundation_version}")
     implementation fg.deobf("com.teamcofh:thermal_expansion:${minecraft_version}-${thermal_expansion_version}")
 
-    implementation fg.deobf("me.desht.pneumaticcraft:pneumaticcraft-repressurized:${minecraft_version}-${pncr_version}")
+    implementation fg.deobf("me.desht.pneumaticcraft:pneumaticcraft-repressurized:${pncr_version}+mc${minecraft_version}")
 //    implementation fg.deobf("local:pneumaticcraft-repressurized:1.19.2-4.3.4-CUSTOM")
 
     // run game with a few extra mods for testing
-    runtimeOnly fg.deobf("com.teamcofh:thermal_dynamics:${minecraft_version}-${thermal_dynamics_version}")
+//    runtimeOnly fg.deobf("com.teamcofh:thermal_dynamics:${minecraft_version}-${thermal_dynamics_version}")
     runtimeOnly fg.deobf("curse.maven:pipez-443900:${pipez_fid}")
 }
 
@@ -165,7 +164,7 @@ def modsTomlSpec = copySpec {
         include 'META-INF/mods.toml'
         expand 'systeams_version': systeams_version,
             'minecraft_range': minecraft_range,
-            'forge_range': forge_range,
+            'neoforge_range': neoforge_range,
             'thermal_core_range': thermal_core_range
     }
 }

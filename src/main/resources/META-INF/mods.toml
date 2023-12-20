@@ -1,5 +1,5 @@
 modLoader="javafml" #mandatory
-loaderVersion="${forge_range}" #mandatory
+loaderVersion="${neoforge_range}" #mandatory
 license="MIT"
 issueTrackerURL="https://github.com/ChiefArug/ThermalSysteams/issues" #optional
 [[mods]] #mandatory
@@ -18,7 +18,7 @@ Addon for the Thermal Series that adds Steam dynamos back to modern versions!
 [[dependencies.systeams]] #optional
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="${forge_range}" #mandatory
+    versionRange="${neoforge_range}" #mandatory
 [[dependencies.systeams]]
     modId="minecraft"
     mandatory=true
