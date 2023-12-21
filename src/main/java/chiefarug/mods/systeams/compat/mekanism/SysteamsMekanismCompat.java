@@ -9,6 +9,7 @@ import mekanism.api.Action;
 import mekanism.api.MekanismAPI;
 import mekanism.api.chemical.gas.Gas;
 import mekanism.api.chemical.gas.GasStack;
+import mekanism.api.chemical.gas.IGasHandler;
 import mekanism.common.registries.MekanismGases;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
@@ -16,7 +17,6 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import mekanism.api.chemical.gas.IGasHandler;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
@@ -34,9 +34,12 @@ public class SysteamsMekanismCompat {
 	}
 
 	public static LazyOptional<IGasHandler> wrapLiquidCapability(LazyOptional<IFluidHandler> fluidHandler) {
-		if (fluidHandler.isPresent())
+		if (fluidHandler.isPresent()) {
 			//noinspection OptionalGetWithoutIsPresent
-			return LazyOptional.of(() -> new LiquidToGasHandler(fluidHandler.resolve().get()));
+			LazyOptional<IGasHandler> lazyOp = LazyOptional.of(() -> new LiquidToGasHandler(fluidHandler.resolve().get()));
+			fluidHandler.addListener(f -> lazyOp.invalidate());
+			return lazyOp;
+		}
 		return LazyOptional.empty();
 	}
 
@@ -172,9 +175,10 @@ public class SysteamsMekanismCompat {
 		@Override
 		public GasStack insertChemical(int tank, @NotNull GasStack stack, Action action) {
 			Pair<FluidStack, Long> fluid = gasToFluidWithOverflow(stack);
-			int leftover = fluidHandler.fill(fluid.getFirst(), action.toFluidAction());
-			if (fluid.getSecond() == 0 && leftover == 0) return GasStack.EMPTY;
-			stack.setAmount(fluid.getSecond() + leftover);
+			int amountFilled = fluidHandler.fill(fluid.getFirst(), action.toFluidAction());
+			if (fluid.getSecond() == 0 && amountFilled == fluid.getFirst().getAmount()) return GasStack.EMPTY;
+			stack = stack.copy();
+			stack.setAmount(fluid.getSecond() + (fluid.getFirst().getAmount() - amountFilled));
 			return stack;
 		}
 
