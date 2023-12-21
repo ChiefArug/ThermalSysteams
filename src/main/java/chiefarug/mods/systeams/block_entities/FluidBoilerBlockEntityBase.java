@@ -1,13 +1,13 @@
 package chiefarug.mods.systeams.block_entities;
 
 import cofh.core.client.renderer.model.ModelUtils;
-import cofh.core.network.packet.client.TileStatePacket;
+import cofh.core.common.network.packet.client.TileStatePacket;
 import cofh.core.util.helpers.FluidHelper;
 import cofh.lib.api.StorageGroup;
 import cofh.lib.api.fluid.IFluidStackHolder;
-import cofh.lib.fluid.FluidStorageCoFH;
+import cofh.lib.common.fluid.FluidStorageCoFH;
 import cofh.lib.util.Constants;
-import cofh.thermal.core.config.ThermalCoreConfig;
+import cofh.thermal.core.common.config.ThermalCoreConfig;
 import cofh.thermal.lib.util.managers.SingleFluidFuelManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;

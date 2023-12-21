@@ -1,6 +1,6 @@
 package chiefarug.mods.systeams.block_entities;
 
-import chiefarug.mods.systeams.containers.NumismaticBoilerContainer;
+import chiefarug.mods.systeams.containers.NumismaticBoilerMenu;
 import cofh.thermal.core.util.managers.dynamo.NumismaticFuelManager;
 import cofh.thermal.lib.util.managers.SingleItemFuelManager;
 import net.minecraft.core.BlockPos;
@@ -39,6 +39,6 @@ public class NumismaticBoilerBlockEntity extends ItemBoilerBlockEntityBase{
 	@Override
 	public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player) {
 		assert this.level != null;
-		return new NumismaticBoilerContainer(containerId, this.level, this.getBlockPos(), playerInv, player);
+		return new NumismaticBoilerMenu(containerId, this.level, this.getBlockPos(), playerInv, player);
 	}
 }

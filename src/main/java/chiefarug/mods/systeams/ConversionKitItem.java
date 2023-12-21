@@ -2,7 +2,7 @@ package chiefarug.mods.systeams;
 
 import chiefarug.mods.systeams.block.BoilerBlock;
 import cofh.thermal.core.ThermalCore;
-import cofh.thermal.lib.block.DynamoBlock;
+import cofh.thermal.lib.common.block.DynamoBlock;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.ChatFormatting;
@@ -34,7 +34,7 @@ import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.MAGMATIC;
 import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.NUMISMATIC;
 import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.STIRLING;
 import static cofh.lib.util.constants.BlockStatePropertiesCoFH.FACING_ALL;
-import static cofh.thermal.lib.block.DynamoBlock.WATERLOGGED;
+import static cofh.thermal.lib.common.block.DynamoBlock.WATERLOGGED;
 
 public class ConversionKitItem extends Item {
 	public ConversionKitItem(Properties pProperties) {

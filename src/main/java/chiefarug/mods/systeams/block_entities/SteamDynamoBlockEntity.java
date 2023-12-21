@@ -2,16 +2,16 @@ package chiefarug.mods.systeams.block_entities;
 
 import chiefarug.mods.systeams.SysteamsConfig;
 import chiefarug.mods.systeams.SysteamsRegistry;
-import chiefarug.mods.systeams.containers.SteamDynamoContainer;
+import chiefarug.mods.systeams.containers.SteamDynamoMenu;
 import chiefarug.mods.systeams.recipe.SteamFuelManager;
 import cofh.core.client.renderer.model.ModelUtils;
-import cofh.core.network.packet.client.TileStatePacket;
+import cofh.core.common.network.packet.client.TileStatePacket;
 import cofh.core.util.helpers.FluidHelper;
 import cofh.lib.api.StorageGroup;
-import cofh.lib.fluid.FluidStorageCoFH;
+import cofh.lib.common.fluid.FluidStorageCoFH;
 import cofh.lib.util.Constants;
-import cofh.thermal.core.config.ThermalCoreConfig;
-import cofh.thermal.lib.block.entity.DynamoBlockEntity;
+import cofh.thermal.core.common.config.ThermalCoreConfig;
+import cofh.thermal.lib.common.block.entity.DynamoBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -101,7 +101,7 @@ public class SteamDynamoBlockEntity extends DynamoBlockEntity {
 	@Nullable
 	@Override
 	public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-		return new SteamDynamoContainer(i, Objects.requireNonNull(this.level, "Tried to construct a Steam Dynamo menu too ealy!"), worldPosition, inventory, player);
+		return new SteamDynamoMenu(i, Objects.requireNonNull(this.level, "Tried to construct a Steam Dynamo menu too ealy!"), worldPosition, inventory, player);
 	}
 
 	@Nonnull

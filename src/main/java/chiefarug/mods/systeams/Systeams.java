@@ -3,7 +3,7 @@ package chiefarug.mods.systeams;
 import chiefarug.mods.systeams.compat.mekanism.SysteamsMekanismCompat;
 import chiefarug.mods.systeams.compat.pneumaticcraft.SysteamsPNCRCompat;
 import chiefarug.mods.systeams.networking.RecipeCheckerChannel;
-import cofh.core.config.CoreClientConfig;
+import cofh.core.common.config.CoreClientConfig;
 import cofh.lib.util.Utils;
 import cofh.lib.util.constants.ModIds;
 import cofh.lib.util.helpers.StringHelper;

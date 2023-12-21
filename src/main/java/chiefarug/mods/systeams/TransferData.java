@@ -1,8 +1,8 @@
 package chiefarug.mods.systeams;
 
-import cofh.lib.fluid.SimpleTankInv;
-import cofh.lib.inventory.SimpleItemInv;
-import cofh.thermal.lib.block.entity.AugmentableBlockEntity;
+import cofh.lib.common.fluid.SimpleTankInv;
+import cofh.lib.common.inventory.SimpleItemInv;
+import cofh.thermal.lib.common.block.entity.AugmentableBlockEntity;
 import me.desht.pneumaticcraft.api.tileentity.IAirHandlerMachine;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;

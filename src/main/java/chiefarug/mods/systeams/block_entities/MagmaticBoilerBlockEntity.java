@@ -1,6 +1,6 @@
 package chiefarug.mods.systeams.block_entities;
 
-import chiefarug.mods.systeams.containers.MagmaticBoilerContainer;
+import chiefarug.mods.systeams.containers.MagmaticBoilerMenu;
 import cofh.thermal.core.util.managers.dynamo.MagmaticFuelManager;
 import cofh.thermal.lib.util.managers.SingleFluidFuelManager;
 import net.minecraft.core.BlockPos;
@@ -44,6 +44,6 @@ public class MagmaticBoilerBlockEntity extends FluidBoilerBlockEntityBase{
 	@Override
 	public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player) {
 		assert this.level != null;
-		return new MagmaticBoilerContainer(containerId, this.level, this.getBlockPos(), playerInv, player);
+		return new MagmaticBoilerMenu(containerId, this.level, this.getBlockPos(), playerInv, player);
 	}
 }

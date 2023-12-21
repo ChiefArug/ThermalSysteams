@@ -5,7 +5,7 @@ import chiefarug.mods.systeams.block_entities.BoilerBlockEntityBase;
 import cofh.core.util.helpers.AugmentableHelper;
 import cofh.lib.api.block.entity.ITickableTile;
 import cofh.lib.util.constants.NBTTags;
-import cofh.thermal.core.config.ThermalCoreConfig;
+import cofh.thermal.core.common.config.ThermalCoreConfig;
 import cofh.thermal.lib.util.managers.IFuelManager;
 import me.desht.pneumaticcraft.api.PneumaticRegistry;
 import me.desht.pneumaticcraft.api.lib.NBTKeys;
@@ -144,7 +144,7 @@ public class PneumaticBoilerBlockEntity extends BoilerBlockEntityBase implements
 	@Override
 	public AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player) {
 		assert this.level != null;
-		return new PneumaticBoilerContainer(containerId, this.level, this.getBlockPos(), playerInv, player);
+		return new PneumaticBoilerMenu(containerId, this.level, this.getBlockPos(), playerInv, player);
 	}
 
 	@NotNull

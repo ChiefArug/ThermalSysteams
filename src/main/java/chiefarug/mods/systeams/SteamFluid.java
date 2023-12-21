@@ -1,10 +1,9 @@
 package chiefarug.mods.systeams;
 
-import cofh.lib.fluid.FluidCoFH;
+import cofh.lib.common.fluid.FluidCoFH;
 import cofh.lib.util.DeferredRegisterCoFH;
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.math.Vector3f;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -17,6 +16,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -27,8 +27,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.common.SoundActions;
@@ -36,6 +34,7 @@ import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3f;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -49,18 +48,8 @@ public class SteamFluid /*extends FluidCoFH*/ { // We can't extend FluidCoFH bec
 	public final RegistryObject<ForgeFlowingFluid> stillFluid;
 	public final RegistryObject<ForgeFlowingFluid> flowingFluid;
 
-	private static final BlockBehaviour.Properties fluidBlockProperties = BlockBehaviour.Properties.of(
-			new Material.Builder(MaterialColor.COLOR_LIGHT_GRAY)
-					.noCollider()
-					.notSolidBlocking()
-					.nonSolid()
-					.destroyOnPush()
-					.replaceable()
-					.liquid()
-					.build(),
-			MaterialColor.COLOR_LIGHT_GRAY
-	);
-	private static final Item.Properties bucketItemProperties = new Item.Properties().tab(SysteamsRegistry.TAB).craftRemainder(net.minecraft.world.item.Items.BUCKET).stacksTo(1);
+	private static final BlockBehaviour.Properties fluidBlockProperties = BlockBehaviour.Properties.copy(Blocks.WATER).mapColor(DyeColor.LIGHT_GRAY);
+	private static final Item.Properties bucketItemProperties = new Item.Properties().craftRemainder(net.minecraft.world.item.Items.BUCKET).stacksTo(1);
 
 //	protected final RegistryObject<LiquidBlock> block;
 	protected final RegistryObject<Item> bucket;

@@ -1,6 +1,6 @@
 package chiefarug.mods.systeams.block_entities;
 
-import chiefarug.mods.systeams.containers.CompressionBoilerContainer;
+import chiefarug.mods.systeams.containers.CompressionBoilerMenu;
 import cofh.thermal.core.util.managers.dynamo.CompressionFuelManager;
 import cofh.thermal.lib.util.managers.SingleFluidFuelManager;
 import net.minecraft.core.BlockPos;
@@ -39,6 +39,6 @@ public class CompressionBoilerBlockEntity extends FluidBoilerBlockEntityBase{
 	@Override
 	public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player) {
 		assert this.level != null;
-		return new CompressionBoilerContainer(containerId, this.level, this.getBlockPos(), playerInv, player);
+		return new CompressionBoilerMenu(containerId, this.level, this.getBlockPos(), playerInv, player);
 	}
 }

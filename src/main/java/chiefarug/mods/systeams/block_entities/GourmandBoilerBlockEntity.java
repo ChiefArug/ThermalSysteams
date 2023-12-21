@@ -1,6 +1,6 @@
 package chiefarug.mods.systeams.block_entities;
 
-import chiefarug.mods.systeams.containers.GourmandBoilerContainer;
+import chiefarug.mods.systeams.containers.GourmandBoilerMenu;
 import cofh.thermal.core.util.managers.dynamo.GourmandFuelManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -24,7 +24,7 @@ public class GourmandBoilerBlockEntity extends ItemBoilerBlockEntityBase {
 	@Override
 	public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player) {
 		assert this.level != null;
-		return new GourmandBoilerContainer(containerId, this.level, this.getBlockPos(), playerInv, player);
+		return new GourmandBoilerMenu(containerId, this.level, this.getBlockPos(), playerInv, player);
 	}
 
 	@Override

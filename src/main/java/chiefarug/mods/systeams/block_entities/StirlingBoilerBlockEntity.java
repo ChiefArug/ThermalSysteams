@@ -1,6 +1,6 @@
 package chiefarug.mods.systeams.block_entities;
 
-import chiefarug.mods.systeams.containers.StirlingBoilerContainer;
+import chiefarug.mods.systeams.containers.StirlingBoilerMenu;
 import cofh.thermal.core.util.managers.dynamo.StirlingFuelManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -25,7 +25,7 @@ public class StirlingBoilerBlockEntity extends ItemBoilerBlockEntityBase {
 	@Override
 	public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player) {
 		assert this.level != null;
-		return new StirlingBoilerContainer(containerId, this.level, this.getBlockPos(), playerInv, player);
+		return new StirlingBoilerMenu(containerId, this.level, this.getBlockPos(), playerInv, player);
 	}
 
 	@Override

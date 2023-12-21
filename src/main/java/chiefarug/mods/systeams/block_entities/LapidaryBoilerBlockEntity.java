@@ -1,7 +1,7 @@
 package chiefarug.mods.systeams.block_entities;
 
 import chiefarug.mods.systeams.SysteamsRegistry;
-import chiefarug.mods.systeams.containers.LapidaryBoilerContainer;
+import chiefarug.mods.systeams.containers.LapidaryBoilerMenu;
 import cofh.thermal.core.util.managers.dynamo.LapidaryFuelManager;
 import cofh.thermal.lib.util.managers.SingleItemFuelManager;
 import net.minecraft.core.BlockPos;
@@ -26,7 +26,7 @@ public class LapidaryBoilerBlockEntity extends ItemBoilerBlockEntityBase {
 	@Override
 	public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player) {
 		assert this.level != null;
-		return new LapidaryBoilerContainer(containerId, this.level, this.getBlockPos(), playerInv, player);
+		return new LapidaryBoilerMenu(containerId, this.level, this.getBlockPos(), playerInv, player);
 	}
 
 	@Override

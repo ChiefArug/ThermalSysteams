@@ -1,6 +1,6 @@
 package chiefarug.mods.systeams.client.screens;
 
-import chiefarug.mods.systeams.containers.SteamDynamoContainer;
+import chiefarug.mods.systeams.containers.SteamDynamoMenu;
 import cofh.core.util.helpers.GuiHelper;
 import cofh.lib.util.constants.ModIds;
 import cofh.lib.util.helpers.StringHelper;
@@ -10,11 +10,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class SteamDynamoScreen extends DynamoScreen<SteamDynamoContainer> {
+public class SteamDynamoScreen extends DynamoScreen<SteamDynamoMenu> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(ModIds.ID_THERMAL, "textures/gui/container/fluid_dynamo.png");
 
-	public SteamDynamoScreen(SteamDynamoContainer container, Inventory inv, Component titleIn) {
+	public SteamDynamoScreen(SteamDynamoMenu container, Inventory inv, Component _title) {
 		super(container, inv, container.blockEntity, StringHelper.getTextComponent("block.systeams.steam_dynamo"));
         texture = TEXTURE;
         info = GuiHelper.appendLine(GuiHelper.generatePanelInfo("info.systeams.steam_dynamo"), "info.thermal.dynamo.throttle");

@@ -1,7 +1,7 @@
 package chiefarug.mods.systeams.recipe;
 
 import chiefarug.mods.systeams.SysteamsRegistry;
-import cofh.lib.fluid.FluidIngredient;
+import cofh.lib.common.fluid.FluidIngredient;
 import cofh.thermal.lib.util.recipes.ThermalFuel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;

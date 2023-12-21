@@ -1,7 +1,7 @@
 package chiefarug.mods.systeams.client.screens;
 
 import chiefarug.mods.systeams.block_entities.FluidBoilerBlockEntityBase;
-import chiefarug.mods.systeams.containers.BoilerContainerBase;
+import chiefarug.mods.systeams.containers.BoilerMenuBase;
 import cofh.core.util.helpers.GuiHelper;
 import cofh.lib.util.constants.ModIds;
 import cofh.thermal.core.client.gui.ThermalGuiHelper;
@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 import static cofh.core.util.helpers.GuiHelper.SCALE_FLAME;
 
-public class FluidBoilerScreen<T extends BoilerContainerBase<?>> extends BoilerScreenBase<T>{
+public class FluidBoilerScreen<T extends BoilerMenuBase<?>> extends BoilerScreenBase<T>{
 
 	protected static final ResourceLocation FLUID_TEXTURE = new ResourceLocation(ModIds.ID_THERMAL, "textures/gui/container/fluid_dynamo.png");
 

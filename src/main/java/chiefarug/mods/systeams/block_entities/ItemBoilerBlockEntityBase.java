@@ -1,8 +1,8 @@
 package chiefarug.mods.systeams.block_entities;
 
 import cofh.lib.api.StorageGroup;
-import cofh.lib.inventory.ItemStorageCoFH;
-import cofh.thermal.core.config.ThermalCoreConfig;
+import cofh.lib.common.inventory.ItemStorageCoFH;
+import cofh.thermal.core.common.config.ThermalCoreConfig;
 import cofh.thermal.lib.util.managers.SingleItemFuelManager;
 import cofh.thermal.lib.util.recipes.internal.IDynamoFuel;
 import net.minecraft.core.BlockPos;

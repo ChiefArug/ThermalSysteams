@@ -1,7 +1,7 @@
 package chiefarug.mods.systeams.block_entities;
 
 import chiefarug.mods.systeams.SysteamsConfig;
-import chiefarug.mods.systeams.containers.DisenchantmentBoilerContainer;
+import chiefarug.mods.systeams.containers.DisenchantmentBoilerMenu;
 import cofh.thermal.core.util.managers.dynamo.DisenchantmentFuelManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -24,7 +24,7 @@ public class DisenchantmentBoilerBlockEntity extends ItemBoilerBlockEntityBase {
 	@Override
 	public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player) {
 		assert this.level != null;
-		return new DisenchantmentBoilerContainer(containerId, this.level, this.getBlockPos(), playerInv, player);
+		return new DisenchantmentBoilerMenu(containerId, this.level, this.getBlockPos(), playerInv, player);
 	}
 
 	@Override

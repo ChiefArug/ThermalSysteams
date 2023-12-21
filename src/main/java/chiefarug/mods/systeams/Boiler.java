@@ -2,19 +2,21 @@ package chiefarug.mods.systeams;
 
 import chiefarug.mods.systeams.block.BoilerBlock;
 import chiefarug.mods.systeams.block_entities.BoilerBlockEntityBase;
-import chiefarug.mods.systeams.containers.BoilerContainerBase;
+import chiefarug.mods.systeams.containers.BoilerMenuBase;
 import cofh.lib.util.DeferredRegisterCoFH;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.network.IContainerFactory;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 
 // Holder and helper class for making boilers
-public class Boiler<B extends BoilerBlockEntityBase, C extends BoilerContainerBase<B>> {
+public class Boiler<B extends BoilerBlockEntityBase, C extends BoilerMenuBase<B>> implements ItemLike {
 
 	private final RegistryObject<BoilerBlock> block;
 	private final RegistryObject<Item> blockItem;
@@ -49,5 +51,11 @@ public class Boiler<B extends BoilerBlockEntityBase, C extends BoilerContainerBa
 
 	public MenuType<C> menu() {
 		return menu.get();
+	}
+
+	@NotNull
+	@Override
+	public Item asItem() {
+		return item();
 	}
 }

@@ -5,12 +5,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -25,18 +27,18 @@ public class UpgradeShapelessRecipe extends ShapelessRecipe {
 	private final ItemStack replacement;
 
 	public UpgradeShapelessRecipe(ShapelessRecipe original, ItemStack replacement) {
-		this(original.getId(), original.getGroup(), original.getResultItem(), original.getIngredients(), replacement);
+		this(original.getId(), original.getGroup(), original.getResultItem(null/*techincally we should do this, but we know that its unused*/), original.getIngredients(), replacement);
 	}
 
 	public UpgradeShapelessRecipe(ResourceLocation id, String group, ItemStack result, NonNullList<Ingredient> ingredients, ItemStack replacement) {
-		super(id, group, result, ingredients);
+		super(id, group, CraftingBookCategory.MISC, result, ingredients);
 		this.replacement = replacement;
 	}
 
 	@NotNull
 	@Override
-	public ItemStack assemble(CraftingContainer inv) {
-		ItemStack result = super.assemble(inv);
+	public ItemStack assemble(CraftingContainer inv, RegistryAccess reg) {
+		ItemStack result = super.assemble(inv, reg);
 
 		int index = getMainItem(inv);
 		if (index == -1) {
@@ -98,6 +100,7 @@ public class UpgradeShapelessRecipe extends ShapelessRecipe {
 
 		public UpgradeShapelessRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 			ShapelessRecipe original = super.fromNetwork(recipeId, buffer);
+			if (original == null) return null;
 
 			ItemStack replacement = buffer.readItem();
 

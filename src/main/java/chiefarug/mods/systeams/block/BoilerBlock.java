@@ -3,7 +3,7 @@ package chiefarug.mods.systeams.block;
 import chiefarug.mods.systeams.ConversionKitItem;
 import chiefarug.mods.systeams.Systeams;
 import chiefarug.mods.systeams.SysteamsConfig;
-import cofh.core.block.TileBlockActive6Way;
+import cofh.core.common.block.EntityBlockActive6Way;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -39,7 +39,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 // Most of this is copied from dynamo code
 // I don't extend it because these are not dynamos and should not be treated as such
 @Mod.EventBusSubscriber(modid= Systeams.MODID)
-public class BoilerBlock extends TileBlockActive6Way {
+public class BoilerBlock extends EntityBlockActive6Way {
 
 	public BoilerBlock(Properties builder, Class<?> tileClass, Supplier<BlockEntityType<?>> blockEntityType) {
 		super(builder, tileClass, blockEntityType);
@@ -88,7 +88,6 @@ public class BoilerBlock extends TileBlockActive6Way {
 
 	/**
 	 * The item used to convert this boiler back into a dynamo, and the item returned when a dynamo converts into this boiler
-	 * @return
 	 */
 	public ItemStack getOtherConversionItem() {
 		return new ItemStack(RF_COIL);

@@ -1,7 +1,7 @@
 package chiefarug.mods.systeams.compat.mekanism;
 
 import chiefarug.mods.systeams.SysteamsRegistry;
-import cofh.lib.fluid.FluidStorageCoFH;
+import cofh.lib.common.fluid.FluidStorageCoFH;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.mojang.datafixers.util.Pair;

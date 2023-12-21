@@ -1,23 +1,22 @@
-package chiefarug.mods.systeams.containers;
+package chiefarug.mods.systeams.compat.pneumaticcraft;
 
-import chiefarug.mods.systeams.SysteamsRegistry;
 import chiefarug.mods.systeams.block_entities.BoilerBlockEntityBase;
-import chiefarug.mods.systeams.block_entities.CompressionBoilerBlockEntity;
+import chiefarug.mods.systeams.containers.BoilerMenuBase;
 import cofh.core.util.ProxyUtils;
-import cofh.lib.inventory.wrapper.InvWrapperCoFH;
+import cofh.lib.common.inventory.wrapper.InvWrapperCoFH;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
-public class CompressionBoilerContainer extends BoilerContainerBase<CompressionBoilerBlockEntity> {
-	public CompressionBoilerContainer(int windowId, Inventory inv, FriendlyByteBuf data) {
+public class PneumaticBoilerMenu extends BoilerMenuBase<PneumaticBoilerBlockEntity> {
+	public PneumaticBoilerMenu(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, ProxyUtils.getClientWorld(), data.readBlockPos(), inv, ProxyUtils.getClientPlayer());
 	}
 
-	public CompressionBoilerContainer(int windowId, Level level, BlockPos pos, Inventory inventory, Player player) {
-		super(SysteamsRegistry.Boilers.COMPRESSION.menu(), windowId, level, pos, inventory, player);
+	public PneumaticBoilerMenu(int windowId, Level level, BlockPos pos, Inventory inventory, Player player) {
+		super(SysteamsPNCRCompat.Registry.PNEUMATIC_BOILER_MENU.get(), windowId, level, pos, inventory, player);
 		BoilerBlockEntityBase blockEntity = (BoilerBlockEntityBase) level.getBlockEntity(pos);
         InvWrapperCoFH blockEntityInv = new InvWrapperCoFH(blockEntity.getItemInv());
 

@@ -17,14 +17,14 @@ import chiefarug.mods.systeams.client.screens.MagmaticBoilerScreen;
 import chiefarug.mods.systeams.client.screens.NumismaticBoilerScreen;
 import chiefarug.mods.systeams.client.screens.SteamDynamoScreen;
 import chiefarug.mods.systeams.client.screens.StirlingBoilerScreen;
-import chiefarug.mods.systeams.containers.CompressionBoilerContainer;
-import chiefarug.mods.systeams.containers.DisenchantmentBoilerContainer;
-import chiefarug.mods.systeams.containers.GourmandBoilerContainer;
-import chiefarug.mods.systeams.containers.LapidaryBoilerContainer;
-import chiefarug.mods.systeams.containers.MagmaticBoilerContainer;
-import chiefarug.mods.systeams.containers.NumismaticBoilerContainer;
-import chiefarug.mods.systeams.containers.SteamDynamoContainer;
-import chiefarug.mods.systeams.containers.StirlingBoilerContainer;
+import chiefarug.mods.systeams.containers.CompressionBoilerMenu;
+import chiefarug.mods.systeams.containers.DisenchantmentBoilerMenu;
+import chiefarug.mods.systeams.containers.GourmandBoilerMenu;
+import chiefarug.mods.systeams.containers.LapidaryBoilerMenu;
+import chiefarug.mods.systeams.containers.MagmaticBoilerMenu;
+import chiefarug.mods.systeams.containers.NumismaticBoilerMenu;
+import chiefarug.mods.systeams.containers.SteamDynamoMenu;
+import chiefarug.mods.systeams.containers.StirlingBoilerMenu;
 import chiefarug.mods.systeams.recipe.SteamFuel;
 import chiefarug.mods.systeams.recipe.SteamFuelManager;
 import chiefarug.mods.systeams.recipe.UpgradeShapelessRecipe;
@@ -33,13 +33,15 @@ import cofh.lib.util.constants.BlockStatePropertiesCoFH;
 import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.recipes.SerializableRecipeType;
 import cofh.thermal.core.ThermalCore;
-import cofh.thermal.core.config.ThermalCoreConfig;
-import cofh.thermal.lib.block.DynamoBlock;
-import cofh.thermal.lib.common.ThermalAugmentRules;
-import cofh.thermal.lib.common.ThermalRecipeManagers;
-import cofh.thermal.lib.item.BlockItemAugmentable;
+import cofh.thermal.core.common.config.ThermalCoreConfig;
+import cofh.thermal.lib.common.block.DynamoBlock;
+import cofh.thermal.lib.util.ThermalAugmentRules;
+import cofh.thermal.lib.util.ThermalRecipeManagers;
+import cofh.thermal.lib.common.item.BlockItemAugmentable;
 import cofh.thermal.lib.util.recipes.DynamoFuelSerializer;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.inventory.MenuType;
@@ -50,11 +52,9 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Material;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fluids.FluidType;
@@ -64,7 +64,6 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.tags.ITag;
 import net.minecraftforge.registries.tags.ITagManager;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -73,16 +72,25 @@ import static chiefarug.mods.systeams.Systeams.MODID;
 @SuppressWarnings("unused")
 public class SysteamsRegistry {
 
-	static final CreativeModeTab TAB = new CreativeModeTab(MODID) {
-		@Override
-		public @NotNull ItemStack makeIcon() {
-			return new ItemStack(Items.BOILER_PIPE.get());
-		}
-	};
-	public static final Item.Properties I_PROPERTIES = new Item.Properties().tab(TAB);
-	public static final BlockBehaviour.Properties B_PROPERTIES = BlockBehaviour.Properties
-			.of(Material.METAL)
-			.sound(SoundType.NETHERITE_BLOCK)
+	public static final DeferredRegisterCoFH<CreativeModeTab> TAB_REGISTRY = DeferredRegisterCoFH.create(Registries.CREATIVE_MODE_TAB, MODID);
+	public static final RegistryObject<CreativeModeTab> TAB = TAB_REGISTRY.register(MODID, () -> CreativeModeTab.builder()
+			.title(Component.translatable("itemGroup.systeams"))
+			.icon(() -> new ItemStack(Items.BOILER_PIPE.get()))
+			.displayItems((p, out) -> {
+				out.accept(Items.BOILER_PIPE.get());
+				out.accept(Items.STEAM_DYNAMO.get());
+				out.accept(Boilers.COMPRESSION);
+				out.accept(Boilers.GOURMAND);
+				out.accept(Boilers.LAPIDARY);
+				out.accept(Boilers.MAGMATIC);
+				out.accept(Boilers.STIRLING);
+				out.accept(Boilers.NUMISMATIC);
+				out.accept(Boilers.DISENCHANTMENT);
+			})
+			.build());
+
+	public static final Item.Properties I_PROPERTIES = new Item.Properties();
+	public static final BlockBehaviour.Properties B_PROPERTIES = BlockBehaviour.Properties.copy(net.minecraft.world.level.block.Blocks.NETHERITE_BLOCK)
 			.strength(2.0F)
 			.lightLevel(BlockHelper.lightValue(BlockStatePropertiesCoFH.ACTIVE, 14));
 
@@ -151,7 +159,7 @@ public class SysteamsRegistry {
 		public static final ITag<Item> UPGRADE_MAIN = modTag(ForgeRegistries.ITEMS, "recipe_control/upgrade_main");
 
 		public static final RegistryObject<Item> STEAM_DYNAMO = ITEM_REGISTRY.register(STEAM_DYNAMO_ID, () -> machineBlockItemOf(Blocks.STEAM_DYNAMO.get()));
-		public static final RegistryObject<ConversionKitItem> BOILER_PIPE = ITEM_REGISTRY.register("boiler_pipe", () -> new ConversionKitItem(new Item.Properties().tab(TAB)));
+		public static final RegistryObject<ConversionKitItem> BOILER_PIPE = ITEM_REGISTRY.register("boiler_pipe", () -> new ConversionKitItem(I_PROPERTIES));
 }
 	public static class Fluids {
 		static void init() {}
@@ -171,7 +179,7 @@ public class SysteamsRegistry {
 			MenuScreens.register(Boilers.DISENCHANTMENT.menu(), DisenchantmentBoilerScreen::new);
 			MenuScreens.register(Boilers.GOURMAND.menu(), GourmandBoilerScreen::new);
 		}
-		public static final RegistryObject<MenuType<SteamDynamoContainer>> DYNAMO_STEAM = MENU_REGISTRY.register(STEAM_DYNAMO_ID, () -> IForgeMenuType.create(SteamDynamoContainer::new));
+		public static final RegistryObject<MenuType<SteamDynamoMenu>> DYNAMO_STEAM = MENU_REGISTRY.register(STEAM_DYNAMO_ID, () -> IForgeMenuType.create(SteamDynamoMenu::new));
 	}
 	public static class Recipes {
 		public static final RegistryObject<DynamoFuelSerializer<SteamFuel>> STEAM_SERIALIZER = RECIPE_SERIALIZER_REGISTRY.register(STEAM_ID, () -> new DynamoFuelSerializer<>(SteamFuel::new, SteamFuelManager.instance().getDefaultEnergy(), SteamFuelManager.MIN_ENERGY, SteamFuelManager.MAX_ENERGY));
@@ -191,13 +199,13 @@ public class SysteamsRegistry {
 	}
 	public static class Boilers {
 		static void init() {}
-		public static final Boiler<StirlingBoilerBlockEntity, StirlingBoilerContainer> STIRLING = new Boiler<>(STIRLING_BOILER_ID, StirlingBoilerBlockEntity.class, StirlingBoilerBlockEntity::new, StirlingBoilerContainer::new);
-		public static final Boiler<MagmaticBoilerBlockEntity, MagmaticBoilerContainer> MAGMATIC = new Boiler<>(MAGMATIC_BOILER_ID, MagmaticBoilerBlockEntity.class, MagmaticBoilerBlockEntity::new, MagmaticBoilerContainer::new);
-		public static final Boiler<CompressionBoilerBlockEntity, CompressionBoilerContainer> COMPRESSION = new Boiler<>(COMPRESSION_BOILER_ID, CompressionBoilerBlockEntity.class, CompressionBoilerBlockEntity::new, CompressionBoilerContainer::new);
-		public static final Boiler<NumismaticBoilerBlockEntity, NumismaticBoilerContainer> NUMISMATIC = new Boiler<>(NUMISMATIC_BOILER_ID, NumismaticBoilerBlockEntity.class, NumismaticBoilerBlockEntity::new, NumismaticBoilerContainer::new);
-		public static final Boiler<LapidaryBoilerBlockEntity, LapidaryBoilerContainer> LAPIDARY = new Boiler<>(LAPIDARY_BOILER_ID, LapidaryBoilerBlockEntity.class, LapidaryBoilerBlockEntity::new, LapidaryBoilerContainer::new);
-		public static final Boiler<DisenchantmentBoilerBlockEntity, DisenchantmentBoilerContainer> DISENCHANTMENT = new Boiler<>(DISENCHANTMENT_BOILER_ID, DisenchantmentBoilerBlockEntity.class, DisenchantmentBoilerBlockEntity::new, DisenchantmentBoilerContainer::new);
-		public static final Boiler<GourmandBoilerBlockEntity, GourmandBoilerContainer> GOURMAND = new Boiler<>(GOURMAND_BOILER_ID, GourmandBoilerBlockEntity.class, GourmandBoilerBlockEntity::new, GourmandBoilerContainer::new);
+		public static final Boiler<StirlingBoilerBlockEntity, StirlingBoilerMenu> STIRLING = new Boiler<>(STIRLING_BOILER_ID, StirlingBoilerBlockEntity.class, StirlingBoilerBlockEntity::new, StirlingBoilerMenu::new);
+		public static final Boiler<MagmaticBoilerBlockEntity, MagmaticBoilerMenu> MAGMATIC = new Boiler<>(MAGMATIC_BOILER_ID, MagmaticBoilerBlockEntity.class, MagmaticBoilerBlockEntity::new, MagmaticBoilerMenu::new);
+		public static final Boiler<CompressionBoilerBlockEntity, CompressionBoilerMenu> COMPRESSION = new Boiler<>(COMPRESSION_BOILER_ID, CompressionBoilerBlockEntity.class, CompressionBoilerBlockEntity::new, CompressionBoilerMenu::new);
+		public static final Boiler<NumismaticBoilerBlockEntity, NumismaticBoilerMenu> NUMISMATIC = new Boiler<>(NUMISMATIC_BOILER_ID, NumismaticBoilerBlockEntity.class, NumismaticBoilerBlockEntity::new, NumismaticBoilerMenu::new);
+		public static final Boiler<LapidaryBoilerBlockEntity, LapidaryBoilerMenu> LAPIDARY = new Boiler<>(LAPIDARY_BOILER_ID, LapidaryBoilerBlockEntity.class, LapidaryBoilerBlockEntity::new, LapidaryBoilerMenu::new);
+		public static final Boiler<DisenchantmentBoilerBlockEntity, DisenchantmentBoilerMenu> DISENCHANTMENT = new Boiler<>(DISENCHANTMENT_BOILER_ID, DisenchantmentBoilerBlockEntity.class, DisenchantmentBoilerBlockEntity::new, DisenchantmentBoilerMenu::new);
+		public static final Boiler<GourmandBoilerBlockEntity, GourmandBoilerMenu> GOURMAND = new Boiler<>(GOURMAND_BOILER_ID, GourmandBoilerBlockEntity.class, GourmandBoilerBlockEntity::new, GourmandBoilerMenu::new);
 	}
 
 

@@ -7,20 +7,22 @@ import cofh.core.client.gui.element.panel.PanelBase;
 import cofh.core.client.gui.element.panel.ResourcePanel;
 import cofh.core.util.helpers.RenderHelper;
 import cofh.lib.util.helpers.StringHelper;
-import com.mojang.blaze3d.vertex.PoseStack;
 import me.desht.pneumaticcraft.client.render.pressure_gauge.PressureGaugeRenderer2D;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 import java.util.function.IntSupplier;
 
-public class PneumaticBoilerScreen extends BoilerScreenBase<PneumaticBoilerContainer> {
+import static chiefarug.mods.systeams.compat.pneumaticcraft.SysteamsPNCRCompat.Registry.Client.AIR_ICON_LOCATION;
+
+public class PneumaticBoilerScreen extends BoilerScreenBase<PneumaticBoilerMenu> {
 
 	protected static final ResourceLocation PRESSURE_TEXTURE = new ResourceLocation(Systeams.MODID, "textures/gui/pressure_boiler.png");
 	protected PneumaticBoilerBlockEntity blockEntity;
 
-	public PneumaticBoilerScreen(PneumaticBoilerContainer container, Inventory inv, Component titleIn) {
+	public PneumaticBoilerScreen(PneumaticBoilerMenu container, Inventory inv, Component titleIn) {
 		super("pneumatic", container, inv, container.blockEntity, titleIn);
 		texture = PRESSURE_TEXTURE;
 		blockEntity = container.blockEntity;
@@ -36,7 +38,7 @@ public class PneumaticBoilerScreen extends BoilerScreenBase<PneumaticBoilerConta
 	private ResourcePanel airPanel() {
 		return new AirResourcePanel(this)
 				.setAirPerTick(blockEntity::getAirPerTick)
-				.setResource(SysteamsPNCRCompat.Registry.Client.AIR_ICON, "info.systeams.air", false)
+				.setResource(AIR_ICON_LOCATION, "info.systeams.air", false)
 				.setCurrent(blockEntity::getAir, "info.systeams.air_volume", "info.systeams.air_volume_unit")
 				.setMax(blockEntity::getVolume, "info.systeams.air_base_volume", "info.systeams.air_volume_unit");
 	}
@@ -55,14 +57,13 @@ public class PneumaticBoilerScreen extends BoilerScreenBase<PneumaticBoilerConta
 		}
 
 		@Override
-		protected void drawForeground(PoseStack matrixStack) {
-			super.drawForeground(matrixStack);
+		protected void drawForeground(GuiGraphics guiGraphics) {
+			super.drawForeground(guiGraphics);
 			if (!fullyOpen) {
 				return;
 			}
 			if (doubleSupplier != null) {
-				fontRenderer().drawShadow(matrixStack, StringHelper.localize("info.systeams.air_per_tick") + ":", sideOffset() + 6, 66, subheaderColor);
-				fontRenderer().draw(matrixStack, doubleSupplier.getAsInt() + " " + StringHelper.localize("info.systeams.air_per_tick_unit"), sideOffset() + 14, 78, textColor);
+				guiGraphics.drawString(fontRenderer(), StringHelper.localize("info.systeams.air_per_tick") + ":", sideOffset() + 6, 66, subheaderColor);
 			}
 			RenderHelper.resetShaderColor();
 		}

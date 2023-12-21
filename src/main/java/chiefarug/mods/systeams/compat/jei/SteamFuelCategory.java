@@ -2,13 +2,12 @@ package chiefarug.mods.systeams.compat.jei;
 
 import chiefarug.mods.systeams.SysteamsRegistry;
 import chiefarug.mods.systeams.recipe.SteamFuel;
-import cofh.lib.fluid.FluidIngredient;
+import cofh.lib.common.fluid.FluidIngredient;
 import cofh.lib.util.helpers.StringHelper;
 import cofh.thermal.core.compat.jei.TCoreJeiPlugin;
 import cofh.thermal.expansion.client.gui.dynamo.DynamoCompressionScreen;
 import cofh.thermal.lib.compat.jei.Drawables;
 import cofh.thermal.lib.compat.jei.ThermalFuelCategory;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -19,6 +18,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -72,9 +72,9 @@ public class SteamFuelCategory extends ThermalFuelCategory<SteamFuel> {
 	}
 
 	@Override
-	public void draw(SteamFuel recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
-		super.draw(recipe, recipeSlotsView, matrixStack, mouseX, mouseY);
-		tankBackground.draw(matrixStack, 33, 10);
+	public void draw(SteamFuel recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+		super.draw(recipe, recipeSlotsView, guiGraphics, mouseX, mouseY);
+		tankBackground.draw(guiGraphics, 33, 10);
 	}
 
 	@Override
