@@ -114,6 +114,7 @@ public class SysteamsRegistry {
 		Recipes.init();
 		Boilers.init();
 
+		TAB_REGISTRY.register(bus);
 		FLUID_REGISTRY.register(bus);
 		FLUID_TYPE_REGISTRY.register(bus);
 		BLOCK_ENTITY_REGISTRY.register(bus);
