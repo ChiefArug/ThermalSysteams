@@ -134,7 +134,7 @@ dependencies {
     implementation fg.deobf("com.teamcofh:cofh_core:${minecraft_version}-${cofh_core_version}")
     implementation fg.deobf("com.teamcofh:thermal_core:${minecraft_version}-${thermal_core_version}")
 //    implementation fg.deobf("com.teamcofh:thermal_foundation:${minecraft_version}-${thermal_foundation_version}")
-    implementation fg.deobf("local:thermal_foundation:${minecraft_version}-${thermal_foundation_version}")
+    implementation fg.deobf("curse.maven:thermal-foundation-222880:4782926") // use the cursemaven version because the one on the maven is broken
     implementation fg.deobf("com.teamcofh:thermal_expansion:${minecraft_version}-${thermal_expansion_version}")
 
     implementation fg.deobf("me.desht.pneumaticcraft:pneumaticcraft-repressurized:${minecraft_version}-${pncr_version}")
