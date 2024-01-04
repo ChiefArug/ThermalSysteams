@@ -40,9 +40,9 @@ public class SysteamsConfig {
 		builder.comment("Systeams Config", "---------------");
 
 		builder.comment("The amount of steam 1mb of water makes.");
-		WATER_TO_STEAM_RATIO = builder.defineInRange("water_to_steam_ratio", 2.0, 0.1, 10.0);
+		WATER_TO_STEAM_RATIO = builder.defineInRange("water_to_steam_ratio", 2.0, 0.1, 512.0);
 		builder.comment("The multiplier on the steam dynamo's RF/t");
-		STEAM_DYNAMO_MULTIPLIER = builder.defineInRange("steam_dynamo_output_multiplier", 2, 0.05, 10);
+		STEAM_DYNAMO_MULTIPLIER = builder.defineInRange("steam_dynamo_output_multiplier", 2, 0.05, 512);
 
 		builder.push("Steam Values");
 			builder.comment("The number of mb of steam produced per RF of energy usually produced by the same fuel in a dynamo", "Note that this does not affect the steam dynamo's rates. That needs to be adjusted with a datapack");
