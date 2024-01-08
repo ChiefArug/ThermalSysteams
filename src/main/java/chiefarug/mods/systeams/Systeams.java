@@ -57,7 +57,7 @@ public class Systeams {
      * @return A new tag
      */
     @Nullable
-    @Contract("null,null -> null;!null,_ -> !null;_,!null -> !null")
+    @Contract("null,null -> null;!null,_ -> new;_,!null -> new")
     public static CompoundTag mergeTags(@Nullable CompoundTag first, @Nullable CompoundTag second) {
         if (first == null && second == null) return null;
         if (first == null)
