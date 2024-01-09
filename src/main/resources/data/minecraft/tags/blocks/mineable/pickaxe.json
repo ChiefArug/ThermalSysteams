@@ -9,5 +9,10 @@
     "systeams:lapidary_boiler",
     "systeams:disenchantment_boiler",
     "systeams:gourmand_boiler"
+    "systeams:gourmand_boiler",
+    {
+      "id": "systeams:pneumatic_boiler",
+      "required": false
+    }
   ]
 }

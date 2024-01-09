@@ -31,7 +31,6 @@ import static chiefarug.mods.systeams.Systeams.MODID;
 public class SysteamsJEIPlugin implements IModPlugin {
 
 	public static final RecipeType<SteamFuel> STEAM_DYNAMO_RECIPE_TYPE = RecipeType.create(MODID, SysteamsRegistry.STEAM_DYNAMO_ID, SteamFuel.class);
-	private static final ResourceLocation UID = new ResourceLocation(MODID, "systeams");
 
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registration) {
@@ -75,7 +74,7 @@ public class SysteamsJEIPlugin implements IModPlugin {
 
 	@Override
 	public @NotNull ResourceLocation getPluginUid() {
-		return UID;
+		return Systeams.MODRL;
 	}
 
 	private static RecipeManager getRecipeManager() {

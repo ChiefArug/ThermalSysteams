@@ -2,12 +2,13 @@ package chiefarug.mods.systeams;
 
 import chiefarug.mods.systeams.compat.mekanism.SysteamsMekanismCompat;
 import chiefarug.mods.systeams.compat.pneumaticcraft.SysteamsPNCRCompat;
-import chiefarug.mods.systeams.networking.RecipeCheckerChannel;
+import chiefarug.mods.systeams.compat.thermal_extra.SysteamsThermalExtraCompat;
 import cofh.core.client.event.CoreClientEvents;
 import com.mojang.logging.LogUtils;
 import me.desht.pneumaticcraft.api.tileentity.IAirHandlerMachine;
 import mekanism.api.chemical.gas.IGasHandler;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
@@ -40,15 +41,15 @@ public class Systeams {
         var bus = FMLJavaModLoadingContext.get().getModEventBus();
         SysteamsRegistry.init(bus);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, SysteamsConfig.spec, "systeams-server.toml");
-        RecipeCheckerChannel.init();
         bus.addListener((FMLCommonSetupEvent event) -> event.enqueueWork(ConversionKitItem::fillDynamoMap));
-        
-        if (ModList.get().isLoaded("pneumaticcraft")) {
+
+        ModList mods = ModList.get();
+        if (mods.isLoaded(PNCR))
             SysteamsPNCRCompat.unfoldPressurizedManifold(bus);
-        }
-        if (ModList.get().isLoaded("mekanism")) {
+        if (mods.isLoaded(MEKANISM))
             SysteamsMekanismCompat.activateMechanisedManifold(bus);
         }
+
     }
 
     /**

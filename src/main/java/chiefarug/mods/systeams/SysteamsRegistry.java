@@ -68,6 +68,7 @@ import net.minecraftforge.registries.tags.ITagManager;
 import java.util.function.Supplier;
 
 import static chiefarug.mods.systeams.Systeams.MODID;
+import static chiefarug.mods.systeams.Systeams.MODRL;
 
 @SuppressWarnings("unused")
 public class SysteamsRegistry {
@@ -219,7 +220,7 @@ public class SysteamsRegistry {
 
 
 	static <T> ITag<T> modTag(IForgeRegistry<T> registry, String key) {
-		return tag(registry, new ResourceLocation(MODID, key));
+		return tag(registry, MODRL.withPath(key));
 	}
 
 	static <T> ITag<T> forgeTag(IForgeRegistry<T> registry, String key) {
