@@ -32,3 +32,8 @@ Addon for the Thermal Series that adds Steam dynamos back to modern versions!
     modId="thermal_expansion"
     mandatory=true
     versionRange="[10,)"
+[[dependencies.systeams]]
+    modId="thermal_extra"
+    mandatory=false
+    versionRange="(3.0.7,4]"
+    ordering="AFTER" # this is purely so our jei catalyst comes after it.

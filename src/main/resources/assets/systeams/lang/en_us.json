@@ -71,5 +71,10 @@
   "info.systeams.pneumatic_boiler.0": "Generates Steam using pressurized air.",
   "info.systeams.pneumatic_boiler.1": "Some say it's a load of hot air",
   "info.systeams.pneumatic_boiler.2": "Don't worry, only the water heats up in here!",
-  "block.systeams.pneumatic_boiler.keyword": "air pressure engine generator steam"
+  "block.systeams.pneumatic_boiler.keyword": "air pressure engine generator steam",
+
+  "block.systeams.frost_boiler": "Frost Boiler",
+  "info.systeams.frost_boiler.0": "Generates Steam using cold things.",
+  "info.systeams.frost_boiler.1": "Don't question it.",
+  "block.systeams.frost_boiler.keyword": "blizz snow ice cold engine generator steam"
 }

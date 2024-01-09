@@ -13,7 +13,8 @@ public class SysteamsConfig {
 		STEAM_RATIO_LAPIDARY,
 		STEAM_RATIO_DISENCHANTMENT,
 		STEAM_RATIO_GOURMAND,
-		STEAM_RATIO_PNEUMATIC
+		STEAM_RATIO_PNEUMATIC,
+		STEAM_RATIO_FROST
 		;
 	// Boiler sped multipliers
 	public static final ForgeConfigSpec.ConfigValue<Double>
@@ -24,7 +25,8 @@ public class SysteamsConfig {
 		SPEED_LAPIDARY,
 		SPEED_DISENCHANTMENT,
 		SPEED_GOURMAND,
-		SPEED_PNEUMATIC
+		SPEED_PNEUMATIC,
+		SPEED_FROST
 		;
 
 	public static final ForgeConfigSpec.ConfigValue<Boolean> PNEUMATIC_BOILER_IN_WORLD_CONVERSION;
@@ -55,6 +57,7 @@ public class SysteamsConfig {
 			STEAM_RATIO_DISENCHANTMENT = steamRatio(builder, "disenchantment");
 			STEAM_RATIO_GOURMAND = steamRatio(builder, "gourmand");
 			STEAM_RATIO_PNEUMATIC = steamRatio(builder, "pneumatic");
+			STEAM_RATIO_FROST = steamRatio(builder, "frost");
 
 		builder.pop();
 
@@ -69,6 +72,8 @@ public class SysteamsConfig {
 			SPEED_DISENCHANTMENT = speed(builder, "disenchantment");
 			SPEED_GOURMAND = speed(builder, "gourmand");
 			SPEED_PNEUMATIC = speed(builder, "pneumatic");
+			SPEED_FROST = speed(builder, "frost");
+
 		builder.pop();
 
 		builder.push("Integration settings");

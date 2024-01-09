@@ -1,5 +1,6 @@
 package chiefarug.mods.systeams.compat.jei;
 
+import chiefarug.mods.systeams.Systeams;
 import chiefarug.mods.systeams.SysteamsRegistry;
 import chiefarug.mods.systeams.client.screens.CompressionBoilerScreen;
 import chiefarug.mods.systeams.client.screens.DisenchantmentBoilerScreen;
@@ -9,6 +10,7 @@ import chiefarug.mods.systeams.client.screens.MagmaticBoilerScreen;
 import chiefarug.mods.systeams.client.screens.NumismaticBoilerScreen;
 import chiefarug.mods.systeams.client.screens.SteamDynamoScreen;
 import chiefarug.mods.systeams.client.screens.StirlingBoilerScreen;
+import chiefarug.mods.systeams.compat.thermal_extra.SysteamsThermalExtraCompat;
 import chiefarug.mods.systeams.recipe.SteamFuel;
 import cofh.thermal.expansion.compat.jei.TExpJeiPlugin;
 import mezz.jei.api.IModPlugin;
@@ -23,8 +25,10 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.NotNull;
 
+import static chiefarug.mods.systeams.Systeams.EXTRA;
 import static chiefarug.mods.systeams.Systeams.MODID;
 
 @JeiPlugin
@@ -57,6 +61,8 @@ public class SysteamsJEIPlugin implements IModPlugin {
 		registration.addRecipeClickArea(DisenchantmentBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.DISENCHANTMENT_FUEL_TYPE);
 		registration.addRecipeClickArea(GourmandBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.GOURMAND_FUEL_TYPE);
 
+		if (ModList.get().isLoaded(EXTRA))
+			SysteamsThermalExtraCompat.JEIHandler.registerGuiHandlers(registration, flameX, flameY);
 	}
 
 	@Override
@@ -70,6 +76,8 @@ public class SysteamsJEIPlugin implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.DISENCHANTMENT.item()), TExpJeiPlugin.DISENCHANTMENT_FUEL_TYPE);
 		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.GOURMAND.item()), TExpJeiPlugin.GOURMAND_FUEL_TYPE);
 
+		if (ModList.get().isLoaded(EXTRA))
+			SysteamsThermalExtraCompat.JEIHandler.registerRecipeCatalysts(registration);
 	}
 
 	@Override

@@ -8,10 +8,13 @@
     "systeams:numismatic_boiler",
     "systeams:lapidary_boiler",
     "systeams:disenchantment_boiler",
-    "systeams:gourmand_boiler"
     "systeams:gourmand_boiler",
     {
       "id": "systeams:pneumatic_boiler",
+      "required": false
+    },
+    {
+      "id": "systeams:frost_boiler",
       "required": false
     }
   ]

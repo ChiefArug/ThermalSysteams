@@ -1,0 +1,7 @@
+{
+  "parent": "systeams:block/frost_boiler",
+  "textures": {
+    "coil": "systeams:block/boiler_pipe_active"
+  }
+
+}

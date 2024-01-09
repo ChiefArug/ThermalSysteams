@@ -33,9 +33,13 @@ public class Systeams {
     @SuppressWarnings("unused")
     public static final Logger LGGR = LogUtils.getLogger();
     public static final String MODID = "systeams";
+    public static final ResourceLocation MODRL = new ResourceLocation(MODID, MODID);
+    public static final String PNCR = "pneumaticcraft";
+    public static final String MEKANISM = "mekanism";
+    public static final String EXTRA = "thermal_extra";
 
     public static final Capability<IAirHandlerMachine> AIR_HANDLER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
-    public static final Capability<IGasHandler> GAS_HANDLER_CAPABILITY = CapabilityManager.get(new CapabilityToken<IGasHandler>() {});
+    public static final Capability<IGasHandler> GAS_HANDLER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
 
     public Systeams() {
         var bus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -48,8 +52,8 @@ public class Systeams {
             SysteamsPNCRCompat.unfoldPressurizedManifold(bus);
         if (mods.isLoaded(MEKANISM))
             SysteamsMekanismCompat.activateMechanisedManifold(bus);
-        }
-
+        if (mods.isLoaded(EXTRA))
+            SysteamsThermalExtraCompat.initializeExtraThermalization(bus);
     }
 
     /**

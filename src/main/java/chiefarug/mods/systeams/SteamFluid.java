@@ -40,6 +40,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static chiefarug.mods.systeams.Systeams.LGGR;
+import static chiefarug.mods.systeams.Systeams.MODRL;
+
 @SuppressWarnings("unused")// ignore unused code, its probably for the block form.
 public class SteamFluid /*extends FluidCoFH*/ { // We can't extend FluidCoFH because it forces you to use the base ForgeFlowingFluid, meaning I can't make it flow upwards.
 
@@ -72,8 +74,8 @@ public class SteamFluid /*extends FluidCoFH*/ { // We can't extend FluidCoFH bec
 					@Override
 					public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
 						consumer.accept(new IClientFluidTypeExtensions() {
-							private static final ResourceLocation STILL = new ResourceLocation("systeams:block/steam_still");
-							private static final ResourceLocation FLOW = new ResourceLocation("systeams:block/steam_flow");
+							private static final ResourceLocation STILL = MODRL.withPath("block/steam_still");
+							private static final ResourceLocation FLOW = MODRL.withPath("block/steam_flow");
 
 							@Override
 							public ResourceLocation getStillTexture() {
