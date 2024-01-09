@@ -4,14 +4,20 @@ import chiefarug.mods.systeams.compat.mekanism.SysteamsMekanismCompat;
 import chiefarug.mods.systeams.compat.pneumaticcraft.SysteamsPNCRCompat;
 import chiefarug.mods.systeams.compat.thermal_extra.SysteamsThermalExtraCompat;
 import cofh.core.client.event.CoreClientEvents;
+import cofh.core.util.helpers.AugmentDataHelper;
 import com.mojang.logging.LogUtils;
 import me.desht.pneumaticcraft.api.tileentity.IAirHandlerMachine;
 import mekanism.api.chemical.gas.IGasHandler;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
@@ -25,6 +31,10 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
+import java.util.List;
+
+import static cofh.lib.util.constants.NBTTags.TAG_AUGMENT_TYPE_DYNAMO;
+import static net.minecraftforge.eventbus.api.EventPriority.LOW;
 import static net.minecraftforge.eventbus.api.EventPriority.LOWEST;
 
 @Mod("systeams")
@@ -81,5 +91,33 @@ public class Systeams {
             LGGR.info("Welcome aboard Captain. All Systeams online");
             first = false;
         }
+    }
+
+    @SubscribeEvent(priority = LOW)
+    static void supplementAugmentTooltips(ItemTooltipEvent event) {
+        List<Component> tooltip = event.getToolTip();
+        if (tooltip.isEmpty() || !SysteamsConfig.REPLACE_TOOLTIPS.get()) return;
+        ItemStack stack = event.getItemStack();
+
+        String augType = AugmentDataHelper.getAugmentType(stack);
+        if (augType.equals(TAG_AUGMENT_TYPE_DYNAMO)) {
+            replaceContents(tooltip);
+        }
+    }
+
+    @SuppressWarnings("SuperfluousFormat")
+    private static boolean replaceContents(List<Component> components) {
+        for (int i = 0; i < components.size(); i++) {
+            Component component = components.get(i);
+            if (component.getContents() instanceof TranslatableContents translatableContents && translatableContents.getKey().equals("info.thermal.augment.type." + TAG_AUGMENT_TYPE_DYNAMO)) {
+                MutableComponent replacement = Component.translatable("info.systeams.augment.type.DynamoBoiler", translatableContents.getArgs()).withStyle(component.getStyle());
+                component.getSiblings().forEach(replacement::append);
+                components.set(i, replacement);
+                return true;
+            } else {
+                if (replaceContents(component.getSiblings())) return true;
+            }
+        }
+        return false;
     }
 }

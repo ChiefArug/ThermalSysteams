@@ -5,7 +5,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 public class SysteamsConfig {
 
 	// Steam ratios
-	public static final ForgeConfigSpec.ConfigValue<Double>
+	public static final ForgeConfigSpec.DoubleValue
 		STEAM_RATIO_STIRLING,
 		STEAM_RATIO_MAGMATIC,
 		STEAM_RATIO_COMPRESSION,
@@ -17,7 +17,7 @@ public class SysteamsConfig {
 		STEAM_RATIO_FROST
 		;
 	// Boiler sped multipliers
-	public static final ForgeConfigSpec.ConfigValue<Double>
+	public static final ForgeConfigSpec.DoubleValue
 		SPEED_STIRLING,
 		SPEED_MAGMATIC,
 		SPEED_COMPRESSION,
@@ -29,11 +29,13 @@ public class SysteamsConfig {
 		SPEED_FROST
 		;
 
-	public static final ForgeConfigSpec.ConfigValue<Boolean> PNEUMATIC_BOILER_IN_WORLD_CONVERSION;
+	public static final ForgeConfigSpec.BooleanValue PNEUMATIC_BOILER_IN_WORLD_CONVERSION;
 
 
-	public static final ForgeConfigSpec.ConfigValue<Double> WATER_TO_STEAM_RATIO;
-	public static final ForgeConfigSpec.ConfigValue<Double> STEAM_DYNAMO_MULTIPLIER;
+	public static final ForgeConfigSpec.DoubleValue WATER_TO_STEAM_RATIO;
+	public static final ForgeConfigSpec.DoubleValue STEAM_DYNAMO_MULTIPLIER;
+
+	public static final ForgeConfigSpec.BooleanValue REPLACE_TOOLTIPS;
 
 	static final ForgeConfigSpec spec;
 	static {
@@ -82,6 +84,12 @@ public class SysteamsConfig {
 					"This can get annoying when trying to place Advanced Pneumatic Tubes next to boilers")
 				.define("pneumatic_boiler_conversion_to_dynamo", true);
 
+		builder.pop();
+			REPLACE_TOOLTIPS = builder.comment(
+					"If the Dynamo in dynamo augment tooltips should be replaced with Dynamo & Boiler",
+					"This doesn't have as much support for translations (it can still be translated with the key info.systeams.augment.type.DynamoBoiler)")
+				.define("replace_dynamo_augment_tooltips", true);
+
 		spec = builder.build();
 	}
 
@@ -89,14 +97,14 @@ public class SysteamsConfig {
 	private static final double steamRatioDefaultValue = 0.5;
 	private static final double steamRatioMin = 0.05;
 	private static final double steamRatioMax = 100;
-	private static ForgeConfigSpec.ConfigValue<Double> steamRatio(ForgeConfigSpec.Builder builder, String name) {
+	private static ForgeConfigSpec.DoubleValue steamRatio(ForgeConfigSpec.Builder builder, String name) {
 		return builder.defineInRange(name, steamRatioDefaultValue, steamRatioMin, steamRatioMax);
 	}
 
 	private static final double speedDefaultValue = 2;
 	private static final double speedMin = 0.05;
 	private static final double speedMax = 20;
-	private static ForgeConfigSpec.ConfigValue<Double> speed(ForgeConfigSpec.Builder builder, String name) {
+	private static ForgeConfigSpec.DoubleValue speed(ForgeConfigSpec.Builder builder, String name) {
 		return builder.defineInRange(name, speedDefaultValue, speedMin, speedMax);
 	}
 
