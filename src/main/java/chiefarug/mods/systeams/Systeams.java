@@ -46,6 +46,7 @@ public class Systeams {
         SysteamsRegistry.init(bus);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, SysteamsConfig.spec, "systeams-server.toml");
         bus.addListener((FMLCommonSetupEvent event) -> event.enqueueWork(ConversionKitItem::fillDynamoMap));
+        bus.addListener((FMLClientSetupEvent event) -> event.enqueueWork(() -> CoreClientEvents.addNamespace(MODID)));
 
         ModList mods = ModList.get();
         if (mods.isLoaded(PNCR))
@@ -81,10 +82,4 @@ public class Systeams {
             first = false;
         }
     }
-
-    @SubscribeEvent
-    static void addTooltips(FMLClientSetupEvent event) {
-        event.enqueueWork(() -> CoreClientEvents.addNamespace(MODID));
-    }
-
 }

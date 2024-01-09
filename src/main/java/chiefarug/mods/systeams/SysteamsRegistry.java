@@ -17,6 +17,8 @@ import chiefarug.mods.systeams.client.screens.MagmaticBoilerScreen;
 import chiefarug.mods.systeams.client.screens.NumismaticBoilerScreen;
 import chiefarug.mods.systeams.client.screens.SteamDynamoScreen;
 import chiefarug.mods.systeams.client.screens.StirlingBoilerScreen;
+import chiefarug.mods.systeams.compat.pneumaticcraft.SysteamsPNCRCompat;
+import chiefarug.mods.systeams.compat.thermal_extra.SysteamsThermalExtraCompat;
 import chiefarug.mods.systeams.containers.CompressionBoilerMenu;
 import chiefarug.mods.systeams.containers.DisenchantmentBoilerMenu;
 import chiefarug.mods.systeams.containers.GourmandBoilerMenu;
@@ -35,9 +37,9 @@ import cofh.lib.util.recipes.SerializableRecipeType;
 import cofh.thermal.core.ThermalCore;
 import cofh.thermal.core.common.config.ThermalCoreConfig;
 import cofh.thermal.lib.common.block.DynamoBlock;
+import cofh.thermal.lib.common.item.BlockItemAugmentable;
 import cofh.thermal.lib.util.ThermalAugmentRules;
 import cofh.thermal.lib.util.ThermalRecipeManagers;
-import cofh.thermal.lib.common.item.BlockItemAugmentable;
 import cofh.thermal.lib.util.recipes.DynamoFuelSerializer;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.registries.Registries;
@@ -58,6 +60,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fluids.FluidType;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -67,8 +70,10 @@ import net.minecraftforge.registries.tags.ITagManager;
 
 import java.util.function.Supplier;
 
+import static chiefarug.mods.systeams.Systeams.EXTRA;
 import static chiefarug.mods.systeams.Systeams.MODID;
 import static chiefarug.mods.systeams.Systeams.MODRL;
+import static chiefarug.mods.systeams.Systeams.PNCR;
 
 @SuppressWarnings("unused")
 public class SysteamsRegistry {
@@ -87,6 +92,12 @@ public class SysteamsRegistry {
 				out.accept(Boilers.STIRLING);
 				out.accept(Boilers.NUMISMATIC);
 				out.accept(Boilers.DISENCHANTMENT);
+
+				ModList mods = ModList.get();
+				if (mods.isLoaded(PNCR))
+					SysteamsPNCRCompat.fillCreativeTab(out);
+				if (mods.isLoaded(EXTRA))
+					SysteamsThermalExtraCompat.fillCreativeTab(out);
 			})
 			.build());
 

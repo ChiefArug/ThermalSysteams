@@ -1,0 +1,11 @@
+{
+  "type": "systeams:upgrade_shapeless",
+  "ingredients": [
+    {"item":"thermal_extra:dynamo_frost"},
+    {"item":"systeams:boiler_pipe"}
+  ],
+  "result": {
+    "item": "systeams:frost_boiler"
+  },
+  "replacement": "thermal:rf_coil"
+}

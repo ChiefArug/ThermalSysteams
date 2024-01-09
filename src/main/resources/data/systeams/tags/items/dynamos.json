@@ -10,7 +10,11 @@
     "systeams:steam_dynamo",
     {
       "required": false,
-      "id": "pneumaticcraft:pneumatic_dynamo"
+      "id": "systeams:pneumatic_boiler"
+    },
+    {
+      "required": false,
+      "id": "systeams:frost_boiler"
     }
   ]
 }

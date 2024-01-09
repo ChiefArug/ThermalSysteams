@@ -10,6 +10,10 @@
     {
       "required": false,
       "id": "systeams:pneumatic_boiler"
+    },
+    {
+      "required": false,
+      "id": "systeams:frost_boiler"
     }
   ]
 }

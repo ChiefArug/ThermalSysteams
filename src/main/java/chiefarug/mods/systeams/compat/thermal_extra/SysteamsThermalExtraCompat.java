@@ -8,6 +8,7 @@ import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mrthomas20121.thermal_extra.compat.jei.ThermalExtraPlugin;
 import mrthomas20121.thermal_extra.init.ThermalExtraBlocks;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -27,6 +28,10 @@ public class SysteamsThermalExtraCompat {
 
     private static void fillDynamoBoilerMap() {
         ConversionKitItem.getDynamoBoilerMap().put(ThermalExtraBlocks.DYNAMO_COLD.get(), Registry.FROST.block());
+    }
+
+    public static void fillCreativeTab(CreativeModeTab.Output out) {
+        out.accept(Registry.FROST);
     }
 
     @SuppressWarnings("unused")

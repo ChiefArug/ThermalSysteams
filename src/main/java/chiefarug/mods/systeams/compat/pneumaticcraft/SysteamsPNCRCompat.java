@@ -16,6 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -48,7 +49,11 @@ public class SysteamsPNCRCompat {
 		ConversionKitItem.getDynamoBoilerMap().put(ModBlocks.PNEUMATIC_DYNAMO.get(), Registry.PNEUMATIC_BOILER_BLOCK.get());
 	}
 
-	@SuppressWarnings("unused")
+	public static void fillCreativeTab(CreativeModeTab.Output out) {
+		out.accept(Registry.PNEUMATIC_BOILER_BLOCK_ITEM.get());
+	}
+
+    @SuppressWarnings("unused")
 	static class Registry {
 		static void init() {
 		}
@@ -75,10 +80,10 @@ public class SysteamsPNCRCompat {
 
 	static void tooltipEvent(ItemTooltipEvent event) {
 		ItemStack stack = event.getItemStack();
-        List<Component> tooltip = event.getToolTip();
         String modid = Utils.getModId(stack.getItem());
         if (!(modid.equals(Names.MOD_ID))) return;
 
+        List<Component> tooltip = event.getToolTip();
 
         if (CoreClientConfig.enableKeywords.get()) {
             String translationKey = stack.getDescriptionId() + ".keyword";
