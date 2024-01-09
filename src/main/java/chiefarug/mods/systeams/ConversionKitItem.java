@@ -130,10 +130,4 @@ public class ConversionKitItem extends Item {
 			transferDatum.put(blockEntity);
 		}
 	}
-
-	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag isAdvanced) {
-		super.appendHoverText(stack, level, components, isAdvanced);
-		components.add(Component.translatable(getDescriptionId(stack) + ".desc").withStyle(ChatFormatting.GOLD));
-	}
 }
