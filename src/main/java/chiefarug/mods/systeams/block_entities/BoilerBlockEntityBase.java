@@ -76,6 +76,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	protected int baseEnergyPerTick = getBaseProcessTick();
 	protected int steamPerTick = calcSteam(baseEnergyPerTick);
 	protected int waterPerTick = calcWater(steamPerTick);
+	public boolean gasMode = false;
 
 	public BoilerBlockEntityBase(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
 		super(tileEntityTypeIn, pos, state);
@@ -269,6 +270,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 
 		buffer.writeInt(fuelMax);
 		buffer.writeInt(fuelRemaining);
+		buffer.writeBoolean(gasMode);
 
 		return buffer;
 	}
@@ -279,6 +281,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 
 		fuelMax = buffer.readInt();
 		fuelRemaining = buffer.readInt();
+		gasMode = buffer.readBoolean();
 	}
 
 
@@ -317,8 +320,10 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 
 	// Steam helpers
 
-	protected void transferSteamOut() { //TODO: alternative steam outputs? namely mek gas
-		FluidHelper.insertIntoAdjacent(this, steamTank, TRANSFER_PER_TICK, getFacing());
+	protected void transferSteamOut() {
+		if (FluidHelper.insertIntoAdjacent(this, steamTank, TRANSFER_PER_TICK, getFacing())) {
+			gasMode = false; // if we extract liquid then we are no longer in gas mode.
+		};
 	}
 
 	private int calcSteam(int energy) {
@@ -368,14 +373,18 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 			if (!steamCap.isPresent()) {
 				steamCap = LazyOptional.of(() -> tankInv.getHandler(StorageGroup.OUTPUT));
 			}
+			gasMode = false; // we have just been queried for the steam cap in liquid form, we are no longer outputting gas
 			return steamCap.cast();
 		}
 		return super.getFluidHandlerCapability(side);
 	}
 
 	protected <T> LazyOptional<T> getGasHandlerCapability(@Nullable Direction side) {
-		if (side!= null && side.equals(getFacing()))
-			return SysteamsMekanismCompat.wrapLiquidCapability(this.getFluidHandlerCapability(side)).cast();
+		if (side!= null && side.equals(getFacing())) {
+			LazyOptional<IFluidHandler> fluidCap = this.getFluidHandlerCapability(side);
+			gasMode = true; // we have just been queried for the steam cap in gas form
+			return SysteamsMekanismCompat.wrapLiquidCapability(fluidCap).cast();
+		}
 		return LazyOptional.empty();
 	}
 
