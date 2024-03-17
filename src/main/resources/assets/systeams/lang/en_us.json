@@ -79,8 +79,6 @@
   "info.systeams.frost_boiler.1": "Don't question it.",
   "block.systeams.frost_boiler.keyword": "blizz snow ice cold engine generator steam",
 
-  "info.systeams.mekanism_gas_output": "Outputting mekanism gas!",
   "info.systeams.mekanism_gas_output.1": "Mekanism gas handler detected on output!",
-  "info.systeams.mekanism_gas_output.2": "Make sure it is pulling from the boiler for gas to be output",
-  "info.systeams.mekanism_gas_output.3": "The boiler will not automatically push gas, only liquid"
+  "info.systeams.mekanism_gas_output.2": "Make sure the handler is set to actively pull from this boiler"
 }
