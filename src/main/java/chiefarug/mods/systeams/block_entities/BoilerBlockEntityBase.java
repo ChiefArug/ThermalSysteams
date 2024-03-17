@@ -86,6 +86,13 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 		facing = state.getValue(FACING_ALL);
 	}
 
+	@Override
+	@SuppressWarnings("deprecation")
+	public void setBlockState(BlockState pBlockState) {
+		super.setBlockState(pBlockState);
+		updateFacing();
+	}
+
 	// ticking 🐊
 	@Override
 	public void tickServer() {
@@ -323,7 +330,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	protected void transferSteamOut() {
 		if (FluidHelper.insertIntoAdjacent(this, steamTank, TRANSFER_PER_TICK, getFacing())) {
 			gasMode = false; // if we extract liquid then we are no longer in gas mode.
-		};
+		}
 	}
 
 	private int calcSteam(int energy) {
