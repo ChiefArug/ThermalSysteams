@@ -18,9 +18,6 @@ You can find the mods config file at worldname/serverconfig/systeams-server.toml
 
 The recipes are able to be configured via the normal means, so datapack, KubeJS or CraftTweaker. Note that the boilers use the same recipe lot as their respective dynamo, so any changes to boiler recipes must be made to dynamo recipes. (apart from the rf to steam ratio. That is configurable via the config file mentioned above)
 
- 
-
-![A showcase of the boilers, items and dynamo added by Systeams](https://media.forgecdn.net/attachments/602/105/showcase_screenshot.png)
 
 Finally a massive thanks to King Lemming and the rest of the CoFH team who make the Thermal Series, to Reda, the CoFH artist, for such amazing textures that mine are based off and to Random, for some design, texturing and code advice.
 
