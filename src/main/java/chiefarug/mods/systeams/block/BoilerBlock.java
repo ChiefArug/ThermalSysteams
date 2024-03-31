@@ -13,6 +13,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -39,7 +40,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 // Most of this is copied from dynamo code
 // I don't extend it because these are not dynamos and should not be treated as such
 @Mod.EventBusSubscriber(modid= Systeams.MODID)
-public class BoilerBlock extends EntityBlockActive6Way {
+public class BoilerBlock extends EntityBlockActive6Way implements SimpleWaterloggedBlock {
 
 	public BoilerBlock(Properties builder, Class<?> tileClass, Supplier<BlockEntityType<?>> blockEntityType) {
 		super(builder, tileClass, blockEntityType);
