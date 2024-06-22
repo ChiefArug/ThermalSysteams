@@ -8,6 +8,7 @@ import chiefarug.mods.systeams.client.screens.LapidaryBoilerScreen;
 import chiefarug.mods.systeams.client.screens.MagmaticBoilerScreen;
 import chiefarug.mods.systeams.client.screens.NumismaticBoilerScreen;
 import chiefarug.mods.systeams.client.screens.SteamDynamoScreen;
+import chiefarug.mods.systeams.client.screens.SteamPulverizerScreen;
 import chiefarug.mods.systeams.client.screens.StirlingBoilerScreen;
 import chiefarug.mods.systeams.recipe.SteamFuel;
 import cofh.thermal.expansion.compat.jei.TExpJeiPlugin;
@@ -58,19 +59,21 @@ public class SysteamsJEIPlugin implements IModPlugin {
 		registration.addRecipeClickArea(DisenchantmentBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.DISENCHANTMENT_FUEL_TYPE);
 		registration.addRecipeClickArea(GourmandBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.GOURMAND_FUEL_TYPE);
 
+		registration.addRecipeClickArea(SteamPulverizerScreen.class, 72, 35, 24, 16, TExpJeiPlugin.PULVERIZER_TYPE);
 	}
 
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Items.STEAM_DYNAMO.get()), STEAM_DYNAMO_RECIPE_TYPE);
-		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.STIRLING.item()), TExpJeiPlugin.STIRLING_FUEL_TYPE);
-		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.MAGMATIC.item()), TExpJeiPlugin.MAGMATIC_FUEL_TYPE);
-		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.COMPRESSION.item()), TExpJeiPlugin.COMPRESSION_FUEL_TYPE);
-		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.NUMISMATIC.item()), TExpJeiPlugin.NUMISMATIC_FUEL_TYPE);
-		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.LAPIDARY.item()), TExpJeiPlugin.LAPIDARY_FUEL_TYPE);
-		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.DISENCHANTMENT.item()), TExpJeiPlugin.DISENCHANTMENT_FUEL_TYPE);
-		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.GOURMAND.item()), TExpJeiPlugin.GOURMAND_FUEL_TYPE);
+		registration.addRecipeCatalyst(SysteamsRegistry.Items.STEAM_DYNAMO.get().getDefaultInstance(), STEAM_DYNAMO_RECIPE_TYPE);
+		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.STIRLING.item().getDefaultInstance(), TExpJeiPlugin.STIRLING_FUEL_TYPE);
+		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.MAGMATIC.item().getDefaultInstance(), TExpJeiPlugin.MAGMATIC_FUEL_TYPE);
+		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.COMPRESSION.item().getDefaultInstance(), TExpJeiPlugin.COMPRESSION_FUEL_TYPE);
+		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.NUMISMATIC.item().getDefaultInstance(), TExpJeiPlugin.NUMISMATIC_FUEL_TYPE);
+		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.LAPIDARY.item().getDefaultInstance(), TExpJeiPlugin.LAPIDARY_FUEL_TYPE);
+		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.DISENCHANTMENT.item().getDefaultInstance(), TExpJeiPlugin.DISENCHANTMENT_FUEL_TYPE);
+		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.GOURMAND.item().getDefaultInstance(), TExpJeiPlugin.GOURMAND_FUEL_TYPE);
 
+		registration.addRecipeCatalyst(SysteamsRegistry.SteamMachines.PULVERIZER.item().getDefaultInstance(), TExpJeiPlugin.PULVERIZER_TYPE);
 	}
 
 	@Override

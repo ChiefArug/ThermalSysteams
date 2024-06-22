@@ -5,15 +5,12 @@ import cofh.thermal.core.ThermalCore;
 import cofh.thermal.lib.block.DynamoBlock;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -26,13 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.COMPRESSION;
-import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.DISENCHANTMENT;
-import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.GOURMAND;
-import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.LAPIDARY;
-import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.MAGMATIC;
-import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.NUMISMATIC;
-import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.STIRLING;
+import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.*;
 import static cofh.lib.util.constants.BlockStatePropertiesCoFH.FACING_ALL;
 import static cofh.thermal.lib.block.DynamoBlock.WATERLOGGED;
 
@@ -129,11 +120,5 @@ public class ConversionKitItem extends Item {
 		for (TransferData transferDatum : transferData) {
 			transferDatum.put(blockEntity);
 		}
-	}
-
-	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag isAdvanced) {
-		super.appendHoverText(stack, level, components, isAdvanced);
-		components.add(Component.translatable(getDescriptionId(stack) + ".desc").withStyle(ChatFormatting.GOLD));
 	}
 }

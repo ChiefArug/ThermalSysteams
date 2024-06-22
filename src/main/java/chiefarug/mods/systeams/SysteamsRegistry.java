@@ -8,6 +8,7 @@ import chiefarug.mods.systeams.block_entities.LapidaryBoilerBlockEntity;
 import chiefarug.mods.systeams.block_entities.MagmaticBoilerBlockEntity;
 import chiefarug.mods.systeams.block_entities.NumismaticBoilerBlockEntity;
 import chiefarug.mods.systeams.block_entities.SteamDynamoBlockEntity;
+import chiefarug.mods.systeams.block_entities.SteamPulverizerBlockEntity;
 import chiefarug.mods.systeams.block_entities.StirlingBoilerBlockEntity;
 import chiefarug.mods.systeams.client.screens.CompressionBoilerScreen;
 import chiefarug.mods.systeams.client.screens.DisenchantmentBoilerScreen;
@@ -16,6 +17,7 @@ import chiefarug.mods.systeams.client.screens.LapidaryBoilerScreen;
 import chiefarug.mods.systeams.client.screens.MagmaticBoilerScreen;
 import chiefarug.mods.systeams.client.screens.NumismaticBoilerScreen;
 import chiefarug.mods.systeams.client.screens.SteamDynamoScreen;
+import chiefarug.mods.systeams.client.screens.SteamPulverizerScreen;
 import chiefarug.mods.systeams.client.screens.StirlingBoilerScreen;
 import chiefarug.mods.systeams.containers.CompressionBoilerContainer;
 import chiefarug.mods.systeams.containers.DisenchantmentBoilerContainer;
@@ -24,10 +26,12 @@ import chiefarug.mods.systeams.containers.LapidaryBoilerContainer;
 import chiefarug.mods.systeams.containers.MagmaticBoilerContainer;
 import chiefarug.mods.systeams.containers.NumismaticBoilerContainer;
 import chiefarug.mods.systeams.containers.SteamDynamoContainer;
+import chiefarug.mods.systeams.containers.SteamPulverizerContainer;
 import chiefarug.mods.systeams.containers.StirlingBoilerContainer;
 import chiefarug.mods.systeams.recipe.SteamFuel;
 import chiefarug.mods.systeams.recipe.SteamFuelManager;
 import chiefarug.mods.systeams.recipe.UpgradeShapelessRecipe;
+import cofh.core.block.TileBlockActive4Way;
 import cofh.lib.util.DeferredRegisterCoFH;
 import cofh.lib.util.constants.BlockStatePropertiesCoFH;
 import cofh.lib.util.helpers.BlockHelper;
@@ -57,6 +61,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -66,9 +71,16 @@ import net.minecraftforge.registries.tags.ITag;
 import net.minecraftforge.registries.tags.ITagManager;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import static chiefarug.mods.systeams.Systeams.MODID;
+import static cofh.lib.util.constants.NBTTags.TAG_AUGMENT_TYPE_AREA_EFFECT;
+import static cofh.lib.util.constants.NBTTags.TAG_AUGMENT_TYPE_DYNAMO;
+import static cofh.lib.util.constants.NBTTags.TAG_AUGMENT_TYPE_POTION;
+import static cofh.lib.util.constants.NBTTags.TAG_AUGMENT_TYPE_RF;
 
 @SuppressWarnings("unused")
 public class SysteamsRegistry {
@@ -98,23 +110,24 @@ public class SysteamsRegistry {
 
 	public static void init(IEventBus bus) {
 		// Make sure all the inner classes have actually been static inited
-		Fluids.init();
-		Blocks.init();
-		Items.init();
 		BlockEntities.init();
+		Blocks.init();
+		Boilers.init();
+		Fluids.init();
+		Items.init();
 		Menus.init();
 		Recipes.init();
-		Boilers.init();
+		SteamMachines.init();
 
-		FLUID_REGISTRY.register(bus);
-		FLUID_TYPE_REGISTRY.register(bus);
 		BLOCK_ENTITY_REGISTRY.register(bus);
 		BLOCK_REGISTRY.register(bus);
+		FLUID_REGISTRY.register(bus);
+		FLUID_TYPE_REGISTRY.register(bus);
 		ITEM_REGISTRY.register(bus);
-		SOUND_REGISTRY.register(bus);
 		MENU_REGISTRY.register(bus);
 		RECIPE_SERIALIZER_REGISTRY.register(bus);
 		RECIPE_TYPE_REGISTRY.register(bus);
+		SOUND_REGISTRY.register(bus);
 
 		bus.addListener((FMLClientSetupEvent event) -> event.enqueueWork(Menus::registerFactories));
 	}
@@ -129,6 +142,7 @@ public class SysteamsRegistry {
 	public static final String DISENCHANTMENT_BOILER_ID = "disenchantment_boiler";
 	public static final String GOURMAND_BOILER_ID = "gourmand_boiler";
 	public static final String UPGRADE_RECIPE_ID = "upgrade_shapeless";
+	public static final String STEAM_PULVERIZER_ID = "steam_pulverizer";
 
 	// These classes are to prevent "forward reference" compile errors. How dare they force me to be more organized
 	@SuppressWarnings("ConstantConditions") // Stop it complaining about passing null to datafixer stuff
@@ -150,13 +164,15 @@ public class SysteamsRegistry {
 		public static final ItemLike RF_COIL = () -> ThermalCore.ITEMS.get("thermal:rf_coil");
 		public static final ITag<Item> UPGRADE_MAIN = modTag(ForgeRegistries.ITEMS, "recipe_control/upgrade_main");
 
-		public static final RegistryObject<Item> STEAM_DYNAMO = ITEM_REGISTRY.register(STEAM_DYNAMO_ID, () -> machineBlockItemOf(Blocks.STEAM_DYNAMO.get()));
+		public static final RegistryObject<Item> STEAM_DYNAMO = ITEM_REGISTRY.register(STEAM_DYNAMO_ID, () -> dynamoishBlockItemOf(Blocks.STEAM_DYNAMO.get()));
 		public static final RegistryObject<ConversionKitItem> BOILER_PIPE = ITEM_REGISTRY.register("boiler_pipe", () -> new ConversionKitItem(new Item.Properties().tab(TAB)));
 }
 	public static class Fluids {
 		static void init() {}
 		public static final ITag<Fluid> WATER_TAG = modTag(ForgeRegistries.FLUIDS, "water");
+		public static final Predicate<FluidStack> IS_WATER = fluid -> WATER_TAG.contains(fluid.getFluid());
 		public static final ITag<Fluid> STEAM_TAG = forgeTag(ForgeRegistries.FLUIDS, "steam");
+		public static final Predicate<FluidStack> IS_STEAM = fluid -> STEAM_TAG.contains(fluid.getFluid());
 		public static final SteamFluid STEAM = new SteamFluid(FLUID_REGISTRY, FLUID_TYPE_REGISTRY, BLOCK_REGISTRY, ITEM_REGISTRY, STEAM_ID);
 	}
 	public static class Menus {
@@ -170,6 +186,8 @@ public class SysteamsRegistry {
 			MenuScreens.register(Boilers.LAPIDARY.menu(), LapidaryBoilerScreen::new);
 			MenuScreens.register(Boilers.DISENCHANTMENT.menu(), DisenchantmentBoilerScreen::new);
 			MenuScreens.register(Boilers.GOURMAND.menu(), GourmandBoilerScreen::new);
+
+			MenuScreens.register(SteamMachines.PULVERIZER.menu(), SteamPulverizerScreen::new);
 		}
 		public static final RegistryObject<MenuType<SteamDynamoContainer>> DYNAMO_STEAM = MENU_REGISTRY.register(STEAM_DYNAMO_ID, () -> IForgeMenuType.create(SteamDynamoContainer::new));
 	}
@@ -200,12 +218,25 @@ public class SysteamsRegistry {
 		public static final Boiler<GourmandBoilerBlockEntity, GourmandBoilerContainer> GOURMAND = new Boiler<>(GOURMAND_BOILER_ID, GourmandBoilerBlockEntity.class, GourmandBoilerBlockEntity::new, GourmandBoilerContainer::new);
 	}
 
+	public static class SteamMachines {
+		static void init() {}
+		public static final SteamMachine<SteamPulverizerBlockEntity, SteamPulverizerContainer> PULVERIZER = new SteamMachine<>(STEAM_PULVERIZER_ID, SteamPulverizerBlockEntity.class, SteamPulverizerBlockEntity::new, SteamPulverizerContainer::new);
+	}
 
-	public static BlockItemAugmentable machineBlockItemOf(Block block) {
+
+	public static BlockItemAugmentable dynamoishBlockItemOf(Block block) {
 		return (BlockItemAugmentable) new BlockItemAugmentable(block, I_PROPERTIES)
 						.setNumSlots(() -> ThermalCoreConfig.dynamoAugments)
 						.setAugValidator(ThermalAugmentRules.DYNAMO_VALIDATOR)
 						.setModId(MODID);
+	}
+	public static final BiPredicate<ItemStack, List<ItemStack>> STEAM_MACHINE_VALIDATORS = ThermalAugmentRules.createDenyValidator(TAG_AUGMENT_TYPE_DYNAMO, TAG_AUGMENT_TYPE_AREA_EFFECT, TAG_AUGMENT_TYPE_POTION, TAG_AUGMENT_TYPE_RF);
+
+	public static BlockItemAugmentable steamMachineBlockItemOf(TileBlockActive4Way block) {
+		return (BlockItemAugmentable) new BlockItemAugmentable(block, I_PROPERTIES)
+				.setNumSlots(() -> ThermalCoreConfig.machineAugments)
+				.setAugValidator(STEAM_MACHINE_VALIDATORS)
+				.setModId(MODID);
 	}
 
 

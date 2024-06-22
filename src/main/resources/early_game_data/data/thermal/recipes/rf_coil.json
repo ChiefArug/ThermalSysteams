@@ -1,0 +1,13 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "  R",
+    " E ",
+    "R  "
+  ],
+  "key": {
+    "R": {"item": "redstone"},
+    "E": {"tag": "forge:ingots/electrum"}
+  },
+  "result": {"item": "thermal:rf_coil"}
+}

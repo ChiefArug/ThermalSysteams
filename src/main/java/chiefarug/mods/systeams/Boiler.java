@@ -29,7 +29,7 @@ public class Boiler<B extends BoilerBlockEntityBase, C extends BoilerContainerBa
 
 	public Boiler(String id, Class<B> blockEntityClass, BlockEntityType.BlockEntitySupplier<B> BEConstructor, IContainerFactory<C> containerConstructor, DeferredRegisterCoFH<Block> blockRegistry, DeferredRegisterCoFH<Item> itemRegistry, DeferredRegisterCoFH<BlockEntityType<?>> blockEntityRegistry, DeferredRegisterCoFH<MenuType<?>> menuRegistry) {
 		block = blockRegistry.register(id, () -> new BoilerBlock(bProperties, blockEntityClass, this::blockEntity));
-		blockItem = itemRegistry.register(id, () -> SysteamsRegistry.machineBlockItemOf(block()));
+		blockItem = itemRegistry.register(id, () -> SysteamsRegistry.dynamoishBlockItemOf(block()));
 		//noinspection DataFlowIssue // i can pass null to datafixers alright
 		blockEntity = blockEntityRegistry.register(id, () -> BlockEntityType.Builder.of(BEConstructor, block()).build(null));
 		menu = menuRegistry.register(id, () -> IForgeMenuType.create(containerConstructor));

@@ -56,10 +56,8 @@ import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction.SIM
 public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity implements ITickableTile.IServerTickable, IThermalInventory {
 	private static final int TRANSFER_PER_TICK = 1000;
 
-	private final Predicate<FluidStack> isWater = fluid -> filter.valid(fluid) && SysteamsRegistry.Fluids.WATER_TAG.contains(fluid.getFluid());
-	public final FluidStorageCoFH waterTank = new FluidStorageCoFH(Constants.TANK_MEDIUM, isWater);
-	private final Predicate<FluidStack> isSteam = fluid -> SysteamsRegistry.Fluids.STEAM_TAG.contains(fluid.getFluid());
-	public final FluidStorageCoFH steamTank = new FluidStorageCoFH(Constants.TANK_LARGE, isSteam);
+	public final FluidStorageCoFH waterTank = new FluidStorageCoFH(Constants.TANK_MEDIUM, SysteamsRegistry.Fluids.IS_WATER);
+	public final FluidStorageCoFH steamTank = new FluidStorageCoFH(Constants.TANK_LARGE, SysteamsRegistry.Fluids.IS_STEAM);
 
 	private LazyOptional<?> steamCap = LazyOptional.empty();
 
