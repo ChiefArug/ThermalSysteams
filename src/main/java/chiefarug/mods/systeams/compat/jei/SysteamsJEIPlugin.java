@@ -31,55 +31,58 @@ import static chiefarug.mods.systeams.Systeams.MODID;
 @JeiPlugin
 public class SysteamsJEIPlugin implements IModPlugin {
 
-	public static final RecipeType<SteamFuel> STEAM_DYNAMO_RECIPE_TYPE = RecipeType.create(MODID, SysteamsRegistry.STEAM_DYNAMO_ID, SteamFuel.class);
-	private static final ResourceLocation UID = new ResourceLocation(MODID, "systeams");
+    public static final RecipeType<SteamFuel> STEAM_DYNAMO = RecipeType.create(MODID, SysteamsRegistry.STEAM_DYNAMO_ID, SteamFuel.class);
+    private static final ResourceLocation UID = new ResourceLocation(MODID, MODID);
 
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registration) {
-		registration.addRecipeCategories(new SteamFuelCategory(registration.getJeiHelpers().getGuiHelper(), new ItemStack(SysteamsRegistry.Items.STEAM_DYNAMO.get()), STEAM_DYNAMO_RECIPE_TYPE));
+		registration.addRecipeCategories(new SteamFuelCategory(registration.getJeiHelpers().getGuiHelper(), new ItemStack(SysteamsRegistry.Items.STEAM_DYNAMO.get()), STEAM_DYNAMO));
 	}
 
-	@Override
-	public void registerRecipes(IRecipeRegistration registration) {
-		RecipeManager recipeManager = getRecipeManager();
+    @Override
+    public void registerRecipes(IRecipeRegistration registration) {
+        RecipeManager recipeManager = getRecipeManager();
 
-		registration.addRecipes(STEAM_DYNAMO_RECIPE_TYPE, recipeManager.getAllRecipesFor(SysteamsRegistry.Recipes.STEAM_TYPE.get()));
+		registration.addRecipes(STEAM_DYNAMO, recipeManager.getAllRecipesFor(SysteamsRegistry.Recipes.STEAM_TYPE.get()));
 	}
 
-	@Override
-	public void registerGuiHandlers(IGuiHandlerRegistration registration) {
-		final int flameX = 80;// + 12; // base pos + difference cause one uses center the other corner
-		final int flameY = 35;// + 12;
-		registration.addRecipeClickArea(SteamDynamoScreen.class, SteamFuelCategory.DURATION_X + 12, SteamFuelCategory.DURATION_Y + 12, 16, 16, STEAM_DYNAMO_RECIPE_TYPE);
-		registration.addRecipeClickArea(StirlingBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.STIRLING_FUEL_TYPE);
-		registration.addRecipeClickArea(MagmaticBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.MAGMATIC_FUEL_TYPE);
-		registration.addRecipeClickArea(CompressionBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.COMPRESSION_FUEL_TYPE);
-		registration.addRecipeClickArea(NumismaticBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.NUMISMATIC_FUEL_TYPE);
-		registration.addRecipeClickArea(LapidaryBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.LAPIDARY_FUEL_TYPE);
-		registration.addRecipeClickArea(DisenchantmentBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.DISENCHANTMENT_FUEL_TYPE);
-		registration.addRecipeClickArea(GourmandBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.GOURMAND_FUEL_TYPE);
+    @Override
+    public void registerGuiHandlers(IGuiHandlerRegistration registration) {
+        final int flameX = 80;// + 12; // base pos + difference cause one uses center the other corner
+        final int flameY = 35;// + 12;
+        registration.addRecipeClickArea(SteamDynamoScreen.class, SteamFuelCategory.DURATION_X + 12, SteamFuelCategory.DURATION_Y + 12, 16, 16, STEAM_DYNAMO);
+        registration.addRecipeClickArea(StirlingBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.STIRLING_FUEL_TYPE);
+        registration.addRecipeClickArea(MagmaticBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.MAGMATIC_FUEL_TYPE);
+        registration.addRecipeClickArea(CompressionBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.COMPRESSION_FUEL_TYPE);
+        registration.addRecipeClickArea(NumismaticBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.NUMISMATIC_FUEL_TYPE);
+        registration.addRecipeClickArea(LapidaryBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.LAPIDARY_FUEL_TYPE);
+        registration.addRecipeClickArea(DisenchantmentBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.DISENCHANTMENT_FUEL_TYPE);
+        registration.addRecipeClickArea(GourmandBoilerScreen.class, flameX, flameY, 16, 16, TExpJeiPlugin.GOURMAND_FUEL_TYPE);
 
-		registration.addRecipeClickArea(SteamPulverizerScreen.class, 72, 35, 24, 16, TExpJeiPlugin.PULVERIZER_TYPE);
-	}
+        registration.addRecipeClickArea(SteamPulverizerScreen.class, 72, 35, 24, 16, TExpJeiPlugin.PULVERIZER_TYPE);
+		//TODO: fix catalyst positions when CoFH does.
+        registration.addRecipeClickArea(SteamPulverizerScreen.class, 72, 35, 24, 16, TExpJeiPlugin.PULVERIZER_CATALYST_TYPE);
+    }
 
-	@Override
-	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-		registration.addRecipeCatalyst(SysteamsRegistry.Items.STEAM_DYNAMO.get().getDefaultInstance(), STEAM_DYNAMO_RECIPE_TYPE);
-		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.STIRLING.item().getDefaultInstance(), TExpJeiPlugin.STIRLING_FUEL_TYPE);
-		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.MAGMATIC.item().getDefaultInstance(), TExpJeiPlugin.MAGMATIC_FUEL_TYPE);
-		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.COMPRESSION.item().getDefaultInstance(), TExpJeiPlugin.COMPRESSION_FUEL_TYPE);
-		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.NUMISMATIC.item().getDefaultInstance(), TExpJeiPlugin.NUMISMATIC_FUEL_TYPE);
-		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.LAPIDARY.item().getDefaultInstance(), TExpJeiPlugin.LAPIDARY_FUEL_TYPE);
-		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.DISENCHANTMENT.item().getDefaultInstance(), TExpJeiPlugin.DISENCHANTMENT_FUEL_TYPE);
-		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.GOURMAND.item().getDefaultInstance(), TExpJeiPlugin.GOURMAND_FUEL_TYPE);
+    @Override
+    public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
+        registration.addRecipeCatalyst(SysteamsRegistry.Items.STEAM_DYNAMO.get().getDefaultInstance(), STEAM_DYNAMO);
+        registration.addRecipeCatalyst(SysteamsRegistry.Boilers.STIRLING.item().getDefaultInstance(), TExpJeiPlugin.STIRLING_FUEL_TYPE);
+        registration.addRecipeCatalyst(SysteamsRegistry.Boilers.MAGMATIC.item().getDefaultInstance(), TExpJeiPlugin.MAGMATIC_FUEL_TYPE);
+        registration.addRecipeCatalyst(SysteamsRegistry.Boilers.COMPRESSION.item().getDefaultInstance(), TExpJeiPlugin.COMPRESSION_FUEL_TYPE);
+        registration.addRecipeCatalyst(SysteamsRegistry.Boilers.NUMISMATIC.item().getDefaultInstance(), TExpJeiPlugin.NUMISMATIC_FUEL_TYPE);
+        registration.addRecipeCatalyst(SysteamsRegistry.Boilers.LAPIDARY.item().getDefaultInstance(), TExpJeiPlugin.LAPIDARY_FUEL_TYPE);
+        registration.addRecipeCatalyst(SysteamsRegistry.Boilers.DISENCHANTMENT.item().getDefaultInstance(), TExpJeiPlugin.DISENCHANTMENT_FUEL_TYPE);
+        registration.addRecipeCatalyst(SysteamsRegistry.Boilers.GOURMAND.item().getDefaultInstance(), TExpJeiPlugin.GOURMAND_FUEL_TYPE);
 
-		registration.addRecipeCatalyst(SysteamsRegistry.SteamMachines.PULVERIZER.item().getDefaultInstance(), TExpJeiPlugin.PULVERIZER_TYPE);
-	}
+        registration.addRecipeCatalyst(SysteamsRegistry.SteamMachines.PULVERIZER.item().getDefaultInstance(), TExpJeiPlugin.PULVERIZER_TYPE);
+        registration.addRecipeCatalyst(SysteamsRegistry.SteamMachines.PULVERIZER.item().getDefaultInstance(), TExpJeiPlugin.PULVERIZER_CATALYST_TYPE);
+    }
 
-	@Override
-	public @NotNull ResourceLocation getPluginUid() {
-		return UID;
-	}
+    @Override
+    public @NotNull ResourceLocation getPluginUid() {
+        return UID;
+    }
 
 	private static RecipeManager getRecipeManager() {
 		ClientLevel level = Minecraft.getInstance().level;

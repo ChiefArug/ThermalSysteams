@@ -6,6 +6,6 @@
     "up": "systeams:block/steam_machine_top",
     "east": "systeams:block/steam_machine_side",
     "west": "systeams:block/steam_machine_side",
-    "south": "systeams:block/steam_machine_side"
+    "south": "systeams:block/steam_machine_back"
   }
 }

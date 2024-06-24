@@ -1,5 +1,6 @@
 package chiefarug.mods.systeams.block_entities;
 
+import chiefarug.mods.systeams.SysteamsConfig;
 import chiefarug.mods.systeams.SysteamsRegistry;
 import chiefarug.mods.systeams.containers.SteamPulverizerContainer;
 import cofh.lib.api.StorageGroup;
@@ -45,7 +46,7 @@ public class SteamPulverizerBlockEntity extends SteamMachineBlockEntity {
 
     @Override
     protected int getBaseProcessTick() {
-        return PulverizerRecipeManager.instance().getBasePower();
+        return (int) (PulverizerRecipeManager.instance().getBasePower() * SysteamsConfig.SPEED_PULVERIZER.get());
     }
 
     @Override
@@ -64,12 +65,13 @@ public class SteamPulverizerBlockEntity extends SteamMachineBlockEntity {
 
         if (cyclicProcessingFeature && !catalystSlot.isEmpty() && !catalystSlot.isFull()) {
             ItemStack catalyst = catalystSlot.getItemStack();
-            outputSlots().stream()
-                    .filter(slot -> itemsEqualWithTags(slot.getItemStack(), catalyst))
-                    .findFirst().ifPresent(slot -> {
-                        slot.modify(-1);
-                        catalystSlot.modify(1);
-                    });
+            for (ItemStorageCoFH slot : outputSlots()) {
+                if (itemsEqualWithTags(slot.getItemStack(), catalyst)) {
+                    slot.modify(-1);
+                    catalystSlot.modify(1);
+                    break;
+                }
+            }
         }
         int decrement = itemInputCounts.size() > 1 ? itemInputCounts.get(1) : 0;
         if (decrement > 0) {
@@ -122,6 +124,11 @@ public class SteamPulverizerBlockEntity extends SteamMachineBlockEntity {
         super.setAttributesFromAugment(augmentData);
 
         cyclicProcessingFeature |= getAttributeMod(augmentData, TAG_AUGMENT_FEATURE_CYCLE_PROCESS) > 0;
+    }
+
+    @Override
+    protected double getRecipeEnergyMult() {
+        return SysteamsConfig.STEAM_RATIO_PULVERIZER.get();
     }
     // endregion
 }

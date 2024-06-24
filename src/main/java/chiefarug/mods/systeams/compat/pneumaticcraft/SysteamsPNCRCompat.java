@@ -25,7 +25,7 @@ import net.minecraftforge.registries.RegistryObject;
 public class SysteamsPNCRCompat {
 
 	public static final String PNEUMATIC_BOILER_ID = "pneumatic_boiler";
-
+	//TODO: add pneumatic boiler to mineable tag. how on earth did i forget that
 	public static void unfoldPressurizedManifold(IEventBus bus) {
 		Registry.init();
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -55,7 +55,7 @@ public class SysteamsPNCRCompat {
 			return PNEUMATIC_BOILER_BLOCK_ENTITY.get();
 		}
 
-		class Client {
+		static class Client {
 			public static TextureAtlasSprite AIR_ICON;
 			private static final ResourceLocation AIR_ICON_LOCATION = new ResourceLocation("mob_effect/water_breathing");
 

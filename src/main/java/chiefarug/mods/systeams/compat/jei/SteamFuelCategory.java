@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static chiefarug.mods.systeams.compat.jei.SysteamsJEIPlugin.STEAM_DYNAMO_RECIPE_TYPE;
+import static chiefarug.mods.systeams.compat.jei.SysteamsJEIPlugin.STEAM_DYNAMO;
 
 public class SteamFuelCategory extends ThermalFuelCategory<SteamFuel> {
 
@@ -53,7 +53,7 @@ public class SteamFuelCategory extends ThermalFuelCategory<SteamFuel> {
 
 	@Override
 	public @NotNull RecipeType<SteamFuel> getRecipeType() {
-		return STEAM_DYNAMO_RECIPE_TYPE;
+		return STEAM_DYNAMO;
 	}
 
 	@Override

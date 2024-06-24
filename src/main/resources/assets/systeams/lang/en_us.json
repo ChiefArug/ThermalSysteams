@@ -74,8 +74,5 @@
   "block.systeams.pneumatic_boiler.keyword": "air pressure engine generator steam",
 
   "block.systeams.steam_pulverizer": "Steam Pulverizer",
-  "block.systeams.steam_pulverizer.keyword": "catalyst crusher macerator machine ore",
-
-  "block.systeams.steam_smelter": "Steam Induction Smelter",
-  "block.systeams.steam_smelter.keyword": "alloy catalyst machine ore"
+  "block.systeams.steam_pulverizer.keyword": "catalyst crusher macerator machine ore"
 }

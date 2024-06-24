@@ -13,7 +13,8 @@ public class SysteamsConfig {
 		STEAM_RATIO_LAPIDARY,
 		STEAM_RATIO_DISENCHANTMENT,
 		STEAM_RATIO_GOURMAND,
-		STEAM_RATIO_PNEUMATIC
+		STEAM_RATIO_PNEUMATIC,
+		STEAM_RATIO_PULVERIZER
 		;
 	// Boiler sped multipliers
 	public static final ForgeConfigSpec.ConfigValue<Double>
@@ -24,7 +25,8 @@ public class SysteamsConfig {
 		SPEED_LAPIDARY,
 		SPEED_DISENCHANTMENT,
 		SPEED_GOURMAND,
-		SPEED_PNEUMATIC
+		SPEED_PNEUMATIC,
+		SPEED_PULVERIZER
 		;
 
 	public static final ForgeConfigSpec.ConfigValue<Boolean> PNEUMATIC_BOILER_IN_WORLD_CONVERSION;
@@ -39,13 +41,14 @@ public class SysteamsConfig {
 
 		builder.comment("Systeams Config", "---------------");
 
-		builder.comment("The amount of steam 1mb of water makes.");
+		builder.comment("The amount of steam 1mB of water makes.");
 		WATER_TO_STEAM_RATIO = builder.defineInRange("water_to_steam_ratio", 2.0, 0.1, 10.0);
 		builder.comment("The multiplier on the steam dynamo's RF/t");
 		STEAM_DYNAMO_MULTIPLIER = builder.defineInRange("steam_dynamo_output_multiplier", 2, 0.05, 10);
 
-		builder.push("Steam Values");
-			builder.comment("The number of mb of steam produced per RF of energy usually produced by the same fuel in a dynamo", "Note that this does not affect the steam dynamo's rates. That needs to be adjusted with a datapack");
+		builder.push("Steam Boiler Ratios")
+			.comment("The number of mB of steam produced per RF of energy usually produced by the same fuel in a dynamo",
+					"Note that this does not affect the steam dynamo's rates. That needs to be adjusted with a datapack");
 
 			STEAM_RATIO_STIRLING = steamRatio(builder, "stirling");
 			STEAM_RATIO_MAGMATIC = steamRatio(builder, "magmatic");
@@ -55,11 +58,12 @@ public class SysteamsConfig {
 			STEAM_RATIO_DISENCHANTMENT = steamRatio(builder, "disenchantment");
 			STEAM_RATIO_GOURMAND = steamRatio(builder, "gourmand");
 			STEAM_RATIO_PNEUMATIC = steamRatio(builder, "pneumatic");
+		builder.pop().push("Steam Machine Ratios")
+				.comment("The number of mB of steam required per RF of energy that usually consumed by the machine");
+			STEAM_RATIO_PULVERIZER = steamRatio(builder, "pulverizer");
 
-		builder.pop();
-
-		builder.push("Boiler Speed Multipliers");
-			builder.comment("The speed multiplier on each boiler's mB/t");
+		builder.pop().push("Boiler Speed Multipliers");
+			builder.comment("The speed multiplier on each boiler's mB/t compared to the original RF/t");
 
 			SPEED_STIRLING = speed(builder, "stirling");
 			SPEED_MAGMATIC = speed(builder, "magmatic");
@@ -69,7 +73,9 @@ public class SysteamsConfig {
 			SPEED_DISENCHANTMENT = speed(builder, "disenchantment");
 			SPEED_GOURMAND = speed(builder, "gourmand");
 			SPEED_PNEUMATIC = speed(builder, "pneumatic");
-		builder.pop();
+		builder.pop().push("Steam Machine Speed Multipliers")
+			.comment("The speed multiplier on each steam machine's mB/t compared to the original RF/t");
+			SPEED_PULVERIZER = speed(builder, "pulverizer");
 
 		builder.push("Integration settings");
 			PNEUMATIC_BOILER_IN_WORLD_CONVERSION = builder.comment(

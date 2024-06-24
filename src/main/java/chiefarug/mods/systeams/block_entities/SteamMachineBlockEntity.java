@@ -101,6 +101,16 @@ public abstract class SteamMachineBlockEntity extends MachineBlockEntity {
         });
     }
 
+    protected abstract double getRecipeEnergyMult();
+
+    @Override
+    protected void processStart() {
+        processTick = baseProcessTick;
+        int energy = (int) (curRecipe.getEnergy(this) * getRecipeEnergyMult());
+        energy += process;                  // Apply extra energy to next process
+        process = processMax = energy;
+    }
+
     @Override
     protected Predicate<ItemStack> augValidator() {
         return item -> AugmentDataHelper.hasAugmentData(item) && SysteamsRegistry.STEAM_MACHINE_VALIDATORS.test(item, getAugmentsAsList());

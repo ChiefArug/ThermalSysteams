@@ -1,6 +1,6 @@
 {
-  "parent": "systeams:block/steam_machine_base",
+  "parent": "systeams:block/steam_machine_active",
   "textures": {
-    "north": "thermal:block/machine/machine_pulverizer_active"
+    "north": "systeams:block/steam_pulverizer_active"
   }
 }

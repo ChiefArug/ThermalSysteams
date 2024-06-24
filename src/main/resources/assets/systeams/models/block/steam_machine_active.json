@@ -1,0 +1,7 @@
+{
+  "parent": "systeams:block/steam_machine_base",
+  "textures": {
+    "east": "systeams:block/steam_machine_side_active",
+    "west": "systeams:block/steam_machine_side_active"
+  }
+}
