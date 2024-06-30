@@ -40,7 +40,7 @@ public class SteamPulverizerScreen extends MachineScreen<SteamPulverizerContaine
         addElement(createOutputSlot(this, 125, 44, tile));
 
         addElement(GuiHelper.setClearable(GuiHelper.createMediumFluidStorage(this, 7, 28, tile.getTank(0)), tile, 0));
-
+        //TODO: add widget for steam usage per tick
         addElement(ThermalGuiHelper.createDefaultProgress(this, 72, 35, PROG_ARROW_RIGHT, tile));
         addElement(ThermalGuiHelper.createDefaultSpeed(this, 44, 35, SCALE_CRUSH, tile));
     }
