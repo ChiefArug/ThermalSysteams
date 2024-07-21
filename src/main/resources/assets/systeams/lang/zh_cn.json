@@ -1,0 +1,84 @@
+{
+  "item.systeams.steam_bucket": "蒸汽桶",
+  "fluid_type.systeams.steam": "蒸汽",
+  "item.systeams.boiler_pipe": "锅炉蒸汽热管",
+  "item.systeams.boiler_pipe.keyword": "蒸汽锅炉线圈",
+  "item.thermal.rf_coil.keyword": "蒸汽锅炉发电机",
+  "item.systeams.boiler_pipe.desc": "潜行对发电机使用令其转变为锅炉,返回红石通量线圈.",
+  "item.thermal.rf_coil.desc": "潜行队锅炉使用令其转变为发电机,返回锅炉蒸汽热管.",
+  "itemGroup.systeams": "热力蒸汽锅炉",
+  "info.systeams.augment.type.DynamoBoiler": "发电机与锅炉",
+
+  "info.systeams.steam": "蒸汽",
+  "info.systeams.steam_prod": "蒸汽产量",
+  "info.systeams.water_cons": "水消耗量",
+
+  "info.systeams.air": "空气",
+  "info.systeams.air_pressure": "气压",
+  "info.systeams.air_volume": "空气",
+  "info.systeams.air_base_volume": "基础压力",
+  "info.systeams.air_max_usage": "最大用量",
+  "info.systeams.air_volume_unit": "mL",
+  "info.systeams.air_per_tick": "最大空气消耗",
+  "info.systeams.air_per_tick_unit": "mL/t",
+
+  "block.pneumaticcraft.advanced_pressure_tube.desc": "潜行对发电机使用令其转变为锅炉,返回红石通量线圈.",
+
+  "block.systeams.steam_dynamo": "蒸汽发电机",
+  "info.systeams.steam_dynamo.0": "将蒸汽转变为能量.",
+  "info.systeams.steam_dynamo.1": "这里的蒸汽越来越多了",
+  "block.systeams.steam_dynamo.keyword": "发动机 发电机 锅炉功率",
+
+  "info.systeams.boiler.throttle": "基于局部反馈来调节输出功率.",
+
+  "block.systeams.stirling_boiler": "斯特林能源锅炉",
+  "info.systeams.stirling_boiler.0": "使用固体燃料来产生蒸汽.",
+  "info.systeams.stirling_boiler.1": "大多数可以在熔炉燃烧的物品也可以在这里使用.",
+  "block.systeams.stirling_boiler.keyword": "木炭 焦炭 发动机 发电机 蒸汽",
+
+  "block.systeams.magmatic_boiler": "热力能源锅炉",
+  "info.systeams.magmatic_boiler.0": "使用炽热熔岩来产生蒸汽.",
+  "info.systeams.magmatic_boiler.1": "在这个过程中光与热会完全消耗.",
+  "block.systeams.magmatic_boiler.keyword": "发动机 发电机 熔岩 蒸汽",
+
+  "block.systeams.compression_boiler": "压缩能源锅炉",
+  "info.systeams.compression_boiler.0": "使用高能液体来产生蒸汽.",
+  "block.systeams.compression_boiler.keyword": "发动机 燃料 发电机 蒸汽",
+
+  "block.systeams.disenchantment_boiler": "祛魔能源锅炉",
+  "info.systeams.disenchantment_boiler.0": "消耗附魔物品来产生蒸汽.",
+  "info.systeams.disenchantment_boiler.1": "在工作过程中物品与附魔会完全消失!",
+  "block.systeams.disenchantment_boiler.keyword": "书 发动机 发电机 蒸汽",
+
+  "block.systeams.gourmand_boiler": "饕餮能源锅炉",
+  "info.systeams.gourmand_boiler.0": "使用食物来产生蒸汽!",
+  "info.systeams.gourmand_boiler.1": "谁知道你在培育什么样的野兽.",
+  "info.systeams.gourmand_boiler.2": "它在燃烧卡路里!",
+  "block.systeams.gourmand_boiler.keyword": "发动机 食物 发电机 蒸汽",
+
+  "block.systeams.lapidary_boiler": "珠宝能源锅炉",
+  "info.systeams.lapidary_boiler.0": "使用宝石来产生蒸汽",
+  "info.systeams.lapidary_boiler.1": "也许另一头是哥布林的国度.",
+  "info.systeams.lapidary_boiler.2": "宝石不过是好看点的小石头!",
+  "block.systeams.lapidary_boiler.keyword": "发动机 宝石 发电机 蒸汽",
+
+  "block.systeams.numismatic_boiler": "通货能源锅炉",
+  "info.systeams.numismatic_boiler.0": "使用钱币来产生蒸汽.",
+  "info.systeams.numismatic_boiler.1": "线圈的另一头也许是大资本家的国度.",
+  "info.systeams.numismatic_boiler.2": "别多想了 快投币吧!",
+  "block.systeams.numismatic_boiler.keyword": "钱币 发动机 发电机 蒸汽",
+
+  "block.systeams.pneumatic_boiler": "气动能源锅炉",
+  "info.systeams.pneumatic_boiler.0": "使用压缩空气来产生蒸汽.",
+  "info.systeams.pneumatic_boiler.1": "有人说这是一股热空气",
+  "info.systeams.pneumatic_boiler.2": "别担心,只有水会在这里被加热!",
+  "block.systeams.pneumatic_boiler.keyword": "压缩空气 发动机 发电机 蒸汽",
+
+  "block.systeams.frost_boiler": "霜冻能源锅炉",
+  "info.systeams.frost_boiler.0": "使用极寒之物来产生蒸汽.",
+  "info.systeams.frost_boiler.1": "不要质疑寒冰的力量.",
+  "block.systeams.frost_boiler.keyword": "暴雪 雪 冰 寒冷 发动机 发电机 蒸汽",
+
+  "info.systeams.mekanism_gas_output.1": "在输出端检测到通用机械气体处理装置！",
+  "info.systeams.mekanism_gas_output.2": "确保处理程序设置为主动从该锅炉抽取"
+}
