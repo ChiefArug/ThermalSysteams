@@ -25,6 +25,7 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.resource.PathPackResources;
@@ -53,7 +54,7 @@ public class Systeams {
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, SysteamsConfig.spec, "systeams-server.toml");
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, SysteamsCommonConfig.spec, "systeams-common.toml");
         RecipeCheckerChannel.init();
-        bus.addListener((FMLCommonSetupEvent event) -> event.enqueueWork(ConversionKitItem::fillDynamoMap));
+        bus.addListener((FMLCommonSetupEvent event) -> event.enqueueWork(ConversionKitItem::fillConversionMap));
         bus.addListener(Systeams::addEarlyGameRecipeChangesDatapack);
 
         if (ModList.get().isLoaded("pneumaticcraft")) {
@@ -63,7 +64,7 @@ public class Systeams {
             SysteamsMekanismCompat.activateMechanisedManifold(bus);
         }
 
-        CoreClientEvents.addNamespace(MODID);
+        bus.addListener((FMLClientSetupEvent event) -> CoreClientEvents.addNamespace(MODID));
     }
 
     /**

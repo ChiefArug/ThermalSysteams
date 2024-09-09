@@ -1,14 +1,12 @@
 {
-    "pack": {
-        "description": "§8Can be disabled in config/systeams-common.toml!",
-        "pack_format": 10
-    },
-    "filter": {
-        "block": [
-            {
-                "namespace": "thermal",
-                "path": "recipes/fire_charge/[a-z0-9_.\\-]+_ingot_\\d.json"
-            }
-        ]
-    }
+  "pack": {
+    "description": "§8Can be disabled in config/systeams-common.toml!",
+    "pack_format": 10
+  },
+  "filter": {
+    "block": [{
+        "namespace": "thermal",
+        "path": "recipes/fire_charge/[a-z0-9_.\\-]+_ingot_\\d.json"
+    }]
+  }
 }

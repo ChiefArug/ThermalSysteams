@@ -1,6 +1,8 @@
 {
   "values": [
     "#systeams:boilers",
-    "#systeams:dynamos"
+    "#systeams:dynamos",
+    "#systeams:steam_machines",
+    "#systeams:rf_machines"
   ]
 }

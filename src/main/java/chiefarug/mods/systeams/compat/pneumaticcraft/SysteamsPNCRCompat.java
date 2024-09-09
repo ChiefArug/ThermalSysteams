@@ -38,7 +38,7 @@ public class SysteamsPNCRCompat {
 	}
 
 	private static void fillDynamoBoilerMap() {
-		ConversionKitItem.getDynamoBoilerMap().put(ModBlocks.PNEUMATIC_DYNAMO.get(), Registry.PNEUMATIC_BOILER_BLOCK.get());
+		ConversionKitItem.addToConversions(ModBlocks.PNEUMATIC_DYNAMO.get(), Registry.PNEUMATIC_BOILER_BLOCK.get(), ModBlocks.ADVANCED_PRESSURE_TUBE.get());
 	}
 
 	@SuppressWarnings("unused")

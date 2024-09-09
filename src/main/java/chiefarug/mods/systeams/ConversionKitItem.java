@@ -1,6 +1,7 @@
 package chiefarug.mods.systeams;
 
-import chiefarug.mods.systeams.block.BoilerBlock;
+import cofh.core.block.TileBlockActive4Way;
+import cofh.core.block.entity.TileCoFH;
 import cofh.thermal.core.ThermalCore;
 import cofh.thermal.lib.block.DynamoBlock;
 import com.google.common.collect.BiMap;
@@ -12,44 +13,69 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Property;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static chiefarug.mods.systeams.SysteamsRegistry.Boilers.*;
-import static cofh.lib.util.constants.BlockStatePropertiesCoFH.FACING_ALL;
-import static cofh.thermal.lib.block.DynamoBlock.WATERLOGGED;
+import static chiefarug.mods.systeams.SysteamsRegistry.Items.RF_COIL;
+import static chiefarug.mods.systeams.SysteamsRegistry.SteamMachines.PULVERIZER;
 
 public class ConversionKitItem extends Item {
 	public ConversionKitItem(Properties pProperties) {
 		super(pProperties);
 	}
 
-	public static final BiMap<Block, BoilerBlock> dynamoBoilerMap = HashBiMap.create(7);
+	private static final int steamyCount = 9;
+	// a map of RF to Steam Blocks
+	private static final BiMap<Block, Block> conversions = HashBiMap.create(steamyCount);
+	private static final Map<Block, ItemLike> nonSteamItem = new HashMap<>(steamyCount);
 
-	public static void fillDynamoMap() {
-		dynamoBoilerMap.put(getDynamo("stirling"), STIRLING.block());
-		dynamoBoilerMap.put(getDynamo("compression"), COMPRESSION.block());
-		dynamoBoilerMap.put(getDynamo("magmatic"), MAGMATIC.block());
-		dynamoBoilerMap.put(getDynamo("numismatic"), NUMISMATIC.block());
-		dynamoBoilerMap.put(getDynamo("lapidary"), LAPIDARY.block());
-		dynamoBoilerMap.put(getDynamo("disenchantment"), DISENCHANTMENT.block());
-		dynamoBoilerMap.put(getDynamo("gourmand"), GOURMAND.block());
+	public static void fillConversionMap() {
+		addToConversions(getDynamo("stirling"), STIRLING.block(), RF_COIL);
+		addToConversions(getDynamo("compression"), COMPRESSION.block(), RF_COIL);
+		addToConversions(getDynamo("magmatic"), MAGMATIC.block(), RF_COIL);
+		addToConversions(getDynamo("numismatic"), NUMISMATIC.block(), RF_COIL);
+		addToConversions(getDynamo("lapidary"), LAPIDARY.block(), RF_COIL);
+		addToConversions(getDynamo("disenchantment"), DISENCHANTMENT.block(), RF_COIL);
+		addToConversions(getDynamo("gourmand"), GOURMAND.block(), RF_COIL);
+		addToConversions(getMachine("pulverizer"), PULVERIZER.block(), RF_COIL);
 	}
 
-	public static BiMap<Block, BoilerBlock> getDynamoBoilerMap() {
-		return dynamoBoilerMap;
+	public static void addToConversions(Block rf, Block steam, ItemLike item) {
+		conversions.put(rf, steam);
+		nonSteamItem.put(steam, item);
+	}
+
+	public static Block getRFLike(Block steamy) {
+		return conversions.inverse().get(steamy);
+	}
+
+	public static Block getSteamLike(Block rf) {
+		return conversions.get(rf);
+	}
+
+	public static ItemStack getConversionItem(Block steamy) {
+		return new ItemStack(nonSteamItem.get(steamy));
 	}
 
 	private static DynamoBlock getDynamo(String id) {
 		return (DynamoBlock) ThermalCore.BLOCKS.get("thermal:dynamo_" + id);
+	}
+
+	private static TileBlockActive4Way getMachine(String id) {
+		return (TileBlockActive4Way) ThermalCore.BLOCKS.get("thermal:machine_" + id);
 	}
 
 	@Override
@@ -61,25 +87,28 @@ public class ConversionKitItem extends Item {
 		InteractionHand hand = context.getHand();
 
 		Block dynamo = oldState.getBlock();
-		BoilerBlock boiler = dynamoBoilerMap.get(dynamo);
-		if (boiler == null)
+		Block steamyBlock = getSteamLike(dynamo);
+		if (steamyBlock == null)
 			return super.useOn(context);
 
 		Player player = context.getPlayer();
-		BlockState newState = boiler.defaultBlockState()
-				.setValue(FACING_ALL, oldState.getValue(FACING_ALL))
-				.setValue(WATERLOGGED, oldState.getValue(WATERLOGGED));
-		transformDynamoBoiler(pos, level, oldState, newState, player);
+		BlockState newState = steamyBlock.defaultBlockState();
+
+		for (Property<?> property : oldState.getProperties()) {
+			newState = applyProperty(property, oldState, newState);
+		}
+		coreTransfer(pos, level, oldState, newState, player);
 
 		// if we have a player, replace with a coil. otherwise just shrink the itemstack
 		if (player != null) {
 			if (!player.getAbilities().instabuild) {
-				ItemStack converstionReturn = boiler.getOtherConversionItem();
+				ItemStack conversionReturn;
+				conversionReturn = getConversionItem(steamyBlock);
 				stack.shrink(1);
 				if (stack.isEmpty())
-					player.setItemInHand(hand, converstionReturn);
+					player.setItemInHand(hand, conversionReturn);
 				else
-					player.addItem(converstionReturn);
+					player.addItem(conversionReturn);
 			}
 		} else {
 			context.getItemInHand().shrink(1);
@@ -88,8 +117,12 @@ public class ConversionKitItem extends Item {
 		return InteractionResult.sidedSuccess(context.getLevel().isClientSide());
 	}
 
-	public static void transformDynamoBoiler(BlockPos pos, Level level, BlockState oldState, BlockState newState, @Nullable Player player) {
-		List<TransferData> transferData = new ArrayList<>();
+	public static <T extends Comparable<T>> BlockState applyProperty(Property<T> prop, BlockState oldState, BlockState toApply) {
+		return toApply.hasProperty(prop) ? toApply.setValue(prop, oldState.getValue(prop)) : toApply;
+	}
+
+	public static void coreTransfer(BlockPos pos, Level level, BlockState oldState, BlockState newState, @Nullable Player player) {
+		List<TransferData> transferData = new ArrayList<>(3);
 
 		if (!level.isClientSide()) {
 			BlockEntity oldBE = level.getBlockEntity(pos);
@@ -104,6 +137,8 @@ public class ConversionKitItem extends Item {
 		if (!level.isClientSide()) {
 			BlockEntity newBE = level.getBlockEntity(pos);
 			putContents(newBE, transferData);
+			// refresh augment data and the like
+			if (newBE instanceof TileCoFH abe) abe.onPlacedBy(level, pos, newState, player, /* hopefully this doesn't break anything. its not used anywhere*/ ItemStack.EMPTY);
 		}
 	}
 

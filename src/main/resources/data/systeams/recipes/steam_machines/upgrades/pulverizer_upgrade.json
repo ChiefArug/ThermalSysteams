@@ -1,0 +1,11 @@
+{
+  "type": "systeams:upgrade_shapeless",
+  "ingredients": [
+    {"item":"thermal:machine_pulverizer"},
+    {"item":"systeams:boiler_pipe"}
+  ],
+  "result": {
+    "item": "systeams:steam_pulverizer"
+  },
+  "replacement": "thermal:rf_coil"
+}

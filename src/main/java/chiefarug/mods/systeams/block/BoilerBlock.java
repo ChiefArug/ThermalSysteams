@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -86,14 +87,6 @@ public class BoilerBlock extends TileBlockActive6Way {
 		builder.add(WATERLOGGED);
 	}
 
-	/**
-	 * The item used to convert this boiler back into a dynamo, and the item returned when a dynamo converts into this boiler
-	 * @return
-	 */
-	public ItemStack getOtherConversionItem() {
-		return new ItemStack(RF_COIL);
-	}
-
 	@NotNull
 	@Override
 	@SuppressWarnings("deprecation")
@@ -114,23 +107,24 @@ public class BoilerBlock extends TileBlockActive6Way {
 		BlockPos pos = event.getHitVec().getBlockPos();
 		BlockState oldState = level.getBlockState(pos);
 		Block block = oldState.getBlock();
-		if (!(block instanceof BoilerBlock boiler)) return;
 		Player player = event.getEntity();
 		InteractionHand hand = event.getHand();
 
 		ItemStack item = player.getItemInHand(hand);
-		if (item.getItem() != boiler.getOtherConversionItem().getItem() || !player.isCrouching()) return;
-		// dirty way of enforcing the config option. i cant be bothered doing it properly
-		if (ModList.get().isLoaded("pneumaticcraft") && (!SysteamsConfig.PNEUMATIC_BOILER_IN_WORLD_CONVERSION.get()) && boiler.getOtherConversionItem().getItem() != RF_COIL.asItem()) return;
+		ItemStack requiredConversionItem = ConversionKitItem.getConversionItem(block);
+		if (item.getItem() != requiredConversionItem.getItem() || !player.isCrouching()) return;
+		// dirty way of enforcing the config option. I cant be bothered doing it properly yet
+		if (ModList.get().isLoaded("pneumaticcraft") && (!SysteamsConfig.PNEUMATIC_BOILER_IN_WORLD_CONVERSION.get()) && requiredConversionItem.getItem() != RF_COIL.asItem()) return;
 
-		Block dynamo = ConversionKitItem.getDynamoBoilerMap().inverse().get(boiler);
-		if (dynamo == null)
+		Block rf = ConversionKitItem.getRFLike(block);
+		if (rf == null)
 			return;
 
-		BlockState newState = dynamo.defaultBlockState()
-				.setValue(FACING_ALL, oldState.getValue(FACING_ALL))
-				.setValue(WATERLOGGED, oldState.getValue(WATERLOGGED));
-		ConversionKitItem.transformDynamoBoiler(pos, level, oldState, newState, player);
+		BlockState newState = rf.defaultBlockState();
+		for (Property<?> property : oldState.getProperties()) {
+			newState = ConversionKitItem.applyProperty(property, oldState, newState);
+		}
+		ConversionKitItem.coreTransfer(pos, level, oldState, newState, player);
 
 		if (!player.getAbilities().instabuild) {
 			item.shrink(1);
