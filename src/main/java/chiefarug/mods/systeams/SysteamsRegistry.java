@@ -28,6 +28,7 @@ import chiefarug.mods.systeams.containers.StirlingBoilerContainer;
 import chiefarug.mods.systeams.recipe.SteamFuel;
 import chiefarug.mods.systeams.recipe.SteamFuelManager;
 import chiefarug.mods.systeams.recipe.UpgradeShapelessRecipe;
+import cofh.core.event.CoreClientEvents;
 import cofh.lib.util.DeferredRegisterCoFH;
 import cofh.lib.util.constants.BlockStatePropertiesCoFH;
 import cofh.lib.util.helpers.BlockHelper;
@@ -116,7 +117,10 @@ public class SysteamsRegistry {
 		RECIPE_SERIALIZER_REGISTRY.register(bus);
 		RECIPE_TYPE_REGISTRY.register(bus);
 
-		bus.addListener((FMLClientSetupEvent event) -> event.enqueueWork(Menus::registerFactories));
+		bus.addListener((FMLClientSetupEvent event) -> {
+			event.enqueueWork(Menus::registerFactories);
+			CoreClientEvents.addNamespace(MODID);
+		});
 	}
 
 	public static final String STEAM_ID = "steam";

@@ -3,7 +3,6 @@ package chiefarug.mods.systeams;
 import chiefarug.mods.systeams.compat.mekanism.SysteamsMekanismCompat;
 import chiefarug.mods.systeams.compat.pneumaticcraft.SysteamsPNCRCompat;
 import chiefarug.mods.systeams.networking.RecipeCheckerChannel;
-import cofh.core.event.CoreClientEvents;
 import com.mojang.logging.LogUtils;
 import me.desht.pneumaticcraft.api.tileentity.IAirHandlerMachine;
 import mekanism.api.chemical.gas.IGasHandler;
@@ -48,8 +47,6 @@ public class Systeams {
         if (ModList.get().isLoaded("mekanism")) {
             SysteamsMekanismCompat.activateMechanisedManifold(bus);
         }
-
-        CoreClientEvents.addNamespace(MODID);
     }
 
     /**
