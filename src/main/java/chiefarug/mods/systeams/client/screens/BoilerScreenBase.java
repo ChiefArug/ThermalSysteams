@@ -38,7 +38,7 @@ public class BoilerScreenBase<T extends BoilerMenuBase<?>> extends AugmentableTi
         super.init();
 
         addPanel(new ResourcePanel(this) {
-                    private final DoubleSupplier maxAmt = blockEntity::getWaterConsumption;
+                    private final DoubleSupplier maxAmt = blockEntity::currentWaterConsumption;
                     @Override
                     protected void drawForeground(GuiGraphics pGuiGraphics) {
                         super.drawForeground(pGuiGraphics);
