@@ -42,7 +42,7 @@ public class BoilerScreenBase<T extends BoilerMenuBase<?>> extends AugmentableTi
                     @Override
                     protected void drawForeground(GuiGraphics pGuiGraphics) {
                         super.drawForeground(pGuiGraphics);
-                        if (maxAmt.getAsDouble() >= 0) {
+                        if (fullyOpen && maxAmt.getAsDouble() >= 0) {
                             pGuiGraphics.drawString(fontRenderer(), localize("info.systeams.water_cons") + ":", sideOffset() + 6, 42, subheaderColor, true);
                             pGuiGraphics.drawString(fontRenderer(), String.format("%.2f", maxAmt.getAsDouble()) + " " + localize("info.cofh.unit_mb_t"), sideOffset() + 14, 54, textColor, false);
                         }
