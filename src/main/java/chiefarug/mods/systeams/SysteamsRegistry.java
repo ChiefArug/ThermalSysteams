@@ -27,6 +27,7 @@ import chiefarug.mods.systeams.containers.MagmaticBoilerMenu;
 import chiefarug.mods.systeams.containers.NumismaticBoilerMenu;
 import chiefarug.mods.systeams.containers.SteamDynamoMenu;
 import chiefarug.mods.systeams.containers.StirlingBoilerMenu;
+import chiefarug.mods.systeams.recipe.BoilingRecipe;
 import chiefarug.mods.systeams.recipe.SteamFuel;
 import chiefarug.mods.systeams.recipe.SteamFuelManager;
 import chiefarug.mods.systeams.recipe.UpgradeShapelessRecipe;
@@ -41,6 +42,7 @@ import cofh.thermal.lib.common.item.BlockItemAugmentable;
 import cofh.thermal.lib.util.ThermalAugmentRules;
 import cofh.thermal.lib.util.ThermalRecipeManagers;
 import cofh.thermal.lib.util.recipes.DynamoFuelSerializer;
+import cofh.thermal.lib.util.recipes.MachineRecipeSerializer;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -150,6 +152,7 @@ public class SysteamsRegistry {
 	public static final String DISENCHANTMENT_BOILER_ID = "disenchantment_boiler";
 	public static final String GOURMAND_BOILER_ID = "gourmand_boiler";
 	public static final String UPGRADE_RECIPE_ID = "upgrade_shapeless";
+	private static final String BOILING_ID = "boiling";
 
 	// These classes are to prevent "forward reference" compile errors. How dare they force me to be more organized
 	@SuppressWarnings("ConstantConditions") // Stop it complaining about passing null to datafixer stuff
@@ -205,6 +208,9 @@ public class SysteamsRegistry {
 				return MODID + ':' + UPGRADE_RECIPE_ID;
 			}
 		});
+
+		public static final RegistryObject<MachineRecipeSerializer<BoilingRecipe>> BOILING_SERIALIZER = RECIPE_SERIALIZER_REGISTRY.register(BOILING_ID, () -> new MachineRecipeSerializer<>(BoilingRecipe::new, 500));
+		public static final RegistryObject<SerializableRecipeType<BoilingRecipe>> BOILING_TYPE = RECIPE_TYPE_REGISTRY.register(BOILING_ID, () -> new SerializableRecipeType<>(MODID, BOILING_ID));
 
 		static void init() {
 			ThermalRecipeManagers.registerManager(SteamFuelManager.instance());
