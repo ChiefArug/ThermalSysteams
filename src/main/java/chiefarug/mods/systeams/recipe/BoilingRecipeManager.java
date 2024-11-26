@@ -23,7 +23,7 @@ public class BoilingRecipeManager extends AbstractManager {
 
     private static final BoilingRecipeManager INSTANCE = new BoilingRecipeManager();
 
-    public static BoilingRecipeManager getInstance() {
+    public static BoilingRecipeManager instance() {
         return INSTANCE;
     }
 
@@ -34,6 +34,10 @@ public class BoilingRecipeManager extends AbstractManager {
         }
     }
     public record BoiledFluid(double inToOutRatio, FluidStack fluidOut) {
+        public BoiledFluid(int inAmount, FluidStack fluidOut) {
+            this((double) inAmount / fluidOut.getAmount(), fluidOut);
+        }
+
         public int getInPerTick(int outPerTick) {
             return (int) Math.floor(inToOutRatio * outPerTick);
         }
@@ -53,14 +57,14 @@ public class BoilingRecipeManager extends AbstractManager {
     public void addRecipe(BoilingRecipe recipe) {
         FluidStack out = recipe.getOutputFluids().get(0);
         for (FluidStack in : recipe.getInputFluids().get(0).getFluids()) {
-            recipes.put(new HashFluid(in), new BoiledFluid((double) in.getAmount() / out.getAmount(), out));
+            recipes.put(new HashFluid(in), new BoiledFluid(in.getAmount(), out));
         }
     }
 
     @Override
     public void refresh(RecipeManager recipeManager) {
-
         Map<ResourceLocation, BoilingRecipe> recipes = recipeManager.byType(SysteamsRegistry.Recipes.BOILING_TYPE.get());
+
         this.recipes = new Object2ObjectOpenHashMap<>(recipes.size());
         for (var entry : recipes.entrySet()) {
             addRecipe(entry.getValue());
