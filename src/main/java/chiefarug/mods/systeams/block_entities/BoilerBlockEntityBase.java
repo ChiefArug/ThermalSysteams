@@ -16,7 +16,6 @@ import cofh.lib.common.fluid.FluidStorageCoFH;
 import cofh.lib.util.Constants;
 import cofh.lib.util.Utils;
 import cofh.lib.util.constants.NBTTags;
-import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.helpers.MathHelper;
 import cofh.thermal.lib.common.block.entity.AugmentableBlockEntity;
 import cofh.thermal.lib.util.ThermalAugmentRules;
@@ -29,14 +28,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.EmptyFluidHandler;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -53,7 +50,6 @@ import static cofh.lib.util.constants.NBTTags.TAG_AUGMENT_DYNAMO_ENERGY;
 import static cofh.lib.util.constants.NBTTags.TAG_AUGMENT_DYNAMO_POWER;
 import static cofh.lib.util.constants.NBTTags.TAG_PROCESS_TICK;
 import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE;
-import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction.SIMULATE;
 
 public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity implements ITickableTile.IServerTickable, IThermalInventory {
 	private static final int TRANSFER_PER_TICK = 1000;
@@ -68,49 +64,48 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	private Direction facing;
 
 	protected final class Fuel {
-		protected int maxBuffer;
-		protected double remainingBuffer;
-		protected double perTick;
-		private ToIntFunction<BoilerBlockEntityBase> refueller;
+		private int maxBuffer;
+		private double remainingBuffer;
+		private double perTick;
+		private final ToIntFunction<BoilerBlockEntityBase> refueller;
 
-		protected Fuel(double perTick, ToIntFunction<BoilerBlockEntityBase> refueller) {
+		private Fuel(double perTick, ToIntFunction<BoilerBlockEntityBase> refueller) {
+			// buffer size of 20 is temporary, when the first refuel happens it will be set properly.
 			this(20, 0, perTick, refueller);
 		}
 
-		protected Fuel(int maxBuffer, double remainingBuffer, double perTick, ToIntFunction<BoilerBlockEntityBase> refueller) {
+		private Fuel(int maxBuffer, double remainingBuffer, double perTick, ToIntFunction<BoilerBlockEntityBase> refueller) {
 			this.maxBuffer = maxBuffer;
 			this.remainingBuffer = remainingBuffer;
 			this.perTick = perTick;
 			this.refueller = refueller;
 		}
 
-		protected double calculatePerTick(int base, double modifier) {
+		private double calculatePerTick(int base, double modifier) {
 			return this.perTick = Math.round(base * modifier);
 		}
 
-		protected double tick() {
+		private void tick() {
 			remainingBuffer -= perTick;
 			tryHaveEnoughToTick();
-			return perTick;
 		}
 
-		protected void refuel() {
+		private void refuel() {
 			int refuel = refueller.applyAsInt(BoilerBlockEntityBase.this);
-			remainingBuffer += refuel;;
+			remainingBuffer += refuel;
 			maxBuffer = (int) remainingBuffer;
 		}
 
-		protected boolean hasEnoughToTick() {
+		private boolean hasEnoughToTick() {
 			return remainingBuffer >= perTick;
 		}
 
-		protected boolean tryHaveEnoughToTick() {
+		private boolean tryHaveEnoughToTick() {
 			if (hasEnoughToTick())
 				return true;
 			refuel();
 			return hasEnoughToTick();
 		}
-
 	}
 
 	protected Fuel energy;
@@ -131,7 +126,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 
 		energy = new Fuel(baseEnergyPerTick, BoilerBlockEntityBase::consumeFuel);
 		steamPerTick = (int) (baseEnergyPerTick * getEnergyToSteamRatio() * efficiencyModifier);
-		water = new Fuel(getWaterPerTick(), consumerWater);
+		water = new Fuel(getWaterPerTickFromCachedRecipe(), consumerWater);
 	}
 
 	@Override
@@ -157,9 +152,8 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 			}
 		} else if (Utils.timeCheckQuarter()) {
 			if (!steamTank.isEmpty())
-				// slowly transfer steam out if it's not turned on, so we dont get stuck with a full tank.
-				FluidHelper.insertIntoAdjacent(this, steamTank, TRANSFER_PER_TICK / 10, facing);
-
+				// slowly transfer steam out if it's not turned on, so we don't get stuck with a full tank.
+				transferSteamOut(TRANSFER_PER_TICK / 10);
 			if (redstoneControl.getState() && canProcessStart()) {
 				processStart();
 				processTick();
@@ -170,7 +164,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	}
 
 
-	protected boolean canProcessStart() { //TODO: implement water type and recipe checking
+	protected boolean canProcessStart() {
 		return cacheBoilingRecipe() && water.tryHaveEnoughToTick() && energy.tryHaveEnoughToTick() && steamTank.getSpace() >= steamPerTick;
 	}
 
@@ -179,7 +173,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 
 	protected void processFinish() {}
 
-	protected boolean canProcessFinish() { // these use have enough not try have enough because the fuel's tick method tries to refill it if need be and it doesn't need to be done here.
+	protected boolean canProcessFinish() { // these use hasEnough not tryHaveEnough because the fuel's tick method tries to refill it if need be, and it doesn't need to be done here.
 		return !water.hasEnoughToTick() || energy.hasEnoughToTick() || steamTank.getSpace() < steamPerTick;
 	}
 
@@ -189,7 +183,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 		FluidStack newSteam = new FluidStack(SysteamsRegistry.Fluids.STEAM.getStill(), steamPerTick);
 		steamTank.fill(newSteam, EXECUTE);
 
-		FluidHelper.insertIntoAdjacent(this, steamTank, TRANSFER_PER_TICK, facing);
+		transferSteamOut(TRANSFER_PER_TICK);
 	}
 
 
@@ -201,7 +195,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 		return steamPerTick;
 	}
 
-	protected int getWaterPerTick() {
+	protected int getWaterPerTickFromCachedRecipe() {
 		return cachedOutput == null ? 20 : cachedOutput.getInPerTick(getSteamPerTick());
 	}
 
@@ -290,12 +284,12 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 		baseEnergyPerTick = (int) energy.calculatePerTick(getBaseProcessTick(), modifier);
 		cacheBoilingRecipe();
 		// water-to-steam ratio: water/steam
-		water.calculatePerTick(20, modifier);// TODO: water recipes to set base here based on output amount?
+		water.calculatePerTick(getWaterPerTickFromCachedRecipe(), modifier);
 		steamPerTick = (int) (baseEnergyPerTick * getEnergyToSteamRatio() * efficiencyModifier);
 	}
 	// endregion
 
-	// NBTIO
+	// region NBTIO
 	@Override
 	public void load(CompoundTag nbt) {
 		super.load(nbt);
@@ -334,8 +328,9 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 //        nbt.putInt(TAG_COOLANT_MAX, coolantMax);
 //        nbt.putInt(TAG_COOLANT, coolant);
 	}
+	// endregion
 
-	// Networking
+	// region NETWORK
 	@Override
 	public FriendlyByteBuf getGuiPacket(FriendlyByteBuf buffer) {
 		super.getGuiPacket(buffer);
@@ -355,6 +350,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 		this.energy.remainingBuffer = buffer.readDouble();
 		gasMode = buffer.readBoolean();
 	}
+	// endregion
 
 
 	@Override
@@ -388,19 +384,11 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 
 	// Steam helpers
 
-	protected void transferSteamOut() {
-		if (FluidHelper.insertIntoAdjacent(this, steamTank, TRANSFER_PER_TICK, getFacing())) {
+	protected void transferSteamOut(int rate) {
+		if (FluidHelper.insertIntoAdjacent(this, steamTank, rate, getFacing())) {
 			gasMode = false; // if we extract liquid then we are no longer in gas mode.
 		}
 	}
-
-//	private int calcSteam(int energy) {
-//		return (int) Math.round(energy * getEnergyToSteamRatio() * getSpeedMultiplier());
-//	}
-//
-//	private int calcWater(int steam) {
-//		return (int) Math.round(steam / WATER_TO_STEAM_RATIO.get());
-//	}
 
 
 	// General helpers
@@ -448,34 +436,11 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	}
 
 	protected <T> LazyOptional<T> getGasHandlerCapability(@Nullable Direction side) {
-		if (side!= null && side.equals(getFacing())) {
+		if (side != null && side.equals(getFacing())) {
 			LazyOptional<IFluidHandler> fluidCap = this.getFluidHandlerCapability(side);
 			gasMode = true; // we have just been queried for the steam cap in gas form
 			return SysteamsMekanismCompat.wrapLiquidCapability(fluidCap).cast();
 		}
 		return LazyOptional.empty();
-	}
-
-	// Copied from CoFH's FluidHelper class because theirs doesn't support simulating the insert
-	private boolean simulateInsertToAdjacent(BlockEntity tile, FluidStorageCoFH tank, @SuppressWarnings("SameParameterValue") int amount, Direction side) {
-		IFluidHandler.FluidAction action = SIMULATE;
-		if (tank.isEmpty()) {
-			return false;
-		}
-		amount = Math.min(amount, tank.getAmount());
-
-		BlockEntity adjTile = BlockHelper.getAdjacentTileEntity(tile, side);
-		Direction opposite = side.getOpposite();
-
-		IFluidHandler handler = FluidHelper.getFluidHandlerCap(adjTile, opposite);
-		if (handler == EmptyFluidHandler.INSTANCE) {
-			return false;
-		}
-		int fillAmount = handler.fill(new FluidStack(tank.getFluidStack(), amount), action);
-		if (fillAmount > 0) {
-			tank.drain(fillAmount, action).getAmount();
-			return true;
-		}
-		return false;
 	}
 }

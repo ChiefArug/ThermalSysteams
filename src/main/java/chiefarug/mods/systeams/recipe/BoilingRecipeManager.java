@@ -14,39 +14,32 @@ import java.util.Map;
 //TODO: JEI category for this
 public class BoilingRecipeManager extends AbstractManager {
 
-    private static int DEFAULT_ENERGY = 1000;
+    private static final int DEFAULT_ENERGY = 1000;
 
     public BoilingRecipeManager() {
         super(DEFAULT_ENERGY);
     }
 
 
-    private static BoilingRecipeManager INSTANCE = new BoilingRecipeManager();
+    private static final BoilingRecipeManager INSTANCE = new BoilingRecipeManager();
 
     public static BoilingRecipeManager getInstance() {
         return INSTANCE;
     }
 
-    record HashableFluid(FluidStack fluid) {
+    record HashFluid(FluidStack fluid) {
         @Override
         public int hashCode() {
             return FluidHelper.fluidHashcode(fluid);
         }
     }
     public record BoiledFluid(double inToOutRatio, FluidStack fluidOut) {
-        public int getBufferSize(int ticks, int outPerTick) {
-            return ticks * getInPerTick(outPerTick);
-        }
         public int getInPerTick(int outPerTick) {
             return (int) Math.floor(inToOutRatio * outPerTick);
         }
     }
 
-    private Map<HashableFluid, BoiledFluid> recipes = new Object2ObjectOpenHashMap<>();
-
-    public void clear() {
-        recipes.clear();
-    }
+    private Map<HashFluid, BoiledFluid> recipes = new Object2ObjectOpenHashMap<>();
 
     public boolean canBoil(FluidStack in) {
         return boil(in) != null;
@@ -54,13 +47,13 @@ public class BoilingRecipeManager extends AbstractManager {
 
     @Nullable
     public BoiledFluid boil(FluidStack in) {
-        return recipes.get(new HashableFluid(in));
+        return recipes.get(new HashFluid(in));
     }
 
     public void addRecipe(BoilingRecipe recipe) {
         FluidStack out = recipe.getOutputFluids().get(0);
         for (FluidStack in : recipe.getInputFluids().get(0).getFluids()) {
-            recipes.put(new HashableFluid(in), new BoiledFluid((double) in.getAmount() / out.getAmount(), out));
+            recipes.put(new HashFluid(in), new BoiledFluid((double) in.getAmount() / out.getAmount(), out));
         }
     }
 
