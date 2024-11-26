@@ -115,7 +115,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 
 	protected Fuel energy;
 	protected BoilingRecipeManager.BoiledFluid cachedOutput;
-	private final ToIntFunction<BoilerBlockEntityBase> consumerWater = boiler -> boiler.waterTank.drain(cachedOutput.fluidInAmount(), IFluidHandler.FluidAction.EXECUTE).getAmount();
+	private final ToIntFunction<BoilerBlockEntityBase> consumerWater = boiler -> boiler.waterTank.drain(cachedOutput.getInPerTick(getSteamPerTick()), IFluidHandler.FluidAction.EXECUTE).getAmount();
 	protected Fuel water;
 	protected int steamPerTick;
 
@@ -130,7 +130,8 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 		facing = state.getValue(FACING_ALL);
 
 		energy = new Fuel(baseEnergyPerTick, BoilerBlockEntityBase::consumeFuel);
-		water = new Fuel(1, consumerWater);
+		steamPerTick = (int) (baseEnergyPerTick * getEnergyToSteamRatio() * efficiencyModifier);
+		water = new Fuel(getWaterPerTick(), consumerWater);
 	}
 
 	@Override
@@ -179,7 +180,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	}
 
 	protected void processTick() {
-		water.tick(); //TODO: implement water to steam multipler or remove from config cause replcaed by recipe system
+		water.tick();
 
 		FluidStack newSteam = new FluidStack(SysteamsRegistry.Fluids.STEAM.getStill(), steamPerTick);
 		steamTank.fill(newSteam, EXECUTE);
@@ -188,6 +189,14 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 
 	protected boolean cacheBoilingRecipe() {
 		return (this.cachedOutput = BoilingRecipeManager.getInstance().boil(waterTank.getFluidStack())) != null;
+	}
+
+	protected int getSteamPerTick() {
+		return steamPerTick;
+	}
+
+	protected int getWaterPerTick() {
+		return cachedOutput == null ? 20 : cachedOutput.getInPerTick(getSteamPerTick());
 	}
 
 	/**
@@ -274,6 +283,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 		double modifier = generationModifier;
 		baseEnergyPerTick = (int) energy.calculatePerTick(getBaseProcessTick(), modifier);
 		cacheBoilingRecipe();
+		// water-to-steam ratio: water/steam
 		water.calculatePerTick(20, modifier);// TODO: water recipes to set base here based on output amount?
 		steamPerTick = (int) (baseEnergyPerTick * getEnergyToSteamRatio() * efficiencyModifier);
 	}

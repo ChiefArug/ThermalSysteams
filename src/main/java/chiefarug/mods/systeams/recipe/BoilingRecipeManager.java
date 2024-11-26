@@ -33,7 +33,14 @@ public class BoilingRecipeManager extends AbstractManager {
             return FluidHelper.fluidHashcode(fluid);
         }
     }
-    public record BoiledFluid(int fluidInAmount, FluidStack fluidOut) {}
+    public record BoiledFluid(double inToOutRatio, FluidStack fluidOut) {
+        public int getBufferSize(int ticks, int outPerTick) {
+            return ticks * getInPerTick(outPerTick);
+        }
+        public int getInPerTick(int outPerTick) {
+            return (int) Math.floor(inToOutRatio * outPerTick);
+        }
+    }
 
     private Map<HashableFluid, BoiledFluid> recipes = new Object2ObjectOpenHashMap<>();
 
@@ -51,8 +58,9 @@ public class BoilingRecipeManager extends AbstractManager {
     }
 
     public void addRecipe(BoilingRecipe recipe) {
-        for (FluidStack stack : recipe.getInputFluids().get(0).getFluids()) {
-            recipes.put(new HashableFluid(stack), new BoiledFluid(stack.getAmount(), recipe.getOutputFluids().get(0)));
+        FluidStack out = recipe.getOutputFluids().get(0);
+        for (FluidStack in : recipe.getInputFluids().get(0).getFluids()) {
+            recipes.put(new HashableFluid(in), new BoiledFluid((double) in.getAmount() / out.getAmount(), out));
         }
     }
 
