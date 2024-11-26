@@ -156,6 +156,10 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 				}
 			}
 		} else if (Utils.timeCheckQuarter()) {
+			if (!steamTank.isEmpty())
+				// slowly transfer steam out if it's not turned on, so we dont get stuck with a full tank.
+				FluidHelper.insertIntoAdjacent(this, steamTank, TRANSFER_PER_TICK / 10, facing);
+
 			if (redstoneControl.getState() && canProcessStart()) {
 				processStart();
 				processTick();
@@ -184,6 +188,8 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 
 		FluidStack newSteam = new FluidStack(SysteamsRegistry.Fluids.STEAM.getStill(), steamPerTick);
 		steamTank.fill(newSteam, EXECUTE);
+
+		FluidHelper.insertIntoAdjacent(this, steamTank, TRANSFER_PER_TICK, facing);
 	}
 
 
