@@ -31,8 +31,6 @@ public class SysteamsConfig {
 
 	public static final ForgeConfigSpec.BooleanValue PNEUMATIC_BOILER_IN_WORLD_CONVERSION;
 
-
-	public static final ForgeConfigSpec.DoubleValue WATER_TO_STEAM_RATIO;
 	public static final ForgeConfigSpec.DoubleValue STEAM_DYNAMO_MULTIPLIER;
 
 	public static final ForgeConfigSpec.BooleanValue REPLACE_TOOLTIPS;
@@ -43,8 +41,6 @@ public class SysteamsConfig {
 
 		builder.comment("Systeams Config", "---------------");
 
-		builder.comment("The amount of steam 1mb of water makes.");
-		WATER_TO_STEAM_RATIO = builder.defineInRange("water_to_steam_ratio", 2.0, 0.1, 10.0);
 		builder.comment("The multiplier on the steam dynamo's RF/t");
 		STEAM_DYNAMO_MULTIPLIER = builder.defineInRange("steam_dynamo_output_multiplier", 1, 0.05, 10);
 
