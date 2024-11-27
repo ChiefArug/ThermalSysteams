@@ -42,9 +42,11 @@ import java.util.Map;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
+import static cofh.core.util.helpers.AugmentableHelper.getAttributeModWithDefault;
 import static cofh.lib.util.Constants.AUG_SCALE_MAX;
 import static cofh.lib.util.Constants.AUG_SCALE_MIN;
 import static cofh.lib.util.constants.BlockStatePropertiesCoFH.FACING_ALL;
+import static cofh.lib.util.constants.NBTTags.TAG_AUGMENT_BASE_MOD;
 import static cofh.lib.util.constants.NBTTags.TAG_AUGMENT_DYNAMO_ENERGY;
 import static cofh.lib.util.constants.NBTTags.TAG_AUGMENT_DYNAMO_POWER;
 import static cofh.lib.util.constants.NBTTags.TAG_PROCESS_TICK;
@@ -101,20 +103,20 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 			processTick();
 			if (canProcessFinish()) {
 				processFinish();
-				if (!redstoneControl.getState() || !canProcessStart()) {
-					isActive = false;
-				} else {
-					processStart();
-				}
-			}
+				isActive = false; // ensure that isActive is false when recalculateEnergy is called in canProcessStart()
+                if (redstoneControl.getState() && canProcessStart()) {
+                    isActive = true;
+                    processStart();
+                }
+            }
 		} else if (Utils.timeCheckQuarter()) {
 			if (!steamTank.isEmpty())
 				// slowly transfer steam out if it's not turned on, so we don't get stuck with a full tank.
 				transferSteamOut(TRANSFER_PER_TICK / 10);
 			if (redstoneControl.getState() && canProcessStart()) {
+				isActive = true; // setting it here is important as we check isActive in recalculateEnergy
 				processStart();
 				processTick();
-				isActive = true;
 			}
 		}
 		updateActiveState(curActive);
@@ -128,9 +130,16 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 		return tryHaveWaterToTick() && tryHaveEnergyToTick() && steamTank.getSpace() >= steamPerTick;
 	}
 
-	protected void processStart() {}
+	protected void processStart() {
+		// make sure that these are definitely set properly
+		recalculateEnergy();
+		recalculateWater();
+	}
 
-	protected void processFinish() {}
+	protected void processFinish() {
+		if (energyPerTick < remainingEnergyBuffer) // set max to -1 (so that the flame displays as empty) if we finished because we are out of energy buffer.
+			maxEnergyBuffer = -1;
+	}
 
 	protected boolean canProcessFinish() { // these use has not tryHave because they will auto refill in the tick method
 		return !hasWaterToTick() || !hasEnergyToTick() || steamTank.getSpace() < steamPerTick;
@@ -177,10 +186,11 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	}
 
 	protected void recalculateEnergy() {
-		maxEnergyBuffer = Math.max(maxEnergyBuffer, remainingEnergyBuffer);
+		if (isActive) // if its not active leave it as it is, at -1
+			maxEnergyBuffer = Math.max(maxEnergyBuffer, remainingEnergyBuffer);
 		baseEnergyPerTick = getBaseProcessTick();
-		energyPerTick = (int) (baseEnergyPerTick / efficiencyModifier);
-		steamPerTick = (int) (baseEnergyPerTick * getEnergyToSteamRatio());
+		energyPerTick = (int) (baseEnergyPerTick * generationModifier);
+		steamPerTick = (int) (energyPerTick * getEnergyToSteamRatio());
 	}
 
 	protected boolean hasEnergyToTick() {
@@ -195,8 +205,11 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	}
 
 	protected void refillEnergy() {
-		remainingEnergyBuffer += consumeFuel();
 
+		int refill = (int) (consumeFuel() * efficiencyModifier);
+		if (refill == 0) return;
+
+		remainingEnergyBuffer += refill;
 		recalculateEnergy();
 	}
 
@@ -219,7 +232,11 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 
 	protected void refillWater() {
 		if (!cacheBoilingRecipe()) return;
-		remainingwWaterBuffer += this.waterTank.drain((int) Math.ceil(waterPerTick), IFluidHandler.FluidAction.EXECUTE).getAmount();
+
+		int refill = this.waterTank.drain((int) Math.ceil(waterPerTick), IFluidHandler.FluidAction.EXECUTE).getAmount();
+		if (refill == 0) return;
+
+		remainingwWaterBuffer += refill;
 		recalculateWater();
 	}
 
@@ -243,7 +260,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 
 	@Override
 	protected Predicate<ItemStack> augValidator() {
-		BiPredicate<ItemStack, List<ItemStack>> validator = tankInv.hasTanks() ? ThermalAugmentRules.DYNAMO_VALIDATOR : ThermalAugmentRules.DYNAMO_NO_FLUID_VALIDATOR;
+			BiPredicate<ItemStack, List<ItemStack>> validator = tankInv.hasTanks() ? ThermalAugmentRules.DYNAMO_VALIDATOR : ThermalAugmentRules.DYNAMO_NO_FLUID_VALIDATOR;
 		return item -> AugmentDataHelper.hasAugmentData(item) && validator.test(item, getAugmentsAsList());
 	}
 
@@ -271,7 +288,6 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 		super.setAttributesFromAugment(augmentData);
 
 		AugmentableHelper.setAttributeFromAugmentAdd(augmentNBT, augmentData, TAG_AUGMENT_DYNAMO_POWER);
-		AugmentableHelper.setAttributeFromAugmentAdd(augmentNBT, augmentData, TAG_AUGMENT_DYNAMO_ENERGY);
 
 		generationModifier += AugmentableHelper.getAttributeModWithDefault(augmentData, TAG_AUGMENT_DYNAMO_POWER, 0.0F);
 		efficiencyModifier *= AugmentableHelper.getAttributeModWithDefault(augmentData, TAG_AUGMENT_DYNAMO_ENERGY, 1.0F);
@@ -281,7 +297,9 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	protected void finalizeAttributes(Map<Enchantment, Integer> enchantmentMap) {
 		super.finalizeAttributes(enchantmentMap);
 
-		generationModifier = MathHelper.clamp(generationModifier * AugmentableHelper.getAttributeModWithDefault(augmentNBT, NBTTags.TAG_AUGMENT_BASE_MOD, 1.0F), AUG_SCALE_MIN, AUG_SCALE_MAX);
+        generationModifier *= getAttributeModWithDefault(augmentNBT, TAG_AUGMENT_BASE_MOD, 1.0F);
+
+        generationModifier = MathHelper.clamp(generationModifier, AUG_SCALE_MIN, AUG_SCALE_MAX);
 		efficiencyModifier = MathHelper.clamp(efficiencyModifier, AUG_SCALE_MIN, AUG_SCALE_MAX);
 
 		recalculateEnergy();
@@ -335,6 +353,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 		buffer.writeInt(maxEnergyBuffer);
 		buffer.writeInt(remainingEnergyBuffer);
 		buffer.writeBoolean(gasMode);
+		buffer.writeInt(steamPerTick);
 
 		return buffer;
 	}
@@ -346,6 +365,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 		this.maxEnergyBuffer = buffer.readInt();
 		this.remainingEnergyBuffer = buffer.readInt();
 		gasMode = buffer.readBoolean();
+		steamPerTick = buffer.readInt();
 	}
 	// endregion
 
