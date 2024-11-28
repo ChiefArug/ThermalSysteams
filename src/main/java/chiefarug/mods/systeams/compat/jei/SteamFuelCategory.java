@@ -10,7 +10,6 @@ import cofh.thermal.lib.compat.jei.Drawables;
 import cofh.thermal.lib.compat.jei.ThermalFuelCategory;
 import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
-import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -19,7 +18,6 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -54,21 +52,6 @@ public class SteamFuelCategory extends ThermalFuelCategory<SteamFuel> {
 	@Override
 	public @NotNull RecipeType<SteamFuel> getRecipeType() {
 		return STEAM_DYNAMO_RECIPE_TYPE;
-	}
-
-	@Override
-	public @NotNull Component getTitle() {
-		return name;
-	}
-
-	@Override
-	public @NotNull IDrawable getBackground() {
-		return background;
-	}
-
-	@Override
-	public @NotNull IDrawable getIcon() {
-		return icon;
 	}
 
 	@Override

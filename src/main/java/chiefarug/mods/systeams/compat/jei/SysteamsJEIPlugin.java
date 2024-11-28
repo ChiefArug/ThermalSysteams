@@ -11,6 +11,7 @@ import chiefarug.mods.systeams.client.screens.NumismaticBoilerScreen;
 import chiefarug.mods.systeams.client.screens.SteamDynamoScreen;
 import chiefarug.mods.systeams.client.screens.StirlingBoilerScreen;
 import chiefarug.mods.systeams.compat.thermal_extra.SysteamsThermalExtraCompat;
+import chiefarug.mods.systeams.recipe.BoilingRecipe;
 import chiefarug.mods.systeams.recipe.SteamFuel;
 import cofh.thermal.expansion.compat.jei.TExpJeiPlugin;
 import mezz.jei.api.IModPlugin;
@@ -23,7 +24,6 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.NotNull;
@@ -35,10 +35,12 @@ import static chiefarug.mods.systeams.Systeams.MODID;
 public class SysteamsJEIPlugin implements IModPlugin {
 
 	public static final RecipeType<SteamFuel> STEAM_DYNAMO_RECIPE_TYPE = RecipeType.create(MODID, SysteamsRegistry.STEAM_DYNAMO_ID, SteamFuel.class);
+	public static final RecipeType<BoilingRecipe> BOILING_RECIPE_TYPE = RecipeType.create(MODID, SysteamsRegistry.BOILING_ID, BoilingRecipe.class);
 
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registration) {
-		registration.addRecipeCategories(new SteamFuelCategory(registration.getJeiHelpers().getGuiHelper(), new ItemStack(SysteamsRegistry.Items.STEAM_DYNAMO.get()), STEAM_DYNAMO_RECIPE_TYPE));
+		registration.addRecipeCategories(new SteamFuelCategory(registration.getJeiHelpers().getGuiHelper(), SysteamsRegistry.Items.STEAM_DYNAMO.get().getDefaultInstance(), STEAM_DYNAMO_RECIPE_TYPE));
+		registration.addRecipeCategories(new BoilingCategory(registration.getJeiHelpers().getGuiHelper(), SysteamsRegistry.Boilers.STIRLING.asItem().getDefaultInstance(), BOILING_RECIPE_TYPE));
 	}
 
 	@Override
@@ -46,6 +48,7 @@ public class SysteamsJEIPlugin implements IModPlugin {
 		RecipeManager recipeManager = getRecipeManager();
 
 		registration.addRecipes(STEAM_DYNAMO_RECIPE_TYPE, recipeManager.getAllRecipesFor(SysteamsRegistry.Recipes.STEAM_TYPE.get()));
+		registration.addRecipes(BOILING_RECIPE_TYPE, recipeManager.getAllRecipesFor(SysteamsRegistry.Recipes.BOILING_TYPE.get()));
 	}
 
 	@Override
@@ -67,14 +70,23 @@ public class SysteamsJEIPlugin implements IModPlugin {
 
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Items.STEAM_DYNAMO.get()), STEAM_DYNAMO_RECIPE_TYPE);
-		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.STIRLING.item()), TExpJeiPlugin.STIRLING_FUEL_TYPE);
-		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.MAGMATIC.item()), TExpJeiPlugin.MAGMATIC_FUEL_TYPE);
-		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.COMPRESSION.item()), TExpJeiPlugin.COMPRESSION_FUEL_TYPE);
-		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.NUMISMATIC.item()), TExpJeiPlugin.NUMISMATIC_FUEL_TYPE);
-		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.LAPIDARY.item()), TExpJeiPlugin.LAPIDARY_FUEL_TYPE);
-		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.DISENCHANTMENT.item()), TExpJeiPlugin.DISENCHANTMENT_FUEL_TYPE);
-		registration.addRecipeCatalyst(new ItemStack(SysteamsRegistry.Boilers.GOURMAND.item()), TExpJeiPlugin.GOURMAND_FUEL_TYPE);
+		registration.addRecipeCatalyst(SysteamsRegistry.Items.STEAM_DYNAMO.get().getDefaultInstance(), STEAM_DYNAMO_RECIPE_TYPE);
+
+		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.STIRLING.item().getDefaultInstance(), TExpJeiPlugin.STIRLING_FUEL_TYPE);
+		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.MAGMATIC.item().getDefaultInstance(), TExpJeiPlugin.MAGMATIC_FUEL_TYPE);
+		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.COMPRESSION.item().getDefaultInstance(), TExpJeiPlugin.COMPRESSION_FUEL_TYPE);
+		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.NUMISMATIC.item().getDefaultInstance(), TExpJeiPlugin.NUMISMATIC_FUEL_TYPE);
+		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.LAPIDARY.item().getDefaultInstance(), TExpJeiPlugin.LAPIDARY_FUEL_TYPE);
+		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.DISENCHANTMENT.item().getDefaultInstance(), TExpJeiPlugin.DISENCHANTMENT_FUEL_TYPE);
+		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.GOURMAND.item().getDefaultInstance(), TExpJeiPlugin.GOURMAND_FUEL_TYPE);
+
+		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.STIRLING.item().getDefaultInstance(), BOILING_RECIPE_TYPE);
+		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.MAGMATIC.item().getDefaultInstance(), BOILING_RECIPE_TYPE);
+		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.COMPRESSION.item().getDefaultInstance(), BOILING_RECIPE_TYPE);
+		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.NUMISMATIC.item().getDefaultInstance(), BOILING_RECIPE_TYPE);
+		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.LAPIDARY.item().getDefaultInstance(), BOILING_RECIPE_TYPE);
+		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.DISENCHANTMENT.item().getDefaultInstance(), BOILING_RECIPE_TYPE);
+		registration.addRecipeCatalyst(SysteamsRegistry.Boilers.GOURMAND.item().getDefaultInstance(), BOILING_RECIPE_TYPE);
 
 		if (ModList.get().isLoaded(EXTRA))
 			SysteamsThermalExtraCompat.JEIHandler.registerRecipeCatalysts(registration);
