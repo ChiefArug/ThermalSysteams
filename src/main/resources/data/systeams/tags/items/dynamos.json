@@ -7,14 +7,6 @@
     "thermal:dynamo_lapidary",
     "thermal:dynamo_disenchantment",
     "thermal:dynamo_gourmand",
-    "systeams:steam_dynamo",
-    {
-      "required": false,
-      "id": "systeams:pneumatic_boiler"
-    },
-    {
-      "required": false,
-      "id": "systeams:frost_boiler"
-    }
+    "systeams:steam_dynamo"
   ]
 }
