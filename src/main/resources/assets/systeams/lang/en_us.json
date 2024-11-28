@@ -8,6 +8,7 @@
   "item.thermal.rf_coil.desc": "Shift-use on a Boiler to convert to a Dynamo. Returns the Steam Pipe",
   "itemGroup.systeams": "Systeams",
   "info.systeams.augment.type.DynamoBoiler": "Dynamo & Boiler",
+  "info.systeams.boiling_recipe": "Boiling",
 
   "info.systeams.steam": "Steam",
   "info.systeams.steam_prod": "Steam prod",
