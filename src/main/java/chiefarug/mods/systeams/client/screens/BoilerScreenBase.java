@@ -62,8 +62,7 @@ public class BoilerScreenBase<T extends BoilerMenuBase<?>> extends AugmentableTi
                 .setItem(() -> ForgeRegistries.ITEMS.getValue(new ResourceLocation(Systeams.MEKANISM, "basic_pressurized_tube")).getDefaultInstance())
                 .setTooltipFactory((element, mouseX, mouseY) -> List.of(
                         Component.translatable("info.systeams.mekanism_gas_output.1"),
-                        Component.translatable("info.systeams.mekanism_gas_output.2"),
-                        Component.translatable("info.systeams.mekanism_gas_output.3")
+                        Component.translatable("info.systeams.mekanism_gas_output.2")
                 ))
                 .setVisible(() -> blockEntity.gasMode)
                 .setSize(16, 16)
