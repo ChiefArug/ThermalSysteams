@@ -4,11 +4,13 @@ import chiefarug.mods.systeams.ConversionKitItem;
 import chiefarug.mods.systeams.SysteamsConfig;
 import chiefarug.mods.systeams.SysteamsRegistry;
 import chiefarug.mods.systeams.block.BoilerBlock;
+import chiefarug.mods.systeams.compat.jei.SysteamsJEIPlugin;
 import cofh.core.common.config.CoreClientConfig;
 import cofh.lib.util.Utils;
 import cofh.lib.util.helpers.StringHelper;
 import me.desht.pneumaticcraft.api.lib.Names;
 import me.desht.pneumaticcraft.common.core.ModBlocks;
+import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -75,6 +77,12 @@ public class SysteamsPNCRCompat {
 				MenuScreens.register(PNEUMATIC_BOILER_MENU.get(), PneumaticBoilerScreen::new);
 			}
 
+		}
+	}
+
+	public static class JEIHandler {
+		public static void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
+			registration.addRecipeCatalyst(Registry.PNEUMATIC_BOILER_BLOCK_ITEM.get().getDefaultInstance(), SysteamsJEIPlugin.BOILING_RECIPE_TYPE);
 		}
 	}
 

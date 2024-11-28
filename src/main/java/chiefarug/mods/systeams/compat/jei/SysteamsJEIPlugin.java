@@ -10,6 +10,7 @@ import chiefarug.mods.systeams.client.screens.MagmaticBoilerScreen;
 import chiefarug.mods.systeams.client.screens.NumismaticBoilerScreen;
 import chiefarug.mods.systeams.client.screens.SteamDynamoScreen;
 import chiefarug.mods.systeams.client.screens.StirlingBoilerScreen;
+import chiefarug.mods.systeams.compat.pneumaticcraft.SysteamsPNCRCompat;
 import chiefarug.mods.systeams.compat.thermal_extra.SysteamsThermalExtraCompat;
 import chiefarug.mods.systeams.recipe.BoilingRecipe;
 import chiefarug.mods.systeams.recipe.SteamFuel;
@@ -30,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static chiefarug.mods.systeams.Systeams.EXTRA;
 import static chiefarug.mods.systeams.Systeams.MODID;
+import static chiefarug.mods.systeams.Systeams.PNCR;
 
 @JeiPlugin
 public class SysteamsJEIPlugin implements IModPlugin {
@@ -90,6 +92,8 @@ public class SysteamsJEIPlugin implements IModPlugin {
 
 		if (ModList.get().isLoaded(EXTRA))
 			SysteamsThermalExtraCompat.JEIHandler.registerRecipeCatalysts(registration);
+		if (ModList.get().isLoaded(PNCR))
+			SysteamsPNCRCompat.JEIHandler.registerRecipeCatalysts(registration);
 	}
 
 	@Override
