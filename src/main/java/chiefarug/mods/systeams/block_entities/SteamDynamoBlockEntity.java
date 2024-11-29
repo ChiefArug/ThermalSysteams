@@ -39,8 +39,6 @@ public class SteamDynamoBlockEntity extends DynamoBlockEntity {
 
 		tankInv.addTank(steamTank, StorageGroup.INPUT);
 
-		renderFluid = new FluidStack(SysteamsRegistry.Fluids.STEAM.stillFluid.get(), BUCKET_VOLUME);
-
 		addAugmentSlots(ThermalCoreConfig.dynamoAugments);
         initHandlers();
 	}

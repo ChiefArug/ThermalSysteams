@@ -153,7 +153,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 		remainingEnergyBuffer -= energyPerTick;
 		tryHaveEnergyToTick();
 		// steam. note this is lossy if there is not enough space in the tank. that is fine, because if someone is letting that happen too often that is their fault.
-		FluidStack newSteam = new FluidStack(SysteamsRegistry.Fluids.STEAM.getStill(), steamPerTick);
+		FluidStack newSteam = new FluidStack(cachedOutput.fluidOut(), steamPerTick);
 		steamTank.fill(newSteam, EXECUTE);
 
 		transferSteamOut(TRANSFER_PER_TICK);
