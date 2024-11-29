@@ -65,11 +65,23 @@ public class BoilingCategory extends ThermalRecipeCategory<BoilingRecipe> {
         FluidStack output = recipe.getOutputFluids().get(0).copy();
         FluidStack[] input = recipe.getInputFluids().get(0).getFluids();
         double ratio = (double) input[0].getAmount() / output.getAmount();
-        output.setAmount(1000);
+
+        int inAmount;
+        int outAmount;
+        if (ratio < 1) {
+            outAmount = 1000;
+            inAmount = (int) Math.round(outAmount * ratio);
+        } else {
+            inAmount = 1000;
+            outAmount = (int) Math.round(inAmount / ratio);
+        }
+
+        output.setAmount(outAmount);
         List<FluidStack> inputs = Arrays.stream(input)
                 .map(FluidStack::copy)
-                .peek(stack -> stack.setAmount((int) (1000 * ratio)))
+                .peek(stack -> stack.setAmount(inAmount))
                 .toList();
+
         builder.addSlot(RecipeIngredientRole.INPUT, 34, 11)
                 .addIngredients(ForgeTypes.FLUID_STACK, inputs)
                 .setFluidRenderer(TCoreJeiPlugin.tankSize(Drawables.TANK_LARGE), false, 16, 40)
