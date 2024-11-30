@@ -1,4 +1,4 @@
-package chiefarug.mods.systeams;
+package chiefarug.mods.systeams.fluid;
 
 import cofh.lib.common.fluid.FluidCoFH;
 import cofh.lib.util.DeferredRegisterCoFH;
@@ -34,8 +34,10 @@ import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -43,6 +45,7 @@ import static chiefarug.mods.systeams.Systeams.LGGR;
 import static chiefarug.mods.systeams.Systeams.MODRL;
 
 @SuppressWarnings("unused")// ignore unused code, its probably for the block form.
+@ParametersAreNonnullByDefault
 public class SteamFluid /*extends FluidCoFH*/ { // We can't extend FluidCoFH because it forces you to use the base ForgeFlowingFluid, meaning I can't make it flow upwards.
 
 	public final RegistryObject<FluidType> type;
@@ -50,21 +53,24 @@ public class SteamFluid /*extends FluidCoFH*/ { // We can't extend FluidCoFH bec
 	public final RegistryObject<ForgeFlowingFluid> stillFluid;
 	public final RegistryObject<ForgeFlowingFluid> flowingFluid;
 
-	private static final BlockBehaviour.Properties fluidBlockProperties = BlockBehaviour.Properties.copy(Blocks.WATER).mapColor(DyeColor.LIGHT_GRAY);
-	private static final Item.Properties bucketItemProperties = new Item.Properties().craftRemainder(net.minecraft.world.item.Items.BUCKET).stacksTo(1);
+	protected static final BlockBehaviour.Properties fluidBlockProperties = BlockBehaviour.Properties.copy(Blocks.WATER).mapColor(DyeColor.LIGHT_GRAY);
+	protected static final Item.Properties bucketItemProperties = new Item.Properties().craftRemainder(net.minecraft.world.item.Items.BUCKET).stacksTo(1);
 
-//	protected final RegistryObject<LiquidBlock> block;
-	protected final RegistryObject<Item> bucket;
+//	@Nullable
+//	protected RegistryObject<LiquidBlock> block = null;
+	@Nullable
+	protected RegistryObject<Item> bucket;
 
-	public SteamFluid(DeferredRegisterCoFH<Fluid> fluidRegister, DeferredRegisterCoFH<FluidType> typeRegister, DeferredRegisterCoFH<Block> blockRegister, DeferredRegisterCoFH<Item> itemRegister, String id) {
+	public SteamFluid(@NotNull DeferredRegisterCoFH<Fluid> fluidRegister, @NotNull DeferredRegisterCoFH<FluidType> typeRegister, @Nullable DeferredRegisterCoFH<Block> blockRegister, @Nullable DeferredRegisterCoFH<Item> itemRegister, String id) {
 		stillFluid = fluidRegister.register(id, () -> new Source(fluidProperties()));
 		flowingFluid = fluidRegister.register(FluidCoFH.flowing(id), () -> new Flowing(fluidProperties()));
 
-//		block = blockRegister.register(id + "_fluid", () -> new SteamLiquidBlock(stillFluid, fluidBlockProperties));
-		bucket = itemRegister.register(id + "_bucket", () -> new BucketItem(stillFluid, bucketItemProperties));
+//		block = blockRegister == null ? null : blockRegister.register(id + "_fluid", () -> new SteamLiquidBlock(stillFluid, fluidBlockProperties));
+		bucket 	= itemRegister == null ? null : itemRegister.register(id + "_bucket", () -> new BucketItem(stillFluid, bucketItemProperties));
 
 
-		type = typeRegister.register(id, () -> new FluidType(FluidType.Properties.create()
+
+        type = typeRegister.register(id, () -> new FluidType(FluidType.Properties.create()
 						.canDrown(true)
 						.canExtinguish(true)
 						.canHydrate(true)
@@ -74,8 +80,8 @@ public class SteamFluid /*extends FluidCoFH*/ { // We can't extend FluidCoFH bec
 					@Override
 					public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
 						consumer.accept(new IClientFluidTypeExtensions() {
-							private static final ResourceLocation STILL = MODRL.withPath("block/steam_still");
-							private static final ResourceLocation FLOW = MODRL.withPath("block/steam_flow");
+							private final ResourceLocation STILL = MODRL.withPath("block/" + id + "_still");
+							private final ResourceLocation FLOW = MODRL.withPath("block/" + id + "_flow");
 
 							@Override
 							public ResourceLocation getStillTexture() {
@@ -123,11 +129,11 @@ public class SteamFluid /*extends FluidCoFH*/ { // We can't extend FluidCoFH bec
 	}
 
 	protected ForgeFlowingFluid.Properties fluidProperties() {
-		return new ForgeFlowingFluid.Properties(type(), stillFluid, flowingFluid)
+        return new ForgeFlowingFluid.Properties(type(), stillFluid, flowingFluid)
 //				.block(block)
-				.bucket(bucket)
-				.tickRate(2)
-				.slopeFindDistance(1);
+                .bucket(bucket)
+                .tickRate(2)
+                .slopeFindDistance(1);
 	}
 
 	protected Supplier<FluidType> type() {
@@ -176,7 +182,7 @@ public class SteamFluid /*extends FluidCoFH*/ { // We can't extend FluidCoFH bec
 					return; // stop trying anything else
 				}
 
-				// else we should flow.
+				// else we should `flow`.
 				// steam is special and will flow its source upwards until it reaches a block, and only then will it spread out (this is mainly to prevent massive leaks of liquid)
 				Direction flowDir = Direction.UP;
 				BlockPos flowToPos = pos.relative(flowDir);

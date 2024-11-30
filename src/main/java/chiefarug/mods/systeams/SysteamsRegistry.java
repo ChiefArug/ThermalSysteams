@@ -27,6 +27,8 @@ import chiefarug.mods.systeams.containers.MagmaticBoilerMenu;
 import chiefarug.mods.systeams.containers.NumismaticBoilerMenu;
 import chiefarug.mods.systeams.containers.SteamDynamoMenu;
 import chiefarug.mods.systeams.containers.StirlingBoilerMenu;
+import chiefarug.mods.systeams.fluid.PlasmaFluid;
+import chiefarug.mods.systeams.fluid.SteamFluid;
 import chiefarug.mods.systeams.recipe.BoilingRecipe;
 import chiefarug.mods.systeams.recipe.BoilingRecipeManager;
 import chiefarug.mods.systeams.recipe.SteamFuel;
@@ -182,7 +184,11 @@ public class SysteamsRegistry {
 		static void init() {}
 		public static final ITag<Fluid> WATER_TAG = modTag(ForgeRegistries.FLUIDS, "water");
 		public static final ITag<Fluid> STEAM_TAG = forgeTag(ForgeRegistries.FLUIDS, "steam");
-		public static final SteamFluid STEAM = new SteamFluid(FLUID_REGISTRY, FLUID_TYPE_REGISTRY, BLOCK_REGISTRY, ITEM_REGISTRY, STEAM_ID);
+		public static final SteamFluid STEAM = new SteamFluid(FLUID_REGISTRY, FLUID_TYPE_REGISTRY, null, ITEM_REGISTRY, STEAM_ID);
+		public static final SteamFluid STEAM_2 = new SteamFluid(FLUID_REGISTRY, FLUID_TYPE_REGISTRY, null, ITEM_REGISTRY, "steamier");
+		public static final SteamFluid STEAM_3 = new SteamFluid(FLUID_REGISTRY, FLUID_TYPE_REGISTRY, null, ITEM_REGISTRY, "steamiest");
+		public static final SteamFluid STEAM_4 = new SteamFluid(FLUID_REGISTRY, FLUID_TYPE_REGISTRY, null, ITEM_REGISTRY, "steamiester");
+		public static final SteamFluid STEAM_5 = new PlasmaFluid(FLUID_REGISTRY, FLUID_TYPE_REGISTRY, null, ITEM_REGISTRY, "steamiestest");
 	}
 	public static class Menus {
 		static void init() {}

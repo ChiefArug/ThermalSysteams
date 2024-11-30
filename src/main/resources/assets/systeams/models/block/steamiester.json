@@ -1,0 +1,6 @@
+{
+    "textures": {
+        "particle": "systeams:block/steamiester_still"
+    },
+    "render_type": "minecraft:translucent"
+}

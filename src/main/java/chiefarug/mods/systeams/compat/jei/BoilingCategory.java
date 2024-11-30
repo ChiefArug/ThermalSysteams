@@ -18,6 +18,7 @@ import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -69,10 +70,10 @@ public class BoilingCategory extends ThermalRecipeCategory<BoilingRecipe> {
         int inAmount;
         int outAmount;
         if (ratio < 1) {
-            outAmount = 1000;
+            outAmount = FluidType.BUCKET_VOLUME;
             inAmount = (int) Math.round(outAmount * ratio);
         } else {
-            inAmount = 1000;
+            inAmount = FluidType.BUCKET_VOLUME;
             outAmount = (int) Math.round(inAmount / ratio);
         }
 
