@@ -1,0 +1,11 @@
+{
+  "type": "systeams:boiling",
+  "ingredient": {
+    "fluid": "systeams:steamiest",
+    "amount": 100
+  },
+  "output": {
+    "fluid": "systeams:steamiester",
+    "amount": 100
+  }
+}

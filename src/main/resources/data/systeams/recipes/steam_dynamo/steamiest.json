@@ -1,0 +1,8 @@
+{
+  "type": "systeams:steam",
+  "input": {
+    "fluid": "systeams:steamiest",
+    "amount": 1000
+  },
+  "energy": 6000
+}

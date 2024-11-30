@@ -57,7 +57,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 
 	private final Predicate<FluidStack> isWater = fluid -> filter.valid(fluid) && BoilingRecipeManager.instance().canBoil(fluid);
 	public final FluidStorageCoFH waterTank = new FluidStorageCoFH(Constants.TANK_MEDIUM, isWater);
-	private final Predicate<FluidStack> isSteam = fluid -> SysteamsRegistry.Fluids.STEAM_TAG.contains(fluid.getFluid());
+	private final Predicate<FluidStack> isSteam = fluid -> SysteamsRegistry.Fluids.STEAMISH_TAG.contains(fluid.getFluid());
 	public final FluidStorageCoFH steamTank = new FluidStorageCoFH(Constants.TANK_LARGE, isSteam);
 
 	private LazyOptional<?> steamCap = LazyOptional.empty();
@@ -100,7 +100,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	public void tickServer() {
 		boolean curActive = isActive;
 		if (isActive) {
-			processTick();
+ 			processTick();
 			if (canProcessFinish()) {
 				processFinish();
 				isActive = false; // ensure that isActive is false when recalculateEnergy is called in canProcessStart()
@@ -146,6 +146,13 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 	}
 
 	protected void processTick() {
+		if (this.waterTank.isEmpty() && this.cachedOutput == null) {
+			this.remainingwWaterBuffer = 0;
+			return; // edge case when the water tank empties but there is still stuff left in the water buffer and we were saved to disk in that time.
+		}
+
+		// new steam. this is up here so that we can yoink the cached output before the water runs out.
+		FluidStack newSteam = new FluidStack(cachedOutput.fluidOut(), steamPerTick);
 		// water
 		remainingwWaterBuffer -= waterPerTick;
 		tryHaveWaterToTick();
@@ -153,7 +160,6 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 		remainingEnergyBuffer -= energyPerTick;
 		tryHaveEnergyToTick();
 		// steam. note this is lossy if there is not enough space in the tank. that is fine, because if someone is letting that happen too often that is their fault.
-		FluidStack newSteam = new FluidStack(cachedOutput.fluidOut(), steamPerTick);
 		steamTank.fill(newSteam, EXECUTE);
 
 		transferSteamOut(TRANSFER_PER_TICK);
@@ -182,6 +188,9 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 
 
 	protected boolean cacheBoilingRecipe() {
+		// dont change the cached recipe if the tank is empty.
+		// this ensures that when the tank is finally emptied after ticking but there is water in the buffer it wont crash.
+		if (waterTank.isEmpty()) return this.cachedOutput != null;
 		return (this.cachedOutput = BoilingRecipeManager.instance().boil(waterTank.getFluidStack())) != null;
 	}
 

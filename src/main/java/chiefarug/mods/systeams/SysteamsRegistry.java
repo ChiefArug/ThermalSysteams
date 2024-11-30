@@ -183,7 +183,7 @@ public class SysteamsRegistry {
 	public static class Fluids {
 		static void init() {}
 		public static final ITag<Fluid> WATER_TAG = modTag(ForgeRegistries.FLUIDS, "water");
-		public static final ITag<Fluid> STEAM_TAG = forgeTag(ForgeRegistries.FLUIDS, "steam");
+		public static final ITag<Fluid> STEAMISH_TAG = modTag(ForgeRegistries.FLUIDS, "steamish");
 		public static final SteamFluid STEAM = new SteamFluid(FLUID_REGISTRY, FLUID_TYPE_REGISTRY, null, ITEM_REGISTRY, STEAM_ID);
 		public static final SteamFluid STEAM_2 = new SteamFluid(FLUID_REGISTRY, FLUID_TYPE_REGISTRY, null, ITEM_REGISTRY, "steamier");
 		public static final SteamFluid STEAM_3 = new SteamFluid(FLUID_REGISTRY, FLUID_TYPE_REGISTRY, null, ITEM_REGISTRY, "steamiest");

@@ -1,0 +1,11 @@
+{
+  "type": "systeams:boiling",
+  "ingredient": {
+    "fluid_tag": "forge:steam",
+    "amount": 100
+  },
+  "result": {
+    "fluid": "systeams:steamier",
+    "amount": 100
+  }
+}
