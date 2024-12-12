@@ -99,10 +99,16 @@ public class SysteamsRegistry {
 				out.accept(Boilers.DISENCHANTMENT);
 
 				ModList mods = ModList.get();
-				if (mods.isLoaded(PNCR))
-					SysteamsPNCRCompat.fillCreativeTab(out);
-				if (mods.isLoaded(EXTRA))
-					SysteamsThermalExtraCompat.fillCreativeTab(out);
+
+				if (mods.isLoaded(PNCR)) SysteamsPNCRCompat.fillCreativeTab(out);
+
+				if (mods.isLoaded(EXTRA)) SysteamsThermalExtraCompat.fillCreativeTab(out);
+
+				out.accept(Fluids.STEAM.getStill().getBucket());
+				out.accept(Fluids.STEAM_2.getStill().getBucket());
+				out.accept(Fluids.STEAM_3.getStill().getBucket());
+				out.accept(Fluids.STEAM_4.getStill().getBucket());
+				out.accept(Fluids.STEAM_5.getStill().getBucket());
 			})
 			.build());
 
