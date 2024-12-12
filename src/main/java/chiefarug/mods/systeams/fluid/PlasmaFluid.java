@@ -31,7 +31,7 @@ public class PlasmaFluid extends SteamFluid {
 
         @Override // holding a bucket of plasma is not a smart idea
         public void inventoryTick(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull Entity entity, int pSlotId, boolean pIsSelected) {
-            if (entity instanceof Player player && player.getAbilities().instabuild) return;
+            if (entity instanceof Player player && player.getAbilities().invulnerable) return;
 
             entity.hurt(entity.level().damageSources().onFire(), 4); //TODO: custom damage type with death message
             entity.setSecondsOnFire(5);
