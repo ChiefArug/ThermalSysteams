@@ -308,8 +308,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 
         generationModifier *= getAttributeModWithDefault(augmentNBT, TAG_AUGMENT_BASE_MOD, 1.0F);
 
-        generationModifier = MathHelper.clamp(generationModifier, AUG_SCALE_MIN, AUG_SCALE_MAX);
-		efficiencyModifier = MathHelper.clamp(efficiencyModifier, AUG_SCALE_MIN, AUG_SCALE_MAX);
+        efficiencyModifier = MathHelper.clamp(efficiencyModifier, AUG_SCALE_MIN, AUG_SCALE_MAX);
 
 		recalculateEnergy();
 		recalculateWater();
