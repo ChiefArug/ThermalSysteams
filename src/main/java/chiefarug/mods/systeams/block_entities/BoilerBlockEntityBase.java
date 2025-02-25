@@ -162,7 +162,7 @@ public abstract class BoilerBlockEntityBase extends AugmentableBlockEntity imple
 		// steam. note this is lossy if there is not enough space in the tank. that is fine, because if someone is letting that happen too often that is their fault.
 		steamTank.fill(newSteam, EXECUTE);
 
-		transferSteamOut(TRANSFER_PER_TICK);
+		transferSteamOut(steamPerTick * 2);
 	}
 
 	/**
