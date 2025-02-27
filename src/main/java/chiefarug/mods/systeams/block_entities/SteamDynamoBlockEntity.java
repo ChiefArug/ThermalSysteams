@@ -1,6 +1,5 @@
 package chiefarug.mods.systeams.block_entities;
 
-import chiefarug.mods.systeams.SysteamsConfig;
 import chiefarug.mods.systeams.SysteamsRegistry;
 import chiefarug.mods.systeams.containers.SteamDynamoMenu;
 import chiefarug.mods.systeams.recipe.SteamFuelManager;
@@ -46,7 +45,7 @@ public class SteamDynamoBlockEntity extends DynamoBlockEntity {
 
 	@Override
 	protected int getBaseProcessTick() {
-		return (int) Math.round(SteamFuelManager.instance().getBasePower() * SysteamsConfig.STEAM_DYNAMO_MULTIPLIER.get());
+		return SteamFuelManager.instance().getBasePower();
 	}
 
 	@Override

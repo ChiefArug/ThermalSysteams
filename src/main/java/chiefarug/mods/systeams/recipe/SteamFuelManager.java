@@ -1,5 +1,6 @@
 package chiefarug.mods.systeams.recipe;
 
+import chiefarug.mods.systeams.SysteamsConfig;
 import chiefarug.mods.systeams.SysteamsRegistry;
 import cofh.core.util.helpers.FluidHelper;
 import cofh.thermal.lib.util.managers.SingleFluidFuelManager;
@@ -74,5 +75,8 @@ public class SteamFuelManager extends SingleFluidFuelManager {
         return fuel;
     }
 
-
+    @Override
+    public int getBasePower() {
+        return SysteamsConfig.STEAM_DYNAMO_POWER.get();
+    }
 }

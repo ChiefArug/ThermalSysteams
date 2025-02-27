@@ -1,5 +1,6 @@
 package chiefarug.mods.systeams;
 
+import chiefarug.mods.systeams.recipe.SteamFuelManager;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class SysteamsConfig {
@@ -31,7 +32,7 @@ public class SysteamsConfig {
 
 	public static final ForgeConfigSpec.BooleanValue PNEUMATIC_BOILER_IN_WORLD_CONVERSION;
 
-	public static final ForgeConfigSpec.DoubleValue STEAM_DYNAMO_MULTIPLIER;
+	public static final ForgeConfigSpec.IntValue STEAM_DYNAMO_POWER;
 
 	public static final ForgeConfigSpec.BooleanValue REPLACE_TOOLTIPS;
 
@@ -42,7 +43,7 @@ public class SysteamsConfig {
 		builder.comment("Systeams Config", "---------------");
 
 		builder.comment("The multiplier on the steam dynamo's RF/t");
-		STEAM_DYNAMO_MULTIPLIER = builder.defineInRange("steam_dynamo_output_multiplier", 1, 0.05, 10);
+		STEAM_DYNAMO_POWER = builder.defineInRange("steam_dynamo_base_power", SteamFuelManager.instance().getBasePower(), SteamFuelManager.instance().getMinPower(), SteamFuelManager.instance().getMaxPower());
 
 		builder.push("Steam Values");
 			builder.comment("The number of mb of steam produced per RF of energy usually produced by the same fuel in a dynamo", "Note that this does not affect the steam dynamo's rates. That needs to be adjusted with a datapack");
