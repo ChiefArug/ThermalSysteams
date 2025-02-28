@@ -43,7 +43,7 @@ public class SysteamsConfig {
 		builder.comment("Systeams Config", "---------------");
 
 		builder.comment("The multiplier on the steam dynamo's RF/t");
-		STEAM_DYNAMO_POWER = builder.defineInRange("steam_dynamo_base_power", SteamFuelManager.instance().getBasePower(), SteamFuelManager.instance().getMinPower(), SteamFuelManager.instance().getMaxPower());
+		STEAM_DYNAMO_POWER = builder.defineInRange("steam_dynamo_base_power", 20, SteamFuelManager.instance().getMinPower(), SteamFuelManager.instance().getMaxPower());
 
 		builder.push("Steam Values");
 			builder.comment("The number of mb of steam produced per RF of energy usually produced by the same fuel in a dynamo", "Note that this does not affect the steam dynamo's rates. That needs to be adjusted with a datapack");
