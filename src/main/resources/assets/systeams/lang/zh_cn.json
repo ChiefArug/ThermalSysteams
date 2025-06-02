@@ -12,7 +12,7 @@
   "item.systeams.boiler_pipe": "蒸汽管道",
   "item.systeams.boiler_pipe.keyword": "蒸汽锅炉线圈",
   "item.thermal.rf_coil.keyword": "蒸汽锅炉发电机",
-  "item.systeams.boiler_pipe.desc": "潜行右击能源炉将其转换为锅炉，返还红石通量线圈。",
+  "item.systeams.boiler_pipe.desc": "潜行右击能源炉将其转换为锅炉，返还一个零件。",
   "item.thermal.rf_coil.desc": "潜行右击锅炉将其转换为能源炉，返还蒸汽管道。",
   "itemGroup.systeams": "热力系列：蒸汽锅炉",
   "info.systeams.augment.type.DynamoBoiler": "发电机与锅炉",
